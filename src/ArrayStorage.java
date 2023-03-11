@@ -26,14 +26,18 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
-        int resumeIndex = -1;
+        int indexForDelete = -1;
         for (int i = 0; i < size; i++) {
             if (storage[i].uuid.equals(uuid)) {
-                resumeIndex = i;
+                indexForDelete = i;
                 break;
             }
         }
-        storage[resumeIndex] = storage[size - 1];
+        if (indexForDelete == -1) {
+            System.out.println("Resume was not found.");
+            return;
+        }
+        storage[indexForDelete] = storage[size - 1];
         storage[size--] = null;
     }
 
