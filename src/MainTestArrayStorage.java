@@ -31,6 +31,7 @@ public class MainTestArrayStorage {
         ARRAY_STORAGE.delete(r1.getUuid());
         ARRAY_STORAGE.delete("nonexistent uuid");
         printAll();
+        ARRAY_STORAGE.update(r3);
         ARRAY_STORAGE.clear();
         printAll();
 

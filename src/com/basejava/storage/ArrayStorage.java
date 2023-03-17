@@ -19,7 +19,7 @@ public class ArrayStorage {
 
     public void save(Resume r) {
         if(isExist(r)) {
-            System.out.println("ERROR: The resume with uuid = \"" + r.getUuid() + "\" already exists.");
+            System.out.println("ERROR: A resume with uuid = \"" + r.getUuid() + "\" already exists.");
             System.out.println("A resume has not been saved");
             return;
         }
@@ -45,7 +45,7 @@ public class ArrayStorage {
                 return storage[i];
             }
         }
-        System.out.println("ERROR: The resume with uuid = \"" + uuid + "\" does not exist.");
+        System.out.println("ERROR: A resume with uuid = \"" + uuid + "\" does not exist.");
         return null;
     }
 
@@ -58,7 +58,7 @@ public class ArrayStorage {
             }
         }
         if (indexForDelete == -1) {
-            System.out.println("ERROR: The resume with uuid = \"" + uuid + "\" was not found.");
+            System.out.println("ERROR: A resume with uuid = \"" + uuid + "\" was not found.");
             return;
         }
         storage[indexForDelete] = storage[size - 1];
@@ -74,5 +74,18 @@ public class ArrayStorage {
 
     public int size() {
         return size;
+    }
+
+    public void update(Resume resume) {
+        if (!isExist(resume)) {
+            System.out.println("ERROR: A resume with uuid = \"" + resume.getUuid() + "\" does not exist.");
+            return;
+        }
+        for (int i = 0; i < size; i++) {
+            if (resume.getUuid().equals(storage[i].getUuid())) {
+                storage[i] = resume;
+                return;
+            }
+        }
     }
 }
