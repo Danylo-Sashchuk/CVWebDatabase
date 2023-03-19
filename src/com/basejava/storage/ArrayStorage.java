@@ -18,16 +18,14 @@ public class ArrayStorage {
     }
 
     public void save(Resume r) {
-        if (isExist(r)) {
-            System.out.println("ERROR: A resume with uuid = \"" + r.getUuid() + "\" already exists.");
-            System.out.println("A resume has not been saved");
-            return;
-        }
         if (size == STORAGE_MAX_SIZE) {
             System.out.println("ERROR: The storage capacity is exceeded.\nNew resume has not been saved.");
-            return;
+        } else if (isExist(r)) {
+            System.out.println("ERROR: A resume with uuid = \"" + r.getUuid() + "\" already exists.");
+            System.out.println("A resume has not been saved");
+        } else {
+            storage[size++] = r;
         }
-        storage[size++] = r;
     }
 
     private boolean isExist(Resume r) {
