@@ -28,19 +28,6 @@ public class ArrayStorage {
         }
     }
 
-    private boolean isExist(Resume r) {
-        return getIndex(r.getUuid()) != -1;
-    }
-
-    private int getIndex(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     public Resume get(String uuid) {
         int resumeIndex = getIndex(uuid);
         if (resumeIndex == -1) {
@@ -77,5 +64,18 @@ public class ArrayStorage {
             return;
         }
         storage[getIndex(resume.getUuid())] = resume;
+    }
+
+    private boolean isExist(Resume r) {
+        return getIndex(r.getUuid()) != -1;
+    }
+
+    private int getIndex(String uuid) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

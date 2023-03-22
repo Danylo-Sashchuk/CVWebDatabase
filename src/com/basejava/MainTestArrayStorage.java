@@ -1,3 +1,5 @@
+package com.basejava;
+
 import com.basejava.model.Resume;
 import com.basejava.storage.ArrayStorage;
 
