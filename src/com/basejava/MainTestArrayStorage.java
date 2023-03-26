@@ -2,12 +2,13 @@ package com.basejava;
 
 import com.basejava.model.Resume;
 import com.basejava.storage.ArrayStorage;
+import com.basejava.storage.Storage;
 
 /**
  * Test for your com.basejava.storage.ArrayStorage implementation
  */
 public class MainTestArrayStorage {
-    static final ArrayStorage ARRAY_STORAGE = new ArrayStorage();
+    static final Storage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) {
         Resume r1 = new Resume();
