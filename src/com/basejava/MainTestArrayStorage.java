@@ -1,14 +1,14 @@
 package com.basejava;
 
 import com.basejava.model.Resume;
-import com.basejava.storage.ArrayStorage;
+import com.basejava.storage.SortedArrayStorage;
 import com.basejava.storage.Storage;
 
 /**
  * Test for your com.basejava.storage.ArrayStorage implementation
  */
 public class MainTestArrayStorage {
-    static final Storage ARRAY_STORAGE = new ArrayStorage();
+    static final Storage ARRAY_STORAGE = new SortedArrayStorage();
 
     public static void main(String[] args) {
         Resume r1 = new Resume();
@@ -31,10 +31,12 @@ public class MainTestArrayStorage {
         System.out.println("Get dummy: " + ARRAY_STORAGE.get("dummy"));
 
         printAll();
-        ARRAY_STORAGE.delete(r1.getUuid());
         ARRAY_STORAGE.delete("nonexistent uuid");
+        ARRAY_STORAGE.delete("uuid2");
         printAll();
-        ARRAY_STORAGE.update(r3);
+        ARRAY_STORAGE.save(r3);
+        ARRAY_STORAGE.save(r2);
+        printAll();
         ARRAY_STORAGE.clear();
         printAll();
 
