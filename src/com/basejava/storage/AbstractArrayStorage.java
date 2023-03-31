@@ -65,6 +65,7 @@ public abstract class AbstractArrayStorage implements Storage {
             System.out.println("ERROR: A resume with uuid = \"" + uuid + "\" was not found.");
             return;
         }
+        size--;
         proceedDelete(index);
     }
 
