@@ -1,5 +1,8 @@
 package com.basejava.storage;
 
+import com.basejava.exceptions.ExistStorageException;
+import com.basejava.exceptions.NotExistStorageException;
+import com.basejava.exceptions.StorageException;
 import com.basejava.model.Resume;
 
 import java.util.Arrays;
@@ -29,8 +32,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public final Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index == -1) {
-            System.out.println("ERROR: A resume with uuid = \"" + uuid + "\" does not exist.");
-            return null;
+            throw new NotExistStorageException(uuid);
         }
         return storage[index];
     }
@@ -39,8 +41,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public final void update(Resume resume) {
         int index = getIndex(resume.getUuid());
         if (!isExist(index)) {
-            System.out.println("ERROR: A resume with uuid = \"" + resume.getUuid() + "\" does not exist.");
-            return;
+            throw new NotExistStorageException(resume.getUuid());
         }
         storage[index] = resume;
     }
@@ -49,10 +50,9 @@ public abstract class AbstractArrayStorage implements Storage {
     public final void save(Resume r) {
         int index = getIndex(r.getUuid());
         if (size == STORAGE_MAX_SIZE) {
-            System.out.println("ERROR: The storage capacity is exceeded.\nNew resume has not been saved.");
+            throw new StorageException("ERROR: The storage capacity is exceeded", r.getUuid());
         } else if (isExist(index)) {
-            System.out.println("ERROR: A resume with uuid = \"" + r.getUuid() + "\" already exists.");
-            System.out.println("A resume has not been saved");
+            throw new ExistStorageException(r.getUuid());
         } else {
             proceedSave(size++, r);
         }
@@ -62,8 +62,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public final void delete(String uuid) {
         int index = getIndex(uuid);
         if (index == -1) {
-            System.out.println("ERROR: A resume with uuid = \"" + uuid + "\" was not found.");
-            return;
+            throw new NotExistStorageException(uuid);
         }
         size--;
         proceedDelete(index);
