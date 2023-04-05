@@ -6,14 +6,8 @@ import org.junit.jupiter.api.Test;
 
 class ArrayStorageTest extends AbstractArrayStorageTest {
 
-    public ArrayStorageTest() {
+    ArrayStorageTest() {
         super(new ArrayStorage());
-    }
-
-    @Override
-    @Test
-    void get() {
-        Assertions.assertEquals(new Resume("uuid1"), storage.get("uuid1"));
     }
 
     @Override

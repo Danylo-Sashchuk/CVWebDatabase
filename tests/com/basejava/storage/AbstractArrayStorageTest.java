@@ -82,10 +82,16 @@ abstract class AbstractArrayStorageTest {
         } catch (Exception e) {
             assertNotNull(e);
         }
+        storage.clear();
+        storage.save(r1);
+        storage.save(r2);
+        storage.save(r3);
     }
 
     @Test
-    abstract void get();
+    final void get() {
+        Assertions.assertEquals(new Resume("uuid1"), storage.get("uuid1"));
+    }
 
     @Test
     abstract void save();
