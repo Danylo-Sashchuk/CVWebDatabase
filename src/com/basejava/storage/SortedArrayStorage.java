@@ -14,9 +14,6 @@ public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     protected void proceedSave(int index, Resume r) {
-        if (index != STORAGE_MAX_SIZE - 1) {
-            System.arraycopy(storage, index, storage, index + 1, size - index);
-        }
         storage[index] = r;
     }
 
