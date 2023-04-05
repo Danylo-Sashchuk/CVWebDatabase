@@ -8,7 +8,7 @@ import com.basejava.model.Resume;
 import java.util.Arrays;
 
 public abstract class AbstractArrayStorage implements Storage {
-    protected static final int STORAGE_MAX_SIZE = 10000;
+    protected static final int STORAGE_MAX_SIZE = 10;
     protected final Resume[] storage = new Resume[STORAGE_MAX_SIZE];
     protected int size = 0;
 

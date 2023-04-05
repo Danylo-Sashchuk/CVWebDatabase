@@ -1,17 +1,35 @@
 package com.basejava.storage;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.basejava.model.Resume;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+class ArrayStorageTest extends AbstractArrayStorageTest {
 
-class ArrayStorageTest {
-
-    @BeforeEach
-    void setUp() {
+    public ArrayStorageTest() {
+        super(new ArrayStorage());
     }
 
-    @AfterEach
-    void tearDown() {
+    @Override
+    @Test
+    void get() {
+        Assertions.assertEquals(new Resume("uuid1"), storage.get("uuid1"));
+    }
+
+    @Override
+    @Test
+    void save() {
+        storage.save(r4);
+        Assertions.assertArrayEquals(new Resume[]{r1, r2, r3, r4}, storage.getAll());
+    }
+
+    @Override
+    @Test
+    void delete() {
+        storage.delete("uuid2");
+        Assertions.assertArrayEquals(new Resume[]{r1, r3}, storage.getAll());
+        storage.delete("uuid1");
+        storage.delete("uuid3");
+        Assertions.assertArrayEquals(new Resume[]{}, storage.getAll());
     }
 }
