@@ -2,6 +2,7 @@ package com.basejava.storage;
 
 import com.basejava.model.Resume;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -9,31 +10,34 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 abstract class AbstractArrayStorageTest {
 
-    Storage storage;
-    final Resume r1 = new Resume("uuid1");
-    final Resume r2 = new Resume("uuid2");
-    final Resume r3 = new Resume("uuid3");
-    final Resume r4 = new Resume("uuid4");
+    protected final Storage storage;
+    protected static final Resume R_1 = new Resume("uuid1");
+    protected static final Resume R_2 = new Resume("uuid2");
+    protected static final Resume R_3 = new Resume("uuid3");
+    protected static final Resume R_4 = new Resume("uuid4");
+    protected static final Resume UUID_NOT_EXIST = new Resume("UUID_NOT_EXIST");
 
     AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
-        storage.save(r1);
-        storage.save(r2);
-        storage.save(r3);
+    }
+
+    @BeforeEach
+    void setUp() {
+        storage.clear();
+        storage.save(R_1);
+        storage.save(R_2);
+        storage.save(R_3);
     }
 
     @Test
     final void getAll() {
-        Assertions.assertArrayEquals(new Resume[]{r1, r2, r3}, storage.getAll());
+        Assertions.assertArrayEquals(new Resume[]{R_1, R_2, R_3}, storage.getAll());
     }
 
     @Test
     final void clear() {
         storage.clear();
         Assertions.assertArrayEquals(new Resume[]{}, storage.getAll());
-        storage.save(r1);
-        storage.save(r2);
-        storage.save(r3);
     }
 
     @Test
@@ -43,8 +47,8 @@ abstract class AbstractArrayStorageTest {
 
     @Test
     final void update() {
-        storage.update(r1);
-        Assertions.assertArrayEquals(new Resume[]{r1, r2, r3}, storage.getAll());
+        storage.update(R_1);
+        Assertions.assertArrayEquals(new Resume[]{R_1, R_2, R_3}, storage.getAll());
     }
 
     @Test
@@ -69,7 +73,7 @@ abstract class AbstractArrayStorageTest {
 
     @Test
     final void storageOverflowException() {
-        storage.save(r4);
+        storage.save(R_4);
         storage.save(new Resume("uuid5"));
         storage.save(new Resume("uuid6"));
         storage.save(new Resume("uuid7"));
@@ -83,9 +87,9 @@ abstract class AbstractArrayStorageTest {
             assertNotNull(e);
         }
         storage.clear();
-        storage.save(r1);
-        storage.save(r2);
-        storage.save(r3);
+        storage.save(R_1);
+        storage.save(R_2);
+        storage.save(R_3);
     }
 
     @Test

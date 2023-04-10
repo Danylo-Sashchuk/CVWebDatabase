@@ -13,15 +13,15 @@ class ArrayStorageTest extends AbstractArrayStorageTest {
     @Override
     @Test
     void save() {
-        storage.save(r4);
-        Assertions.assertArrayEquals(new Resume[]{r1, r2, r3, r4}, storage.getAll());
+        storage.save(R_4);
+        Assertions.assertArrayEquals(new Resume[]{R_1, R_2, R_3, R_4}, storage.getAll());
     }
 
     @Override
     @Test
     void delete() {
         storage.delete("uuid2");
-        Assertions.assertArrayEquals(new Resume[]{r1, r3}, storage.getAll());
+        Assertions.assertArrayEquals(new Resume[]{R_1, R_3}, storage.getAll());
         storage.delete("uuid1");
         storage.delete("uuid3");
         Assertions.assertArrayEquals(new Resume[]{}, storage.getAll());
