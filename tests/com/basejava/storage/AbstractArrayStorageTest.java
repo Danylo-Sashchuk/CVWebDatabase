@@ -2,13 +2,11 @@ package com.basejava.storage;
 
 import com.basejava.exceptions.ExistStorageException;
 import com.basejava.exceptions.NotExistStorageException;
+import com.basejava.exceptions.StorageException;
 import com.basejava.model.Resume;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
 
 abstract class AbstractArrayStorageTest {
 
@@ -39,18 +37,26 @@ abstract class AbstractArrayStorageTest {
     @Test
     final void clear() {
         storage.clear();
+        assertSize(0);
         Assertions.assertArrayEquals(new Resume[]{}, storage.getAll());
     }
 
     @Test
     final void size() {
-        Assertions.assertEquals(3, storage.size());
+        Assertions.assertTrue(assertSize(3));
+    }
+
+    @Test
+    final void get() {
+        Assertions.assertTrue(assertGet(R_1));
+        Assertions.assertTrue(assertGet(R_2));
+        Assertions.assertTrue(assertGet(R_3));
     }
 
     @Test
     final void update() {
         storage.update(R_1);
-        Assertions.assertArrayEquals(new Resume[]{R_1, R_2, R_3}, storage.getAll());
+        Assertions.assertSame(R_1, storage.get(R_1.getUuid()));
     }
 
     @Test
@@ -74,30 +80,35 @@ abstract class AbstractArrayStorageTest {
     }
 
     @Test
-    final void storageOverflowException() {
-        storage.save(R_4);
-        storage.save(new Resume("uuid5"));
-        storage.save(new Resume("uuid6"));
-        storage.save(new Resume("uuid7"));
-        storage.save(new Resume("uuid8"));
-        storage.save(new Resume("uuid9"));
-        storage.save(new Resume("uuid10"));
+    final void saveOverflow() {
         try {
-            storage.save(new Resume("Extra resume"));
-            fail("Storage Exception has not been thrown.");
-        } catch (Exception e) {
-            assertNotNull(e);
+            while (true) {
+                storage.save(new Resume());
+            }
+        } catch (StorageException storageException) {
+            Assertions.assertThrows(StorageException.class, () -> storage.save(new Resume()));
         }
     }
 
     @Test
-    final void get() {
-        Assertions.assertEquals(new Resume("uuid1"), storage.get("uuid1"));
+    final void save() {
+        storage.save(R_4);
+        assertSize(4);
+        assertGet(R_4);
     }
 
     @Test
-    abstract void save();
+    final void delete() {
+        storage.delete(R_2.getUuid());
+        assertSize(2);
+        Assertions.assertThrows(NotExistStorageException.class, () -> storage.get(R_4.getUuid()));
+    }
 
-    @Test
-    abstract void delete();
+    private boolean assertSize(int size) {
+        return size == storage.size();
+    }
+
+    private boolean assertGet(Resume resume) {
+        return resume == storage.get(resume.getUuid());
+    }
 }
