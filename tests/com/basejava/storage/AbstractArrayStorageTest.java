@@ -1,5 +1,7 @@
 package com.basejava.storage;
 
+import com.basejava.exceptions.ExistStorageException;
+import com.basejava.exceptions.NotExistStorageException;
 import com.basejava.model.Resume;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +17,7 @@ abstract class AbstractArrayStorageTest {
     protected static final Resume R_2 = new Resume("uuid2");
     protected static final Resume R_3 = new Resume("uuid3");
     protected static final Resume R_4 = new Resume("uuid4");
-    protected static final Resume UUID_NOT_EXIST = new Resume("UUID_NOT_EXIST");
+    protected static final Resume DUMMY = new Resume("UUID_NOT_EXIST");
 
     AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
@@ -52,23 +54,23 @@ abstract class AbstractArrayStorageTest {
     }
 
     @Test
-    final void notExistStorageException() {
-        try {
-            storage.get("non-existent uuid");
-            fail("NotExistException has not been thrown.");
-        } catch (Exception e) {
-            assertNotNull(e);
-        }
+    final void getNotExist() {
+        Assertions.assertThrows(NotExistStorageException.class, () -> storage.get(DUMMY.getUuid()));
     }
 
     @Test
-    final void existStorageException() {
-        try {
-            storage.save(new Resume("uuid1"));
-            fail("NotExistException has not been thrown.");
-        } catch (Exception e) {
-            assertNotNull(e);
-        }
+    final void saveExist() {
+        Assertions.assertThrows(ExistStorageException.class, () -> storage.save(R_1));
+    }
+
+    @Test
+    final void deleteNotExist() {
+        Assertions.assertThrows(NotExistStorageException.class, () -> storage.delete(DUMMY.getUuid()));
+    }
+
+    @Test
+    final void updateNotExist() {
+        Assertions.assertThrows(NotExistStorageException.class, () -> storage.update(DUMMY));
     }
 
     @Test
@@ -86,10 +88,6 @@ abstract class AbstractArrayStorageTest {
         } catch (Exception e) {
             assertNotNull(e);
         }
-        storage.clear();
-        storage.save(R_1);
-        storage.save(R_2);
-        storage.save(R_3);
     }
 
     @Test
