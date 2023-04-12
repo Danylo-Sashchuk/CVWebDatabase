@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 abstract class AbstractArrayStorageTest {
 
     protected final Storage storage;
-    protected static final int STORAGE_MAX_SIZE = 10;
     protected static final String UUID_1 = "uuid1";
     protected static final String UUID_2 = "uuid2";
     protected static final String UUID_3 = "uuid3";
@@ -89,7 +88,7 @@ abstract class AbstractArrayStorageTest {
     final void saveOverflow() {
         try {
             storage.clear();
-            for (int i = 0; i < STORAGE_MAX_SIZE; i++) {
+            for (int i = 0; i < AbstractArrayStorage.STORAGE_MAX_SIZE; i++) {
                 storage.save(new Resume());
             }
         } catch (StorageException storageException) {
