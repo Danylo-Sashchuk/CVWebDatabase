@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 abstract class AbstractArrayStorageTest {
 
     protected final Storage storage;
-    protected final int STORAGE_MAX_SIZE = 10;
+    protected static final int STORAGE_MAX_SIZE = 10;
     protected static final String UUID_1 = "uuid1";
     protected static final String UUID_2 = "uuid2";
     protected static final String UUID_3 = "uuid3";
