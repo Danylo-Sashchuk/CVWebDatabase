@@ -43,14 +43,14 @@ abstract class AbstractArrayStorageTest {
 
     @Test
     final void size() {
-        Assertions.assertTrue(assertSize(3));
+        assertSize(3);
     }
 
     @Test
     final void get() {
-        Assertions.assertTrue(assertGet(R_1));
-        Assertions.assertTrue(assertGet(R_2));
-        Assertions.assertTrue(assertGet(R_3));
+        assertGet(R_1);
+        assertGet(R_2);
+        assertGet(R_3);
     }
 
     @Test
@@ -104,11 +104,11 @@ abstract class AbstractArrayStorageTest {
         Assertions.assertThrows(NotExistStorageException.class, () -> storage.get(R_4.getUuid()));
     }
 
-    private boolean assertSize(int size) {
-        return size == storage.size();
+    private void assertSize(int size) {
+        Assertions.assertEquals(size, storage.size());
     }
 
-    private boolean assertGet(Resume resume) {
-        return resume == storage.get(resume.getUuid());
+    private void assertGet(Resume resume) {
+        Assertions.assertEquals(resume, storage.get(resume.getUuid()));
     }
 }
