@@ -1,7 +1,5 @@
 package com.basejava.storage;
 
-import com.basejava.model.Resume;
-
 /**
  * Array based storage for Resumes
  */
@@ -18,13 +16,8 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void saveElement(int index, Resume r) {
-        storage[index] = r;
-    }
-
-    @Override
-    protected void deleteElement(int index) {
-        storage[index] = storage[size];
+    protected void deleteElement(Object searchKey) {
+        storage[(int) searchKey] = storage[size];
         storage[size] = null;
     }
 }

@@ -19,12 +19,22 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume getElement(int index) {
-        return storage[index];
+    protected Resume getElement(Object searchKey) {
+        return storage[(int) searchKey];
     }
 
     @Override
-    protected void updateElement(int index, Resume resume) {
-        storage[index] = resume;
+    protected void updateElement(Object searchKey, Resume resume) {
+        storage[(int) searchKey] = resume;
+    }
+
+    @Override
+    protected void saveElement(Object searchKey, Resume resume) {
+        storage[(int) searchKey] = resume;
+    }
+
+    @Override
+    protected boolean isExist(Object searchKey) {
+        return (int) searchKey >= 0;
     }
 }
