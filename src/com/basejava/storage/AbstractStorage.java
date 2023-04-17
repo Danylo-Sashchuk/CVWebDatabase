@@ -10,39 +10,40 @@ public abstract class AbstractStorage implements Storage {
     @Override
     public final Resume get(String uuid) {
         Object searchKey = getIndex(uuid);
-        if (!isExist(searchKey)) {
-            throw new NotExistStorageException(uuid);
-        }
-        return getElement(searchKey);
+        return getElement(getNonExistingSearchKey(searchKey, uuid));
     }
 
     @Override
     public final void update(Resume resume) {
         Object searchKey = getIndex(resume.getUuid());
-        if (!isExist(searchKey)) {
-            throw new NotExistStorageException(resume.getUuid());
-        }
-        updateElement(searchKey, resume);
+        updateElement(getNonExistingSearchKey(searchKey, resume.getUuid()), resume);
     }
 
     @Override
     public final void delete(String uuid) {
         Object searchKey = getIndex(uuid);
-        if (!isExist(searchKey)) {
-            throw new NotExistStorageException(uuid);
-        }
-        deleteElement(searchKey);
+        deleteElement(getNonExistingSearchKey(searchKey, uuid));
     }
 
     @Override
     public final void save(Resume resume) {
         Object searchKey = getIndex(resume.getUuid());
-        if (size == STORAGE_MAX_SIZE) {
+        if (size() == AbstractArrayStorage.STORAGE_MAX_SIZE) {
             throw new StorageException("ERROR: The storage capacity is exceeded", resume.getUuid());
-        } else if (isExist(searchKey)) {
-            throw new ExistStorageException(resume.getUuid());
-        } else {
-            saveElement(resume);
+        }
+        getExistingSearchKey(searchKey, resume.getUuid());
+        saveElement(resume);
+    }
+
+    private Object getNonExistingSearchKey(Object searchKey, String uuid) {
+        if (!isExist(searchKey)) {
+            throw new NotExistStorageException(uuid);
+        }
+        return searchKey;
+    }
+    private void getExistingSearchKey(Object searchKey, String uuid) {
+        if (isExist(searchKey)) {
+            throw new ExistStorageException(uuid);
         }
     }
 
