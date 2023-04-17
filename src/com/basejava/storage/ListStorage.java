@@ -15,13 +15,13 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void saveElement(Object searchKey, Resume resume) {
+    protected void saveElement(Resume resume) {
         storage.add(resume);
     }
 
     @Override
     protected int getIndex(String uuid) {
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < storage.size(); i++) {
             if (storage.get(i).getUuid().equals(uuid)) {
                 return i;
             }
@@ -47,11 +47,15 @@ public class ListStorage extends AbstractStorage {
     @Override
     public void clear() {
         storage.clear();
-        size = 0;
     }
 
     @Override
     public Resume[] getAll() {
         return storage.toArray(new Resume[0]);
+    }
+
+    @Override
+    public int size() {
+        return storage.size();
     }
 }

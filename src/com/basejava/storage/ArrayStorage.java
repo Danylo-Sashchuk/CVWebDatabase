@@ -16,7 +16,7 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void deleteElement(Object searchKey) {
+    protected void proceedDelete(Object searchKey) {
         storage[(int) searchKey] = storage[size];
         storage[size] = null;
     }

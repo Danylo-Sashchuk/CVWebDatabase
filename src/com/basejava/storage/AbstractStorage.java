@@ -6,13 +6,6 @@ import com.basejava.exceptions.StorageException;
 import com.basejava.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
-    protected static final int STORAGE_MAX_SIZE = 10;
-    protected int size = 0;
-
-    @Override
-    public int size() {
-        return size;
-    }
 
     @Override
     public final Resume get(String uuid) {
@@ -38,7 +31,6 @@ public abstract class AbstractStorage implements Storage {
         if (!isExist(searchKey)) {
             throw new NotExistStorageException(uuid);
         }
-        size--;
         deleteElement(searchKey);
     }
 
@@ -50,13 +42,13 @@ public abstract class AbstractStorage implements Storage {
         } else if (isExist(searchKey)) {
             throw new ExistStorageException(resume.getUuid());
         } else {
-            saveElement(size++, resume);
+            saveElement(resume);
         }
     }
 
     protected abstract boolean isExist(Object searchKey);
 
-    protected abstract void saveElement(Object searchKey, Resume resume);
+    protected abstract void saveElement(Resume resume);
 
     protected abstract int getIndex(String uuid);
 
