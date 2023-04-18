@@ -10,7 +10,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected int size = 0;
 
     @Override
-    protected void deleteElement(Object searchKey) {
+    protected void doDelete(Object searchKey) {
         size--;
         proceedDelete(searchKey);
     }
@@ -32,17 +32,17 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume getElement(Object searchKey) {
+    protected Resume doGet(Object searchKey) {
         return storage[(int) searchKey];
     }
 
     @Override
-    protected void updateElement(Object searchKey, Resume resume) {
+    protected void doUpdate(Object searchKey, Resume resume) {
         storage[(int) searchKey] = resume;
     }
 
     @Override
-    protected void saveElement(Resume resume) {
+    protected void saveElement(Object searchKey, Resume resume) {
         storage[size++] = resume;
     }
 
