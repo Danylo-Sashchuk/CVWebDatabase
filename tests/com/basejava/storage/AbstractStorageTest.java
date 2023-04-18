@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 abstract class AbstractStorageTest {
 
-    protected final Storage storage;
     protected static final String UUID_1 = "uuid1";
     protected static final String UUID_2 = "uuid2";
     protected static final String UUID_3 = "uuid3";
@@ -21,6 +20,7 @@ abstract class AbstractStorageTest {
     protected static final Resume resume3 = new Resume(UUID_3);
     protected static final Resume resume4 = new Resume(UUID_4);
     protected static final Resume dummy = new Resume(UUID_NOT_EXIST);
+    protected final Storage storage;
 
     AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -94,7 +94,9 @@ abstract class AbstractStorageTest {
         } catch (StorageException storageException) {
             Assertions.fail("StorageException thrown.");
         }
-        Assertions.assertThrows(StorageException.class, () -> storage.save(new Resume()));
+        if (!(storage instanceof ListStorage)) {
+            Assertions.assertThrows(StorageException.class, () -> storage.save(new Resume()));
+        }
     }
 
     @Test

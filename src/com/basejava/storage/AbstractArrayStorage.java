@@ -1,5 +1,6 @@
 package com.basejava.storage;
 
+import com.basejava.exceptions.StorageException;
 import com.basejava.model.Resume;
 
 import java.util.Arrays;
@@ -42,7 +43,10 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void saveElement(Object searchKey, Resume resume) {
+    protected void doSave(Object searchKey, Resume resume) {
+        if (size() == STORAGE_MAX_SIZE) {
+            throw new StorageException("ERROR: The storage capacity is exceeded", resume.getUuid());
+        }
         storage[size++] = resume;
     }
 

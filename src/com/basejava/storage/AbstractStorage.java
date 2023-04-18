@@ -2,7 +2,6 @@ package com.basejava.storage;
 
 import com.basejava.exceptions.ExistStorageException;
 import com.basejava.exceptions.NotExistStorageException;
-import com.basejava.exceptions.StorageException;
 import com.basejava.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
@@ -28,10 +27,7 @@ public abstract class AbstractStorage implements Storage {
     @Override
     public final void save(Resume resume) {
         Object searchKey = getNotExistingSearchKey(resume.getUuid());
-        if (size() == AbstractArrayStorage.STORAGE_MAX_SIZE) {
-            throw new StorageException("ERROR: The storage capacity is exceeded", resume.getUuid());
-        }
-        saveElement(searchKey, resume);
+        doSave(searchKey, resume);
     }
 
     private Object getExistingSearchKey(String uuid) {
@@ -51,7 +47,7 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract boolean isExist(Object searchKey);
 
-    protected abstract void saveElement(Object searchKey, Resume resume);
+    protected abstract void doSave(Object searchKey, Resume resume);
 
     protected abstract int getSearchKey(String uuid);
 
