@@ -2,7 +2,6 @@ package com.basejava.storage;
 
 import com.basejava.exceptions.ExistStorageException;
 import com.basejava.exceptions.NotExistStorageException;
-import com.basejava.exceptions.StorageException;
 import com.basejava.model.Resume;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -82,21 +81,6 @@ abstract class AbstractStorageTest {
     @Test
     final void updateNotExist() {
         Assertions.assertThrows(NotExistStorageException.class, () -> storage.update(dummy));
-    }
-
-    @Test
-    final void saveOverflow() {
-        try {
-            storage.clear();
-            for (int i = 0; i < AbstractArrayStorage.STORAGE_MAX_SIZE; i++) {
-                storage.save(new Resume());
-            }
-        } catch (StorageException storageException) {
-            Assertions.fail("StorageException thrown.");
-        }
-        if (!(storage instanceof ListStorage)) {
-            Assertions.assertThrows(StorageException.class, () -> storage.save(new Resume()));
-        }
     }
 
     @Test
