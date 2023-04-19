@@ -47,13 +47,16 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         if (size() == STORAGE_MAX_SIZE) {
             throw new StorageException("ERROR: The storage capacity is exceeded", resume.getUuid());
         }
-        storage[size++] = resume;
+        proceedSave(searchKey, resume);
+        size++;
     }
 
     @Override
     protected boolean isExist(Object searchKey) {
         return (int) searchKey >= 0;
     }
+
+    protected abstract void proceedSave(Object searchKey, Resume resume);
 
     protected abstract void proceedDelete(Object searchKey);
 }
