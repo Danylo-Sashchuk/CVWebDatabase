@@ -1,7 +1,9 @@
-package com.basejava.storage;
+package com.basejava.storage.arrays;
 
 import com.basejava.exceptions.StorageException;
 import com.basejava.model.Resume;
+import com.basejava.storage.AbstractStorageTest;
+import com.basejava.storage.Storage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

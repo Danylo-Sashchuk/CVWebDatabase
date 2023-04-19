@@ -1,7 +1,8 @@
-package com.basejava.storage;
+package com.basejava.storage.arrays;
 
 import com.basejava.exceptions.StorageException;
 import com.basejava.model.Resume;
+import com.basejava.storage.AbstractStorage;
 
 import java.util.Arrays;
 

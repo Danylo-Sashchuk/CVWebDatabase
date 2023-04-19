@@ -1,7 +1,7 @@
 package com.basejava;
 
 import com.basejava.model.Resume;
-import com.basejava.storage.SortedArrayStorage;
+import com.basejava.storage.arrays.SortedArrayStorage;
 import com.basejava.storage.Storage;
 
 import java.io.BufferedReader;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * Interactive test for com.basejava.storage.ArrayStorage implementation
+ * Interactive test for com.basejava.storage.arrays.ArrayStorage implementation
  * (just run, no need to understand)
  */
 public class MainArray {

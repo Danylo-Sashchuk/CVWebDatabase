@@ -1,6 +1,7 @@
-package com.basejava.storage;
+package com.basejava.storage.collections;
 
 import com.basejava.model.Resume;
+import com.basejava.storage.AbstractStorage;
 
 import java.util.ArrayList;
 import java.util.List;

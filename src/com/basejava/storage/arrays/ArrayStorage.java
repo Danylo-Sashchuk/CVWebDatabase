@@ -1,4 +1,4 @@
-package com.basejava.storage;
+package com.basejava.storage.arrays;
 
 import com.basejava.model.Resume;
 

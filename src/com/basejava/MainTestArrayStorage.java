@@ -1,11 +1,11 @@
 package com.basejava;
 
 import com.basejava.model.Resume;
-import com.basejava.storage.SortedArrayStorage;
+import com.basejava.storage.arrays.SortedArrayStorage;
 import com.basejava.storage.Storage;
 
 /**
- * Test for your com.basejava.storage.ArrayStorage implementation
+ * Test for your com.basejava.storage.arrays.ArrayStorage implementation
  */
 public class MainTestArrayStorage {
     static final Storage ARRAY_STORAGE = new SortedArrayStorage();
