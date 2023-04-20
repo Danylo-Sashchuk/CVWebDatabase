@@ -49,7 +49,7 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract void doSave(Object searchKey, Resume resume);
 
-    protected abstract int getSearchKey(String uuid);
+    protected abstract Object getSearchKey(String uuid);
 
     protected abstract void doUpdate(Object searchKey, Resume resume);
 
