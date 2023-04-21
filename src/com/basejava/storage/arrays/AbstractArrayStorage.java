@@ -57,6 +57,9 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return (int) searchKey >= 0;
     }
 
+    @Override
+    protected abstract Integer getSearchKey(String uuid);
+
     protected abstract void proceedSave(Object searchKey, Resume resume);
 
     protected abstract void proceedDelete(Object searchKey);
