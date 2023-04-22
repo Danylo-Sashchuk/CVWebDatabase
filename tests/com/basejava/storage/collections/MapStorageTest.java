@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
-class MapStorageTest extends AbstractStorageTest {
+public class MapStorageTest extends AbstractStorageTest {
 
     protected MapStorageTest() {
         super(new MapStorage());

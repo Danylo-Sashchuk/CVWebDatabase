@@ -3,7 +3,7 @@ package com.basejava.storage.arrays;
 import com.basejava.model.Resume;
 import org.junit.jupiter.api.Test;
 
-class SortedArrayStorageTest extends AbstractArrayStorageTest {
+public class SortedArrayStorageTest extends AbstractArrayStorageTest {
 
     SortedArrayStorageTest() {
         super(new SortedArrayStorage());
