@@ -16,9 +16,9 @@ class MapStorageTest extends AbstractStorageTest {
 
     @Test
     @Override
-    protected void getAll() {
+    protected void getAllSorted() {
         List<Resume> expected = Arrays.asList(resume1, resume2, resume3);
-        List<Resume> actual = Arrays.asList(storage.getAll());
+        List<Resume> actual = storage.getAllSorted();
         Assertions.assertEquals(3, storage.size());
         Assertions.assertTrue(expected.containsAll(actual) && actual.containsAll(expected));
     }

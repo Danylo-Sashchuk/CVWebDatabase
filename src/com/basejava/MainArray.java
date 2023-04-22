@@ -1,12 +1,13 @@
 package com.basejava;
 
 import com.basejava.model.Resume;
-import com.basejava.storage.arrays.SortedArrayStorage;
 import com.basejava.storage.Storage;
+import com.basejava.storage.arrays.SortedArrayStorage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 /**
  * Interactive test for com.basejava.storage.arrays.ArrayStorage implementation
@@ -30,41 +31,34 @@ public class MainArray {
                 uuid = params[1].intern();
             }
             switch (params[0]) {
-                case "list":
-                    printAll();
-                    break;
-                case "size":
-                    System.out.println(ARRAY_STORAGE.size());
-                    break;
-                case "save":
+                case "list" -> printAll();
+                case "size" -> System.out.println(ARRAY_STORAGE.size());
+                case "save" -> {
                     r = new Resume(uuid);
                     ARRAY_STORAGE.save(r);
                     printAll();
-                    break;
-                case "delete":
+                }
+                case "delete" -> {
                     ARRAY_STORAGE.delete(uuid);
                     printAll();
-                    break;
-                case "get":
-                    System.out.println(ARRAY_STORAGE.get(uuid));
-                    break;
-                case "clear":
+                }
+                case "get" -> System.out.println(ARRAY_STORAGE.get(uuid));
+                case "clear" -> {
                     ARRAY_STORAGE.clear();
                     printAll();
-                    break;
-                case "exit":
+                }
+                case "exit" -> {
                     return;
-                default:
-                    System.out.println("Неверная команда.");
-                    break;
+                }
+                default -> System.out.println("Неверная команда.");
             }
         }
     }
 
     static void printAll() {
-        Resume[] all = ARRAY_STORAGE.getAll();
+        List<Resume> all = ARRAY_STORAGE.getAllSorted();
         System.out.println("----------------------------");
-        if (all.length == 0) {
+        if (all.size() == 0) {
             System.out.println("Empty");
         } else {
             for (Resume r : all) {

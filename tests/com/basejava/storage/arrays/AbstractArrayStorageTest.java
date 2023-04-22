@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
+    protected final String[] NAMES = {"Emily Adams", "Michael Brown", "Sophia Clark", "William Davis", "Natalie Evans",
+            "Oliver Green", "Isabella Hall", "Jacob Jackson", "Ava Johnson", "Ethan King", "Lily Martinez",};
 
     AbstractArrayStorageTest(Storage storage) {
         super(storage);
@@ -18,11 +20,11 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
         try {
             storage.clear();
             for (int i = 0; i < AbstractArrayStorage.STORAGE_MAX_SIZE; i++) {
-                storage.save(new Resume());
+                storage.save(new Resume(NAMES[i]));
             }
         } catch (StorageException storageException) {
             Assertions.fail("StorageException thrown.");
         }
-        Assertions.assertThrows(StorageException.class, () -> storage.save(new Resume()));
+        Assertions.assertThrows(StorageException.class, () -> storage.save(new Resume(NAMES[NAMES.length - 1])));
     }
 }

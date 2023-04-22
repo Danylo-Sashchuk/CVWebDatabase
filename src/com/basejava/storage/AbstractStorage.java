@@ -4,7 +4,11 @@ import com.basejava.exceptions.ExistStorageException;
 import com.basejava.exceptions.NotExistStorageException;
 import com.basejava.model.Resume;
 
+import java.util.Comparator;
+
 public abstract class AbstractStorage implements Storage {
+    protected static final Comparator<Resume> RESUME_COMPARATOR =
+            Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid);
 
     @Override
     public final Resume get(String uuid) {
