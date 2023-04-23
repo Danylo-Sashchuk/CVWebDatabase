@@ -51,9 +51,7 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     public List<Resume> getAllSorted() {
-        List<Resume> resumes = new ArrayList<>(storage);
-        resumes.sort(RESUME_COMPARATOR);
-        return resumes;
+        return storage.parallelStream().sorted(RESUME_COMPARATOR).toList();
     }
 
     @Override
