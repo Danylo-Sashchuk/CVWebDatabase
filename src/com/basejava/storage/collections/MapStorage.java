@@ -3,6 +3,7 @@ package com.basejava.storage.collections;
 import com.basejava.model.Resume;
 import com.basejava.storage.AbstractStorage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,8 +47,8 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> getAllSorted() {
-        return storage.values().parallelStream().sorted(RESUME_COMPARATOR).toList();
+    protected List<Resume> doGetAll() {
+        return new ArrayList<>(storage.values());
     }
 
     @Override

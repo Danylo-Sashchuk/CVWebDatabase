@@ -50,8 +50,8 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> getAllSorted() {
-        return storage.parallelStream().sorted(RESUME_COMPARATOR).toList();
+    protected List<Resume> doGetAll() {
+        return storage;
     }
 
     @Override

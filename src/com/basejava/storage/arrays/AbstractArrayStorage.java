@@ -6,7 +6,6 @@ import com.basejava.storage.AbstractStorage;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
     protected final Resume[] storage = new Resume[STORAGE_MAX_SIZE];
@@ -20,8 +19,10 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> getAllSorted() {
-        return Arrays.stream(storage).filter(Objects::nonNull).sorted(RESUME_COMPARATOR).toList();
+    protected List<Resume> doGetAll() {
+        Resume[] resumes = new Resume[size];
+        System.arraycopy(storage, 0, resumes, 0, size);
+        return Arrays.asList(resumes);
     }
 
     @Override
