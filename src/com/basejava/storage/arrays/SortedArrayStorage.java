@@ -15,15 +15,15 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void proceedSave(Object searchKey, Resume resume) {
-        int index = -(int) searchKey - 1;
+    protected void proceedSave(Integer searchKey, Resume resume) {
+        int index = -searchKey - 1;
         System.arraycopy(storage, index, storage, index + 1, size - index);
         storage[index] = resume;
     }
 
     @Override
-    protected void proceedDelete(Object searchKey) {
-        int index = (int) searchKey;
+    protected void proceedDelete(Integer searchKey) {
+        int index = searchKey;
         System.arraycopy(storage, index + 1, storage, index, size - index);
         storage[size] = null;
     }

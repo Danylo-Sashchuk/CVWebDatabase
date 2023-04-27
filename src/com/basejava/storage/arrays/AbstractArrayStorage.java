@@ -7,13 +7,13 @@ import com.basejava.storage.AbstractStorage;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected final Resume[] storage = new Resume[STORAGE_MAX_SIZE];
     protected static final int STORAGE_MAX_SIZE = 10;
     protected int size = 0;
 
     @Override
-    protected void doDelete(Object searchKey) {
+    protected void doDelete(Integer searchKey) {
         size--;
         proceedDelete(searchKey);
     }
@@ -37,17 +37,17 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume doGet(Object searchKey) {
-        return storage[(int) searchKey];
+    protected Resume doGet(Integer searchKey) {
+        return storage[searchKey];
     }
 
     @Override
-    protected void doUpdate(Object searchKey, Resume resume) {
-        storage[(int) searchKey] = resume;
+    protected void doUpdate(Integer searchKey, Resume resume) {
+        storage[searchKey] = resume;
     }
 
     @Override
-    protected void doSave(Object searchKey, Resume resume) {
+    protected void doSave(Integer searchKey, Resume resume) {
         if (size() == STORAGE_MAX_SIZE) {
             throw new StorageException("ERROR: The storage capacity is exceeded", resume.getUuid());
         }
@@ -56,14 +56,14 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        return (int) searchKey >= 0;
+    protected boolean isExist(Integer searchKey) {
+        return searchKey >= 0;
     }
 
     @Override
     protected abstract Integer getSearchKey(String uuid);
 
-    protected abstract void proceedSave(Object searchKey, Resume resume);
+    protected abstract void proceedSave(Integer searchKey, Resume resume);
 
-    protected abstract void proceedDelete(Object searchKey);
+    protected abstract void proceedDelete(Integer searchKey);
 }

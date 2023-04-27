@@ -18,13 +18,13 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void proceedSave(Object searchKey, Resume resume) {
+    protected void proceedSave(Integer searchKey, Resume resume) {
         storage[size] = resume;
     }
 
     @Override
-    protected void proceedDelete(Object searchKey) {
-        storage[(int) searchKey] = storage[size];
+    protected void proceedDelete(Integer searchKey) {
+        storage[searchKey] = storage[size];
         storage[size] = null;
     }
 }
