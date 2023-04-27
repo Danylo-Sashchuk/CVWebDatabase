@@ -1,8 +1,8 @@
 package com.basejava;
 
 import com.basejava.model.Resume;
-import com.basejava.storage.arrays.SortedArrayStorage;
 import com.basejava.storage.Storage;
+import com.basejava.storage.arrays.SortedArrayStorage;
 
 /**
  * Test for your com.basejava.storage.arrays.ArrayStorage implementation
@@ -11,9 +11,9 @@ public class MainTestArrayStorage {
     static final Storage ARRAY_STORAGE = new SortedArrayStorage();
 
     public static void main(String[] args) {
-        Resume r1 = new Resume("uuid1");
-        Resume r2 = new Resume("uuid2");
-        Resume r3 = new Resume("uuid3");
+        Resume r1 = new Resume("uuid1", "name1");
+        Resume r2 = new Resume("uuid2", "name2");
+        Resume r3 = new Resume("uuid3", "name3");
 
         ARRAY_STORAGE.save(r1);
         ARRAY_STORAGE.save(r2);
