@@ -1,7 +1,7 @@
 package com.basejava.model;
 
 public enum ContactType {
-    PHONE_NUMBER("Телефон"), EMAIL("E-mail"), SKYPE("Skype"), LINK("Ссылка");
+    PHONE_NUMBER("Телефон"), EMAIL("E-mail"), SKYPE("Skype"), LINKEDIN("Профиль LinkedIn"), GITHUB("Профиль GitHub");
 
     private final String title;
 

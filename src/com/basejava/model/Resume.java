@@ -33,6 +33,10 @@ public class Resume {
         return contacts;
     }
 
+    public void addContact(ContactType type, String value) {
+        contacts.put(type, value);
+    }
+
     public Map<SectionType, AbstractSection> getSections() {
         return sections;
     }
@@ -47,7 +51,8 @@ public class Resume {
 
     @Override
     public String toString() {
-        return "Resume{" + "uuid='" + uuid + '\'' + ", fullName='" + fullName + '\'' + '}';
+        return "Resume{" + "uuid='" + uuid + '\'' + ", fullName='" + fullName + '\'' + ", contacts=" + contacts + ", " +
+                "sections=" + sections + '}';
     }
 
     @Override
