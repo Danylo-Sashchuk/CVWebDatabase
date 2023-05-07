@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class ListSection extends AbstractSection {
-    private final List<String> text;
+    private final List<String> texts;
 
-    public ListSection(List<String> text) {
-        this.text = text;
+    public ListSection(List<String> texts) {
+        this.texts = texts;
     }
 
     @Override
@@ -17,15 +17,20 @@ public class ListSection extends AbstractSection {
 
         ListSection that = (ListSection) o;
 
-        return Objects.equals(text, that.text);
+        return Objects.equals(texts, that.texts);
+    }
+
+    @Override
+    public String toString() {
+        return "ListSection{" + "texts=" + texts + '}';
     }
 
     @Override
     public int hashCode() {
-        return text != null ? text.hashCode() : 0;
+        return texts != null ? texts.hashCode() : 0;
     }
 
-    public List<String> getText() {
-        return text;
+    public List<String> getTexts() {
+        return texts;
     }
 }

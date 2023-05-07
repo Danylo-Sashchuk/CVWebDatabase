@@ -6,11 +6,11 @@ import java.util.Objects;
 public class Company {
     private final List<Period> periods;
     private String name;
-    private String website;
+    private Link website;
 
-    public Company(String name, String website, List<Period> periods) {
+    public Company(String url, String name, List<Period> periods) {
+        this.website = new Link(name, url);
         this.name = name;
-        this.website = website;
         this.periods = periods;
     }
 
@@ -26,17 +26,17 @@ public class Company {
         this.name = name;
     }
 
-    public String getWebsite() {
+    public Link getWebsite() {
         return website;
     }
 
-    public void setWebsite(String website) {
+    public void setWebsite(Link website) {
         this.website = website;
     }
 
     @Override
     public String toString() {
-        return "Company{" + "periods=" + periods + ", name='" + name + '\'' + ", website='" + website + '\'' + '}';
+        return "Company{" + "periods=" + periods + ", name='" + name + '\'' + ", website=" + website + '}';
     }
 
     @Override
@@ -46,15 +46,15 @@ public class Company {
 
         Company company = (Company) o;
 
-        if (!Objects.equals(periods, company.periods)) return false;
-        if (!Objects.equals(name, company.name)) return false;
+        if (!periods.equals(company.periods)) return false;
+        if (!name.equals(company.name)) return false;
         return Objects.equals(website, company.website);
     }
 
     @Override
     public int hashCode() {
-        int result = periods != null ? periods.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
+        int result = periods.hashCode();
+        result = 31 * result + name.hashCode();
         result = 31 * result + (website != null ? website.hashCode() : 0);
         return result;
     }

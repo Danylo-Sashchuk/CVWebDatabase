@@ -1,6 +1,6 @@
 package com.basejava.model;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -11,33 +11,22 @@ import java.util.UUID;
 public class Resume {
 
     private final String uuid;
-
     private final String fullName;
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private final Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
-    private final Map<ContactType, String> contacts;
-    private final Map<SectionType, AbstractSection> sections;
-
-    public Resume(String uuid, String fullName, Map<ContactType, String> contacts,
-                  Map<SectionType, AbstractSection> sections) {
+    public Resume(String uuid, String fullName) {
         Objects.requireNonNull(uuid, "uuid must not be null");
         Objects.requireNonNull(fullName, "fullName must not be null");
-        Objects.requireNonNull(contacts, "contacts must not be null");
-        Objects.requireNonNull(sections, "sections must not be null");
         if (uuid.isEmpty()) {
             throw new IllegalArgumentException("uuid must not be empty");
         }
         this.uuid = uuid;
         this.fullName = fullName;
-        this.contacts = contacts;
-        this.sections = sections;
     }
 
     public Resume(String fullName) {
-        this(UUID.randomUUID().toString(), fullName, new HashMap<>(), new HashMap<>());
-    }
-
-    public Resume(String uuid, String fullName) {
-        this(uuid, fullName, new HashMap<>(), new HashMap<>());
+        this(UUID.randomUUID().toString(), fullName);
     }
 
     public Map<ContactType, String> getContacts() {
