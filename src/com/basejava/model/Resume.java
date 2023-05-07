@@ -41,6 +41,10 @@ public class Resume {
         return sections;
     }
 
+    public void addSection(SectionType type, AbstractSection section) {
+        sections.put(type, section);
+    }
+
     public String getFullName() {
         return fullName;
     }

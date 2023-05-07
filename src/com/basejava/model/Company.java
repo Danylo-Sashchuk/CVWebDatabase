@@ -8,7 +8,7 @@ public class Company {
     private String name;
     private Link website;
 
-    public Company(String url, String name, List<Period> periods) {
+    public Company(String name, String url, List<Period> periods) {
         this.website = new Link(name, url);
         this.name = name;
         this.periods = periods;
@@ -16,6 +16,10 @@ public class Company {
 
     public List<Period> getPeriods() {
         return periods;
+    }
+
+    public void addPeriod(Period period) {
+        periods.add(period);
     }
 
     public String getName() {
