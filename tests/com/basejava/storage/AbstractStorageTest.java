@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class AbstractStorageTest {
-
+    protected static final ResumeTestData resumeTestData = ResumeTestData.getInstance();
     protected static final String UUID_1 = "uuid1";
     protected static final String UUID_2 = "uuid2";
     protected static final String UUID_3 = "uuid3";
@@ -22,11 +22,11 @@ public abstract class AbstractStorageTest {
     protected static final String FULL_NAME_3 = "Robert Johnson";
     protected static final String FULL_NAME_4 = "Alice Wilson";
     protected static final String UUID_NOT_EXIST = "UUID_NOT_EXIST";
-    protected static final Resume resume1 = new Resume(UUID_1, FULL_NAME_1);
-    protected static final Resume resume2 = new Resume(UUID_2, FULL_NAME_2);
-    protected static final Resume resume3 = new Resume(UUID_3, FULL_NAME_3);
-    protected static final Resume resume4 = new Resume(UUID_4, FULL_NAME_4);
-    protected static final Resume dummy = new Resume(UUID_NOT_EXIST);
+    protected static final Resume resume1 = resumeTestData.createResume(UUID_1, FULL_NAME_1);
+    protected static final Resume resume2 = resumeTestData.createResume(UUID_2, FULL_NAME_2);
+    protected static final Resume resume3 = resumeTestData.createResume(UUID_3, FULL_NAME_3);
+    protected static final Resume resume4 = resumeTestData.createResume(UUID_4, FULL_NAME_4);
+    protected static final Resume dummy = resumeTestData.createResume(UUID_NOT_EXIST);
     protected final Storage storage;
 
     protected AbstractStorageTest(Storage storage) {

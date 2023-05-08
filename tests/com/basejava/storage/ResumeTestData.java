@@ -8,8 +8,10 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 public class ResumeTestData {
+    private static final ResumeTestData instance = new ResumeTestData();
     private final MockingData mockingData;
     private Iterator<String> phonesIterator;
     private Iterator<String> emailsIterator;
@@ -26,8 +28,7 @@ public class ResumeTestData {
     private Iterator<String> educationWebsitesIterator;
     private Iterator<String> educationTitlesIterator;
     private Iterator<String> educationDescriptionsIterator;
-
-    public ResumeTestData() {
+    private ResumeTestData() {
         mockingData = MockingData.getInstance();
         phonesIterator = mockingData.getIterator(mockingData.PHONE_NUMBERS);
         emailsIterator = mockingData.getIterator(mockingData.EMAILS);
@@ -46,6 +47,10 @@ public class ResumeTestData {
         educationDescriptionsIterator = mockingData.getIterator(mockingData.EDUCATION_DESCRIPTION);
     }
 
+    public static ResumeTestData getInstance() {
+        return instance;
+    }
+
     public Resume createResume(String uuid, String fullName) {
         if (!hasMoreData()) {
             reloadIterators();
@@ -61,6 +66,10 @@ public class ResumeTestData {
         addExperiences(resume);
         addEducations(resume);
         return resume;
+    }
+
+    public Resume createResume(String fullName) {
+        return createResume(UUID.randomUUID().toString(), fullName);
     }
 
     private boolean hasMoreData() {
@@ -154,20 +163,16 @@ public class ResumeTestData {
     private List<Company> createCompaniesList(Iterator<String> namesIterator, Iterator<String> websitesIterator,
                                               Iterator<String> titlesIterator, Iterator<String> descriptionsIterator) {
         List<Company> companies = new ArrayList<>();
-        List<Period> periods = new ArrayList<>();
-        periods.add(createPeriod(titlesIterator, descriptionsIterator));
-        periods.add(createPeriod(titlesIterator, descriptionsIterator));
-        companies.add(createCompany(namesIterator, websitesIterator, periods));
-
-        periods.clear();
-        periods.add(createPeriod(titlesIterator, descriptionsIterator));
-        periods.add(createPeriod(titlesIterator, descriptionsIterator));
-        companies.add(createCompany(namesIterator, websitesIterator, periods));
+        companies.add(createCompany(namesIterator, websitesIterator, titlesIterator, descriptionsIterator));
+        companies.add(createCompany(namesIterator, websitesIterator, titlesIterator, descriptionsIterator));
         return companies;
     }
 
     private Company createCompany(Iterator<String> namesIterator, Iterator<String> websitesIterator,
-                                  List<Period> periods) {
+                                  Iterator<String> titlesIterator, Iterator<String> descriptionsIterator) {
+        List<Period> periods = new ArrayList<>();
+        periods.add(createPeriod(titlesIterator, descriptionsIterator));
+        periods.add(createPeriod(titlesIterator, descriptionsIterator));
         return new Company(namesIterator.next(), websitesIterator.next(), periods);
     }
 

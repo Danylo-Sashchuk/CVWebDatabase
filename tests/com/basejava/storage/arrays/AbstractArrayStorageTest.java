@@ -1,7 +1,6 @@
 package com.basejava.storage.arrays;
 
 import com.basejava.exceptions.StorageException;
-import com.basejava.model.Resume;
 import com.basejava.storage.AbstractStorageTest;
 import com.basejava.storage.Storage;
 import org.junit.jupiter.api.Assertions;
@@ -20,11 +19,12 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
         try {
             storage.clear();
             for (int i = 0; i < AbstractArrayStorage.STORAGE_MAX_SIZE; i++) {
-                storage.save(new Resume(NAMES[i]));
+                storage.save(resumeTestData.createResume(NAMES[i]));
             }
         } catch (StorageException storageException) {
             Assertions.fail("StorageException thrown.");
         }
-        Assertions.assertThrows(StorageException.class, () -> storage.save(new Resume(NAMES[NAMES.length - 1])));
+        Assertions.assertThrows(StorageException.class,
+                () -> storage.save(resumeTestData.createResume(NAMES[NAMES.length - 1])));
     }
 }

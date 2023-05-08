@@ -1,6 +1,5 @@
 package com.basejava.storage.arrays;
 
-import com.basejava.model.Resume;
 import org.junit.jupiter.api.Test;
 
 public class SortedArrayStorageTest extends AbstractArrayStorageTest {
@@ -12,11 +11,11 @@ public class SortedArrayStorageTest extends AbstractArrayStorageTest {
     @Test
     public void saveBug() {
         storage.clear();
-        storage.save(new Resume("u1", NAMES[0]));
-        storage.save(new Resume("u9", NAMES[1]));
-        storage.save(new Resume("u8", NAMES[2]));
-        storage.save(new Resume("u5", NAMES[3]));
-        storage.save(new Resume("u4", NAMES[4]));
+        storage.save(resumeTestData.createResume("u1", NAMES[0]));
+        storage.save(resumeTestData.createResume("u9", NAMES[1]));
+        storage.save(resumeTestData.createResume("u8", NAMES[2]));
+        storage.save(resumeTestData.createResume("u5", NAMES[3]));
+        storage.save(resumeTestData.createResume("u4", NAMES[4]));
         System.out.println(storage.get("u9"));
     }
 }
