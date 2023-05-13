@@ -170,19 +170,19 @@ public class ResumeTestData {
 
     private Company createCompany(Iterator<String> namesIterator, Iterator<String> websitesIterator,
                                   Iterator<String> titlesIterator, Iterator<String> descriptionsIterator) {
-        List<Period> periods = new ArrayList<>();
+        List<Company.Period> periods = new ArrayList<>();
         periods.add(createPeriod(titlesIterator, descriptionsIterator));
         periods.add(createPeriod(titlesIterator, descriptionsIterator));
         return new Company(namesIterator.next(), websitesIterator.next(), periods);
     }
 
-    private Period createPeriod(Iterator<String> titleIterator, Iterator<String> descriptionIterator) {
+    private Company.Period createPeriod(Iterator<String> titleIterator, Iterator<String> descriptionIterator) {
         YearMonth start = YearMonth.parse(datesIterator.next());
         YearMonth end = YearMonth.parse(datesIterator.next());
         LocalDate startDate = DateUtil.of(start.getYear(), start.getMonth());
         LocalDate endDate = DateUtil.of(end.getYear(), end.getMonth());
         String workTitle = titleIterator.next();
         String workDescription = descriptionIterator.next();
-        return new Period(workTitle, workDescription, startDate, endDate);
+        return new Company.Period(workTitle, workDescription, startDate, endDate);
     }
 }
