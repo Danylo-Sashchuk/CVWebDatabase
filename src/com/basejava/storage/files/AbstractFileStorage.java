@@ -77,7 +77,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doDelete(File searchKey) {
-        if (!searchKey.delete()) throw new StorageException("File has not been deleted", searchKey.getName());
+        if (!searchKey.delete()) {
+            throw new StorageException("File has not been deleted", searchKey.getName());
+        }
     }
 
     @Override

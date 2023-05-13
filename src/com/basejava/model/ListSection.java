@@ -6,6 +6,10 @@ import java.util.Objects;
 public class ListSection extends AbstractSection {
     private final List<String> texts;
 
+    public ListSection(String... texts) {
+        this(List.of(texts));
+    }
+
     public ListSection(List<String> texts) {
         this.texts = texts;
     }

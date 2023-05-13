@@ -5,16 +5,18 @@ import java.util.Objects;
 
 public class MainFile {
     public static void main(String[] args) {
-        File start = new File(".");
-        go(start);
+        File start = new File("./src/com/basejava");
+        go(start, new StringBuilder());
     }
 
-    public static void go(File file) {
-        System.out.println(file);
+    public static void go(File file, StringBuilder offset) {
+        System.out.println(offset + file.getName());
         if (file.isDirectory()) {
-            for (File f: Objects.requireNonNull(file.listFiles())) {
-                go(f);
+            offset.append("    ");
+            for (File f : Objects.requireNonNull(file.listFiles())) {
+                go(f, offset);
             }
+            offset.delete(0, 4);
         }
     }
 }
