@@ -1,7 +1,5 @@
 package com.basejava.exceptions;
 
-import java.io.IOException;
-
 public class StorageException extends RuntimeException {
     private final String uuid;
 

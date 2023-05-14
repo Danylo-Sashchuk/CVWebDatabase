@@ -4,8 +4,7 @@ import com.basejava.exceptions.StorageException;
 import com.basejava.model.Resume;
 import com.basejava.storage.AbstractStorage;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -66,7 +65,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected void doSave(File file, Resume resume) {
         try {
             file.createNewFile();
-            doWrite(file, resume);
+            doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
             throw new StorageException("IO error", file.getName(), e);
         }
@@ -78,18 +77,18 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     }
 
     @Override
-    protected void doUpdate(File searchKey, Resume resume) {
+    protected void doUpdate(File file, Resume resume) {
         try {
-            doWrite(searchKey, resume);
+            doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
-            throw new StorageException("IO error", searchKey.getName(), e);
+            throw new StorageException("IO error", file.getName(), e);
         }
     }
 
     @Override
-    protected Resume doGet(File searchKey) {
+    protected Resume doGet(File file) {
         try {
-            return doRead(searchKey);
+            return doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -102,7 +101,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         }
     }
 
-    protected abstract Resume doRead(File file) throws IOException;
+    protected abstract Resume doRead(InputStream inputStream) throws IOException;
 
-    protected abstract void doWrite(File file, Resume resume) throws IOException;
+    protected abstract void doWrite(Resume resume, OutputStream outputStream) throws IOException;
 }

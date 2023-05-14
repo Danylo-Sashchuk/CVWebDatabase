@@ -1,10 +1,14 @@
 package com.basejava.model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
-public class Company {
+public class Company implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private final List<Period> periods;
     private String name;
     private Link website;
@@ -64,7 +68,9 @@ public class Company {
         return result;
     }
 
-    public static class Period {
+    public static class Period implements Serializable {
+        @Serial
+        private static final long serialVersionUID = 1L;
         private String title;
         private String description;
         private LocalDate startDate;

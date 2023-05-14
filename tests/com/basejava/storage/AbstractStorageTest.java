@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class AbstractStorageTest {
+    protected static final String STORAGE_DIR = "/Users/Danylo/Desktop/Workspace/basejava/storage";
     protected static final ResumeTestData resumeTestData = ResumeTestData.getInstance();
     protected static final String UUID_1 = "uuid1";
     protected static final String UUID_2 = "uuid2";
@@ -67,7 +68,7 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    final void update() {
+    void update() {
         storage.update(resume1);
         Assertions.assertSame(resume1, storage.get(UUID_1));
     }
