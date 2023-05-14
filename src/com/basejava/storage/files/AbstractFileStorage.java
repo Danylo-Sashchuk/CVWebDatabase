@@ -25,10 +25,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException("I/O error", directory.getName());
-        }
+        File[] files = getFiles();
         for (File file : files) {
             doDelete(file);
         }
@@ -36,24 +33,26 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public int size() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException("I/O error", directory.getName());
-        }
+        File[] files = getFiles();
         return files.length;
     }
 
     @Override
     protected List<Resume> doGetAll() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException("I/O error", directory.getName());
-        }
+        File[] files = getFiles();
         List<Resume> resumes = new ArrayList<>();
         for (File file : files) {
             resumes.add(doGet(file));
         }
         return resumes;
+    }
+
+    private File[] getFiles() {
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new StorageException("I/O error", directory.getName());
+        }
+        return files;
     }
 
     @Override

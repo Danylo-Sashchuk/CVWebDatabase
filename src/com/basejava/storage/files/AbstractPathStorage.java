@@ -4,7 +4,6 @@ import com.basejava.exceptions.StorageException;
 import com.basejava.model.Resume;
 import com.basejava.storage.AbstractStorage;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
+
 
 public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     private final Path directory;
@@ -29,31 +29,24 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     public void clear() {
-        try (Stream<Path> stream = Files.list(directory)) {
-            stream.forEach(this::doDelete);
-        } catch (IOException e) {
-            throw new StorageException("Path delete error", null, e);
-        }
+        getFilesStream().forEach(this::doDelete);
     }
 
     @Override
     public int size() {
-        File[] files = directory.toFile().listFiles();
-        if (files == null) {
-            throw new StorageException("I/O error", directory.toString());
-        }
-        return files.length;
+        return (int) getFilesStream().count();
     }
 
     @Override
     protected List<Resume> doGetAll() {
         List<Resume> resumes = new ArrayList<>();
-        try (Stream<Path> stream = Files.list(directory)) {
-            stream.map(this::doGet).forEach(resumes::add);
-        } catch (IOException e) {
-            throw new StorageException("Path read error", null, e);
-        }
+        getFilesStream().map(this::doGet).forEach(resumes::add);
         return resumes;
+    }
+
+    @Override
+    protected Path getSearchKey(String uuid) {
+        return Paths.get(directory.toString()).resolve(uuid);
     }
 
     @Override
@@ -71,9 +64,12 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         }
     }
 
-    @Override
-    protected Path getSearchKey(String uuid) {
-        return Paths.get(directory.toString() + "/" + uuid);
+    private Stream<Path> getFilesStream() {
+        try {
+            return Files.list(directory);
+        } catch (IOException e) {
+            throw new StorageException("Path read error", null, e);
+        }
     }
 
     @Override
