@@ -1,6 +1,7 @@
 package com.basejava.storage.files;
 
 import com.basejava.storage.AbstractStorageTest;
+import com.basejava.storage.files.serialization.ObjectStreamSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
