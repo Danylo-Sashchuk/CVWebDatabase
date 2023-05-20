@@ -16,8 +16,8 @@ public class DataStreamSerializer implements SerializationStrategy {
             for (int i = 0; i < size; i++) {
                 resume.addContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF());
             }
-            resume.addSection(SectionType.POSITION, new TextSection(dataInputStream.readUTF()));
-            resume.addSection(SectionType.PERSONAL, new TextSection(dataInputStream.readUTF()));
+//            resume.addSection(SectionType.POSITION, new TextSection(dataInputStream.readUTF()));
+//            resume.addSection(SectionType.PERSONAL, new TextSection(dataInputStream.readUTF()));
 
 
             return resume;
@@ -36,12 +36,12 @@ public class DataStreamSerializer implements SerializationStrategy {
                 dataOutputStream.writeUTF(entry.getValue());
             }
 
-            Map<SectionType, AbstractSection> allSections = resume.getSections();
-            TextSection position = (TextSection) allSections.get(SectionType.POSITION);
-            dataOutputStream.writeUTF(String.valueOf(position));
-
-            TextSection personal = (TextSection) allSections.get(SectionType.PERSONAL);
-            dataOutputStream.writeUTF(String.valueOf(personal));
+//            Map<SectionType, AbstractSection> allSections = resume.getSections();
+//            TextSection position = (TextSection) allSections.get(SectionType.POSITION);
+//            dataOutputStream.writeUTF(String.valueOf(position));
+//
+//            TextSection personal = (TextSection) allSections.get(SectionType.PERSONAL);
+//            dataOutputStream.writeUTF(String.valueOf(personal));
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.basejava.model;
 
-import com.basejava.util.LocalDateAdapter;
+import com.basejava.util.LocalDateAdapterXml;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -76,9 +76,9 @@ public class Company implements Serializable {
         private static final long serialVersionUID = 1L;
         private String title;
         private String description;
-        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        @XmlJavaTypeAdapter(LocalDateAdapterXml.class)
         private LocalDate startDate;
-        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        @XmlJavaTypeAdapter(LocalDateAdapterXml.class)
         private LocalDate endDate;
 
         public Period(String title, String description, LocalDate startDate, LocalDate endDate) {

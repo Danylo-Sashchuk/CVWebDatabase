@@ -60,11 +60,11 @@ public class ResumeTestData {
         addPosition(resume);
         addPersonal(resume);
 
-//        addAchievements(resume);
-//        addQualifications(resume);
-//
-//        addExperiences(resume);
-//        addEducations(resume);
+        addAchievements(resume);
+        addQualifications(resume);
+
+        addExperiences(resume);
+        addEducations(resume);
         return resume;
     }
 
