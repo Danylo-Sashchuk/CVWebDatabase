@@ -5,6 +5,7 @@ import com.basejava.storage.arrays.SortedArrayStorageTest;
 import com.basejava.storage.collections.ListStorageTest;
 import com.basejava.storage.collections.MapResumeStorageTest;
 import com.basejava.storage.collections.MapStorageTest;
+import com.basejava.storage.files.JsonPathStorageTest;
 import com.basejava.storage.files.ObjectStreamPathStorageTest;
 import com.basejava.storage.files.ObjectStreamStorageTest;
 import com.basejava.storage.files.XmlPathStorageTest;
@@ -13,7 +14,8 @@ import org.junit.platform.suite.api.Suite;
 
 @Suite
 @SelectClasses({ArrayStorageTest.class, SortedArrayStorageTest.class, ListStorageTest.class, MapStorageTest.class,
-        MapResumeStorageTest.class, ObjectStreamPathStorageTest.class, ObjectStreamStorageTest.class, XmlPathStorageTest.class})
+        MapResumeStorageTest.class, ObjectStreamPathStorageTest.class, ObjectStreamStorageTest.class,
+        XmlPathStorageTest.class, JsonPathStorageTest.class})
 public class AllStoragesTest {
 
 }
