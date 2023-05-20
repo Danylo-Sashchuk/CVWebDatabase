@@ -1,16 +1,25 @@
 package com.basejava.model;
 
+import com.basejava.util.LocalDateAdapter;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
-
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Company implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    private final List<Period> periods;
+    private List<Period> periods;
     private String name;
+
+    public Company() {
+    }
+
     private Link website;
 
     public Company(String name, String url, List<Period> periods) {
@@ -52,28 +61,24 @@ public class Company implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Company company = (Company) o;
-
-        if (!periods.equals(company.periods)) return false;
-        if (!name.equals(company.name)) return false;
-        return Objects.equals(website, company.website);
+        return Objects.equals(periods, company.periods) && Objects.equals(name, company.name) && Objects.equals(website, company.website);
     }
 
     @Override
     public int hashCode() {
-        int result = periods.hashCode();
-        result = 31 * result + name.hashCode();
-        result = 31 * result + (website != null ? website.hashCode() : 0);
-        return result;
+        return Objects.hash(periods, name, website);
     }
 
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Period implements Serializable {
         @Serial
         private static final long serialVersionUID = 1L;
         private String title;
         private String description;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
         private LocalDate startDate;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
         private LocalDate endDate;
 
         public Period(String title, String description, LocalDate startDate, LocalDate endDate) {
@@ -81,6 +86,9 @@ public class Company implements Serializable {
             this.description = description;
             this.startDate = startDate;
             this.endDate = endDate;
+        }
+
+        public Period() {
         }
 
         public String getTitle() {

@@ -13,6 +13,9 @@ public class TextSection extends AbstractSection {
         this.text = text;
     }
 
+    public TextSection() {
+    }
+
     public String getText() {
         return text;
     }
