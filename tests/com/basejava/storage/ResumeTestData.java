@@ -117,15 +117,15 @@ public class ResumeTestData {
         return fullName;
     }
 
-    private void addPosition(Resume resume) {
+    public void addPosition(Resume resume) {
         resume.addSection(SectionType.POSITION, new TextSection(positionsIterator.next()));
     }
 
-    private void addPersonal(Resume resume) {
+    public void addPersonal(Resume resume) {
         resume.addSection(SectionType.PERSONAL, new TextSection(personalsIterator.next()));
     }
 
-    private void addAchievements(Resume resume) {
+    public void addAchievements(Resume resume) {
         ListSection achievementsSection = createListSection(achievementsIterator);
         resume.addSection(SectionType.ACHIEVEMENTS, achievementsSection);
     }
@@ -148,7 +148,7 @@ public class ResumeTestData {
         resume.addSection(SectionType.QUALIFICATIONS, qualificationsSection);
     }
 
-    private void addExperiences(Resume resume) {
+    public void addExperiences(Resume resume) {
         CompanySection experienceSection = new CompanySection(createCompaniesList(companyNamesIterator,
                 companyWebsitesIterator, workTitlesIterator, workDescriptionsIterator));
         resume.addSection(SectionType.EXPERIENCE, experienceSection);
@@ -158,6 +158,10 @@ public class ResumeTestData {
         CompanySection educationSection = new CompanySection(createCompaniesList(educationNamesIterator,
                 educationWebsitesIterator, educationTitlesIterator, educationDescriptionsIterator));
         resume.addSection(SectionType.EDUCATION, educationSection);
+    }
+
+    public List<Company> getExperiences() {
+        return createCompaniesList(companyNamesIterator, companyWebsitesIterator, workTitlesIterator, workDescriptionsIterator);
     }
 
     private List<Company> createCompaniesList(Iterator<String> namesIterator, Iterator<String> websitesIterator,
