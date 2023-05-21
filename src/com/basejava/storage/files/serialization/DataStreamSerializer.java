@@ -16,15 +16,40 @@ public class DataStreamSerializer implements SerializationStrategy {
             String fullName = dataInputStream.readUTF();
             Resume resume = new Resume(uuid, fullName);
 
-            readContacts(resume, dataInputStream);
-            readTextSection(SectionType.POSITION, resume, dataInputStream);
-            readTextSection(SectionType.PERSONAL, resume, dataInputStream);
+            SectionType sectionType = SectionType.valueOf(dataInputStream.readUTF());
 
-            readListSection(SectionType.ACHIEVEMENTS, resume, dataInputStream);
-            readListSection(SectionType.QUALIFICATIONS, resume, dataInputStream);
-
-            readCompanySection(SectionType.EXPERIENCE, resume, dataInputStream);
-            readCompanySection(SectionType.EDUCATION, resume, dataInputStream);
+            switch (sectionType) {
+                case PERSONAL, POSITION -> {
+                    resume.addSection(sectionType, new TextSection(dataInputStream.readUTF()));
+                }
+                case ACHIEVEMENTS, QUALIFICATIONS -> {
+                    int numberOfPoints = dataInputStream.readInt();
+                    List<String> list = new ArrayList<>(numberOfPoints);
+                    for (int i = 0; i < numberOfPoints; i++) {
+                        list.add(dataInputStream.readUTF());
+                    }
+                    resume.addSection(sectionType, new ListSection(list));
+                }
+                case EDUCATION, EXPERIENCE -> {
+                    int numberOfCompanies = dataInputStream.readInt();
+                    List<Company> companies = new ArrayList<>();
+                    for (int i = 0; i < numberOfCompanies; i++) {
+                        int numberOfPeriods = dataInputStream.readInt();
+                        String name = dataInputStream.readUTF();
+                        String url = dataInputStream.readUTF();
+                        List<Company.Period> periods = new ArrayList<>();
+                        for (int i1 = 0; i1 < numberOfPeriods; i1++) {
+                            String title = dataInputStream.readUTF();
+                            String description = dataInputStream.readUTF();
+                            LocalDate startDate = LocalDate.parse(dataInputStream.readUTF());
+                            LocalDate endDate = LocalDate.parse(dataInputStream.readUTF());
+                            periods.add(new Company.Period(title, description, startDate, endDate));
+                        }
+                        companies.add(new Company(name, url, periods));
+                    }
+                    resume.addSection(sectionType, new CompanySection(companies));
+                }
+            }
             return resume;
         }
     }
@@ -35,17 +60,39 @@ public class DataStreamSerializer implements SerializationStrategy {
             dataOutputStream.writeUTF(resume.getUuid());
             dataOutputStream.writeUTF(resume.getFullName());
 
-            writeContacts(resume, dataOutputStream);
-
-            Map<SectionType, AbstractSection> allSections = resume.getSections();
-            writeTextSection((TextSection) allSections.get(SectionType.POSITION), dataOutputStream);
-            writeTextSection((TextSection) allSections.get(SectionType.PERSONAL), dataOutputStream);
-
-            writeListSection((ListSection) allSections.get(SectionType.ACHIEVEMENTS), dataOutputStream);
-            writeListSection((ListSection) allSections.get(SectionType.QUALIFICATIONS), dataOutputStream);
-
-            writeCompanySection((CompanySection) allSections.get(SectionType.EXPERIENCE), dataOutputStream);
-            writeCompanySection((CompanySection) allSections.get(SectionType.EDUCATION), dataOutputStream);
+            Map<SectionType, AbstractSection> sections = resume.getSections();
+            for (Map.Entry<SectionType, AbstractSection> section : sections.entrySet()) {
+                SectionType sectionType = section.getKey();
+                AbstractSection abstractSection = section.getValue();
+                switch (sectionType) {
+                    case PERSONAL, POSITION -> {
+                        dataOutputStream.writeUTF(String.valueOf(sectionType));
+                        dataOutputStream.writeUTF(((TextSection) abstractSection).getText());
+                    }
+                    case ACHIEVEMENTS, QUALIFICATIONS -> {
+                        List<String> texts = ((ListSection) abstractSection).getTexts();
+                        dataOutputStream.writeInt(texts.size());
+                        for (String text : texts) {
+                            dataOutputStream.writeUTF(text);
+                        }
+                    }
+                    case EXPERIENCE, EDUCATION -> {
+                        List<Company> companies = ((CompanySection) abstractSection).getCompanies();
+                        dataOutputStream.writeInt(companies.size());
+                        for (Company company : companies) {
+                            dataOutputStream.writeInt(company.getPeriods().size());
+                            dataOutputStream.writeUTF(company.getName());
+                            dataOutputStream.writeUTF(company.getWebsite().getUrl());
+                            for (Company.Period period : company.getPeriods()) {
+                                dataOutputStream.writeUTF(period.getTitle());
+                                dataOutputStream.writeUTF(period.getDescription());
+                                dataOutputStream.writeUTF(period.getStartDate().toString());
+                                dataOutputStream.writeUTF(period.getEndDate().toString());
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
