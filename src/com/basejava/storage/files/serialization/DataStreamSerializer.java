@@ -7,20 +7,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class DataStreamSerializer implements SerializationStrategy {
-
     @Override
     public Resume doRead(InputStream inputStream) throws IOException {
         try (DataInputStream dataInputStream = new DataInputStream(inputStream)) {
             String uuid = dataInputStream.readUTF();
             String fullName = dataInputStream.readUTF();
             Resume resume = new Resume(uuid, fullName);
-
-            readContacts(resume, dataInputStream);
-
+            int size = dataInputStream.readInt();
+            for (int i = 0; i < size; i++) {
+                resume.addContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF());
+            }
             readTextSection(SectionType.POSITION, resume, dataInputStream);
             readTextSection(SectionType.PERSONAL, resume, dataInputStream);
 
@@ -38,8 +36,12 @@ public class DataStreamSerializer implements SerializationStrategy {
         try (DataOutputStream dataOutputStream = new DataOutputStream(outputStream)) {
             dataOutputStream.writeUTF(resume.getUuid());
             dataOutputStream.writeUTF(resume.getFullName());
-            writeContacts(resume, dataOutputStream);
-
+            Map<ContactType, String> contacts = resume.getContacts();
+            dataOutputStream.writeInt(contacts.size());
+            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+                dataOutputStream.writeUTF(entry.getKey().name());
+                dataOutputStream.writeUTF(entry.getValue());
+            }
             Map<SectionType, AbstractSection> allSections = resume.getSections();
             writeTextSection((TextSection) allSections.get(SectionType.POSITION), dataOutputStream);
             writeTextSection((TextSection) allSections.get(SectionType.PERSONAL), dataOutputStream);
@@ -52,11 +54,64 @@ public class DataStreamSerializer implements SerializationStrategy {
         }
     }
 
+    private void readCompanySection(SectionType sectionType, Resume resume, DataInputStream dataInputStream) throws IOException {
+        int numberOfCompanies = dataInputStream.readInt();
+        List<Company> companies = new ArrayList<>();
+        for (int i = 0; i < numberOfCompanies; i++) {
+            companies.add(readCompany(dataInputStream));
+        }
+        resume.addSection(sectionType, new CompanySection(companies));
+    }
+
+    private Company readCompany(DataInputStream dataInputStream) throws IOException {
+        int numberOfPeriods = dataInputStream.readInt();
+        String name = dataInputStream.readUTF();
+        String url = dataInputStream.readUTF();
+        List<Company.Period> periods = new ArrayList<>();
+        for (int i = 0; i < numberOfPeriods; i++) {
+            periods.add(readPeriod(dataInputStream));
+        }
+        return new Company(name, url, periods);
+    }
+
+    private Company.Period readPeriod(DataInputStream dataInputStream) throws IOException {
+        String title = dataInputStream.readUTF();
+        String description = dataInputStream.readUTF();
+        LocalDate startDate = LocalDate.parse(dataInputStream.readUTF());
+        LocalDate endDate = LocalDate.parse(dataInputStream.readUTF());
+        return new Company.Period(title, description, startDate, endDate);
+    }
+
     private void writeCompanySection(CompanySection companySection, DataOutputStream dataOutputStream) throws IOException {
         dataOutputStream.writeInt(companySection.getCompanies().size());
         for (Company company : companySection.getCompanies()) {
             writeCompany(company, dataOutputStream);
         }
+    }
+
+    private void writeCompany(Company company, DataOutputStream dataOutputStream) throws IOException {
+        dataOutputStream.writeInt(company.getPeriods().size());
+        dataOutputStream.writeUTF(company.getName());
+        dataOutputStream.writeUTF(company.getWebsite().getUrl());
+        for (Company.Period period : company.getPeriods()) {
+            writePeriod(period, dataOutputStream);
+        }
+    }
+
+    private void writePeriod(Company.Period period, DataOutputStream dataOutputStream) throws IOException {
+        dataOutputStream.writeUTF(period.getTitle());
+        dataOutputStream.writeUTF(period.getDescription());
+        dataOutputStream.writeUTF(period.getStartDate().toString());
+        dataOutputStream.writeUTF(period.getEndDate().toString());
+    }
+
+    private void readListSection(SectionType sectionType, Resume resume, DataInputStream dataInputStream) throws IOException {
+        int size = dataInputStream.readInt();
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            list.add(dataInputStream.readUTF());
+        }
+        resume.addSection(sectionType, new ListSection(list));
     }
 
     private void writeListSection(ListSection listSection, DataOutputStream dataOutputStream) throws IOException {
@@ -66,108 +121,11 @@ public class DataStreamSerializer implements SerializationStrategy {
         }
     }
 
-    private void writeTextSection(TextSection textSection, DataOutputStream dataOutputStream) throws IOException {
-        dataOutputStream.writeUTF(textSection.toString());
-    }
-
-    private void writeContacts(Resume resume, DataOutputStream dataOutputStream) throws IOException {
-        Map<ContactType, String> contacts = resume.getContacts();
-        dataOutputStream.writeInt(contacts.size());
-        for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
-            dataOutputStream.writeUTF(entry.getKey().name());
-            dataOutputStream.writeUTF(entry.getValue());
-        }
-    }
-
-    private void readContacts(Resume resume, DataInputStream dataInputStream) throws IOException {
-        int size = dataInputStream.readInt();
-        for (int i = 0; i < size; i++) {
-            resume.addContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF());
-        }
-    }
-
-    private void readCompanySection(SectionType sectionType, Resume resume, DataInputStream dataInputStream) throws IOException {
-        CompanySection company = getCompanySection(dataInputStream);
-        resume.addSection(sectionType, company);
-    }
-
-    private void readListSection(SectionType sectionType, Resume resume, DataInputStream dataInputStream) throws IOException {
-        ListSection qualifications = getListSection(dataInputStream);
-        resume.addSection(sectionType, qualifications);
-    }
-
     private void readTextSection(SectionType sectionType, Resume resume, DataInputStream dataInputStream) throws IOException {
-        TextSection textSection = getTextSection(dataInputStream);
-        resume.addSection(sectionType, textSection);
+        resume.addSection(sectionType, new TextSection(dataInputStream.readUTF()));
     }
 
-    private void writeCompany(Company company, DataOutputStream dataOutputStream) throws IOException {
-        dataOutputStream.writeInt(company.getPeriods().size());
-        dataOutputStream.writeUTF(company.toString());
-    }
-
-    private TextSection getTextSection(DataInputStream dataInputStream) throws IOException {
-        StringBuilder raw = new StringBuilder(dataInputStream.readUTF());
-        raw.delete(0, 18).delete(raw.length() - 2, raw.length());
-        return new TextSection(raw.toString());
-    }
-
-    private ListSection getListSection(DataInputStream dataInputStream) throws IOException {
-        int size = dataInputStream.readInt();
-        List<String> texts = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            texts.add(dataInputStream.readUTF());
-        }
-        return new ListSection(texts);
-    }
-
-    private CompanySection getCompanySection(DataInputStream dataInputStream) throws IOException {
-        int companiesSize = dataInputStream.readInt();
-        List<Company> companies = new ArrayList<>();
-        for (int i = 0; i < companiesSize; i++) {
-            companies.add(getCompany(dataInputStream));
-        }
-        return new CompanySection(companies);
-    }
-
-    private Company getCompany(DataInputStream dataInputStream) throws IOException {
-        int numberOfPeriods = dataInputStream.readInt();
-        String rawCompany = dataInputStream.readUTF();
-        String nameRegex = "name='(.*?)'";
-        String name = parseString(rawCompany, nameRegex);
-        String urlRegex = "url='(.*?)'";
-        String url = parseString(rawCompany, urlRegex);
-        List<Company.Period> periods = getPeriods(rawCompany, numberOfPeriods);
-        return new Company(name, url, periods);
-    }
-
-    private List<Company.Period> getPeriods(String rawCompany, int numberOfPeriods) {
-        List<Company.Period> periods = new ArrayList<>();
-        for (int i = 0; i < numberOfPeriods; i++) {
-            periods.add(createPeriod(rawCompany, i));
-        }
-        return periods;
-    }
-
-    private Company.Period createPeriod(String rawCompany, int offset) {
-        String regex = "title='(.*?)', description='(.*?)', startDate=(\\d{4}-\\d{2}-\\d{2}), endDate=" + "(\\d{4" +
-                "}-\\d{2}-\\d{2})";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(rawCompany);
-        for (int i = 0; i <= offset; i++) {
-            matcher.find();
-        }
-        String title = matcher.group(1);
-        String description = matcher.group(2);
-        LocalDate startDate = LocalDate.parse(matcher.group(3));
-        LocalDate endDate = LocalDate.parse(matcher.group(4));
-        return new Company.Period(title, description, startDate, endDate);
-    }
-
-    private String parseString(String rawCompany, String regex) {
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(rawCompany);
-        matcher.find();
-        return matcher.group(1);
+    private void writeTextSection(TextSection textSection, DataOutputStream dataOutputStream) throws IOException {
+        dataOutputStream.writeUTF(textSection.getText());
     }
 }
