@@ -1,7 +1,6 @@
 package com.basejava.storage.files.serialization;
 
 import com.basejava.model.Resume;
-import com.basejava.storage.files.serialization.SerializationStrategy;
 import com.basejava.util.JsonParser;
 
 import java.io.*;

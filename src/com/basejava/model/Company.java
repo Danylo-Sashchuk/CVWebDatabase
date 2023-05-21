@@ -16,11 +16,10 @@ public class Company implements Serializable {
     private static final long serialVersionUID = 1L;
     private List<Period> periods;
     private String name;
+    private Link website;
 
     public Company() {
     }
-
-    private Link website;
 
     public Company(String name, String url, List<Period> periods) {
         this.website = new Link(name, url);
