@@ -9,7 +9,7 @@ import java.io.Writer;
 import java.time.LocalDate;
 
 public class JsonParser {
-    private static Gson GSON = new GsonBuilder()
+    private static final Gson GSON = new GsonBuilder()
                     .registerTypeAdapter(AbstractSection.class, new JsonSectionAdapter<>()) //TODO change to the TypeAdapter
                     .registerTypeAdapter(LocalDate.class, new LocalDateAdapterJson()).create();
 

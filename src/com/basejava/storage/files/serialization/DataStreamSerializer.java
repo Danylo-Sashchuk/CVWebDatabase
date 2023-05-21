@@ -18,35 +18,19 @@ public class DataStreamSerializer implements SerializationStrategy {
             String uuid = dataInputStream.readUTF();
             String fullName = dataInputStream.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            int size = dataInputStream.readInt();
-            for (int i = 0; i < size; i++) {
-                resume.addContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF());
-            }
 
-            int newSize = dataInputStream.readInt();
+            readContacts(resume, dataInputStream);
 
-            TextSection position = getTextSection(dataInputStream);
-            resume.addSection(SectionType.POSITION, position);
-            TextSection personal = getTextSection(dataInputStream);
-            resume.addSection(SectionType.PERSONAL, personal);
+            readTextSection(SectionType.POSITION, resume, dataInputStream);
+            readTextSection(SectionType.PERSONAL, resume, dataInputStream);
 
-            ListSection achievements = getListSection(dataInputStream);
-            resume.addSection(SectionType.ACHIEVEMENTS, achievements);
-            ListSection qualifications = getListSection(dataInputStream);
-            resume.addSection(SectionType.QUALIFICATIONS, qualifications);
+            readListSection(SectionType.ACHIEVEMENTS, resume, dataInputStream);
+            readListSection(SectionType.QUALIFICATIONS, resume, dataInputStream);
 
-
-            CompanySection companies = getCompanySection(dataInputStream);
-            resume.addSection(SectionType.EXPERIENCE, companies);
-            CompanySection education = getEducationSection(dataInputStream);
-            resume.addSection(SectionType.EDUCATION, education);;
+            readCompanySection(SectionType.EXPERIENCE, resume, dataInputStream);
+            readCompanySection(SectionType.EDUCATION, resume, dataInputStream);
             return resume;
         }
-    }
-
-    private CompanySection getEducationSection(DataInputStream dataInputStream) {
-
-        return null;
     }
 
     @Override
@@ -54,41 +38,67 @@ public class DataStreamSerializer implements SerializationStrategy {
         try (DataOutputStream dataOutputStream = new DataOutputStream(outputStream)) {
             dataOutputStream.writeUTF(resume.getUuid());
             dataOutputStream.writeUTF(resume.getFullName());
-            Map<ContactType, String> contacts = resume.getContacts();
-            dataOutputStream.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
-                String a1 = entry.getKey().name();
-                String a2 = entry.getValue();
-                dataOutputStream.writeUTF(a1);
-                dataOutputStream.writeUTF(a2);
-            }
+            writeContacts(resume, dataOutputStream);
 
             Map<SectionType, AbstractSection> allSections = resume.getSections();
-            dataOutputStream.writeInt(allSections.size());
+            writeTextSection((TextSection) allSections.get(SectionType.POSITION), dataOutputStream);
+            writeTextSection((TextSection) allSections.get(SectionType.PERSONAL), dataOutputStream);
 
-            TextSection position = (TextSection) allSections.get(SectionType.POSITION);
-            dataOutputStream.writeUTF(String.valueOf(position));
-            TextSection personal = (TextSection) allSections.get(SectionType.PERSONAL);
-            dataOutputStream.writeUTF(String.valueOf(personal));
+            writeListSection((ListSection) allSections.get(SectionType.ACHIEVEMENTS), dataOutputStream);
+            writeListSection((ListSection) allSections.get(SectionType.QUALIFICATIONS), dataOutputStream);
 
-            ListSection achievements = (ListSection) allSections.get(SectionType.ACHIEVEMENTS);
-            dataOutputStream.writeInt(achievements.getTexts().size());
-            for (String text : achievements.getTexts()) {
-                dataOutputStream.writeUTF(text);
-            }
-
-            ListSection qualifications = (ListSection) allSections.get(SectionType.QUALIFICATIONS);
-            dataOutputStream.writeInt(qualifications.getTexts().size());
-            for (String text : qualifications.getTexts()) {
-                dataOutputStream.writeUTF(text);
-            }
-
-            CompanySection experiences = (CompanySection) allSections.get(SectionType.EXPERIENCE);
-            dataOutputStream.writeInt(experiences.getCompanies().size());
-            for (Company company : experiences.getCompanies()) {
-                writeCompany(company, dataOutputStream);
-            }
+            writeCompanySection((CompanySection) allSections.get(SectionType.EXPERIENCE), dataOutputStream);
+            writeCompanySection((CompanySection) allSections.get(SectionType.EDUCATION), dataOutputStream);
         }
+    }
+
+    private void writeCompanySection(CompanySection companySection, DataOutputStream dataOutputStream) throws IOException {
+        dataOutputStream.writeInt(companySection.getCompanies().size());
+        for (Company company : companySection.getCompanies()) {
+            writeCompany(company, dataOutputStream);
+        }
+    }
+
+    private void writeListSection(ListSection listSection, DataOutputStream dataOutputStream) throws IOException {
+        dataOutputStream.writeInt(listSection.getTexts().size());
+        for (String text : listSection.getTexts()) {
+            dataOutputStream.writeUTF(text);
+        }
+    }
+
+    private void writeTextSection(TextSection textSection, DataOutputStream dataOutputStream) throws IOException {
+        dataOutputStream.writeUTF(textSection.toString());
+    }
+
+    private void writeContacts(Resume resume, DataOutputStream dataOutputStream) throws IOException {
+        Map<ContactType, String> contacts = resume.getContacts();
+        dataOutputStream.writeInt(contacts.size());
+        for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+            dataOutputStream.writeUTF(entry.getKey().name());
+            dataOutputStream.writeUTF(entry.getValue());
+        }
+    }
+
+    private void readContacts(Resume resume, DataInputStream dataInputStream) throws IOException {
+        int size = dataInputStream.readInt();
+        for (int i = 0; i < size; i++) {
+            resume.addContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF());
+        }
+    }
+
+    private void readCompanySection(SectionType sectionType, Resume resume, DataInputStream dataInputStream) throws IOException {
+        CompanySection company = getCompanySection(dataInputStream);
+        resume.addSection(sectionType, company);
+    }
+
+    private void readListSection(SectionType sectionType, Resume resume, DataInputStream dataInputStream) throws IOException {
+        ListSection qualifications = getListSection(dataInputStream);
+        resume.addSection(sectionType, qualifications);
+    }
+
+    private void readTextSection(SectionType sectionType, Resume resume, DataInputStream dataInputStream) throws IOException {
+        TextSection textSection = getTextSection(dataInputStream);
+        resume.addSection(sectionType, textSection);
     }
 
     private void writeCompany(Company company, DataOutputStream dataOutputStream) throws IOException {
