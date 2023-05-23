@@ -4,9 +4,7 @@ import com.basejava.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DataStreamSerializer implements SerializationStrategy {
     @Override
@@ -66,6 +64,7 @@ public class DataStreamSerializer implements SerializationStrategy {
         try (DataOutputStream dataOutputStream = new DataOutputStream(outputStream)) {
             dataOutputStream.writeUTF(resume.getUuid());
             dataOutputStream.writeUTF(resume.getFullName());
+
             Map<ContactType, String> contacts = resume.getContacts();
             dataOutputStream.writeInt(contacts.size());
             for (Map.Entry<ContactType, String> contact : contacts.entrySet()) {
@@ -86,28 +85,40 @@ public class DataStreamSerializer implements SerializationStrategy {
                     case ACHIEVEMENTS, QUALIFICATIONS -> {
                         List<String> texts = ((ListSection) abstractSection).getTexts();
                         dataOutputStream.writeInt(texts.size());
-                        for (String text : texts) {
-                            dataOutputStream.writeUTF(text);
-                        }
+                        writeWithException(texts, dataOutputStream,
+                                (text, dataOutputStream1) -> dataOutputStream1.writeUTF(text));
                     }
                     case EXPERIENCE, EDUCATION -> {
                         List<Company> companies = ((CompanySection) abstractSection).getCompanies();
                         dataOutputStream.writeInt(companies.size());
-                        for (Company company : companies) {
-                            dataOutputStream.writeInt(company.getPeriods().size());
-                            dataOutputStream.writeUTF(company.getName());
-                            dataOutputStream.writeUTF(company.getWebsite().getUrl());
+                        writeWithException(companies, dataOutputStream, ((company, dataOutputStream1) -> {
+                            dataOutputStream1.writeInt(company.getPeriods().size());
+                            dataOutputStream1.writeUTF(company.getName());
+                            dataOutputStream1.writeUTF(company.getWebsite().getUrl());
                             for (Company.Period period : company.getPeriods()) {
-                                dataOutputStream.writeUTF(period.getTitle());
-                                dataOutputStream.writeUTF(period.getDescription());
-                                dataOutputStream.writeUTF(period.getStartDate().toString());
-                                dataOutputStream.writeUTF(period.getEndDate().toString());
+                                dataOutputStream1.writeUTF(period.getTitle());
+                                dataOutputStream1.writeUTF(period.getDescription());
+                                dataOutputStream1.writeUTF(period.getStartDate().toString());
+                                dataOutputStream1.writeUTF(period.getEndDate().toString());
                             }
-                        }
+                        }));
                     }
                 }
             }
         }
+    }
+
+    private <T> void writeWithException(Collection<T> collection, DataOutputStream dataOutputStream,
+                                        Communicator<T> communicator) throws IOException {
+        Objects.requireNonNull(collection);
+        for (T t : collection) {
+            communicator.communicate(t, dataOutputStream);
+        }
+    }
+
+    @FunctionalInterface
+    interface Communicator<T> {
+        void communicate(T t, DataOutputStream dataOutputStream) throws IOException;
     }
 
     private void readContacts(Resume resume, DataInputStream dataInputStream) throws IOException {
