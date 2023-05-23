@@ -67,10 +67,11 @@ public class DataStreamSerializer implements SerializationStrategy {
 
             Map<ContactType, String> contacts = resume.getContacts();
             dataOutputStream.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> contact : contacts.entrySet()) {
-                dataOutputStream.writeUTF(contact.getKey().name());
-                dataOutputStream.writeUTF(contact.getValue());
-            }
+            Set<Map.Entry<ContactType, String>> entries = contacts.entrySet();
+            writeWithException(entries, dataOutputStream, ((entry, dataOutputStream1) -> {
+                dataOutputStream1.writeUTF(entry.getKey().name());
+                dataOutputStream1.writeUTF(entry.getValue());
+            }));
 
             Map<SectionType, AbstractSection> sections = resume.getSections();
             dataOutputStream.writeInt(sections.size());
