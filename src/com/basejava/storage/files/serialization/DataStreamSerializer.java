@@ -23,34 +23,26 @@ public class DataStreamSerializer implements SerializationStrategy {
             for (int i = 0; i < sectionsNumber; i++) {
                 SectionType sectionType = SectionType.valueOf(dataInputStream.readUTF());
                 switch (sectionType) {
-                    case PERSONAL, POSITION -> {
-                        resume.addSection(sectionType, new TextSection(dataInputStream.readUTF()));
-                    }
+                    case PERSONAL, POSITION ->
+                            resume.addSection(sectionType, new TextSection(dataInputStream.readUTF()));
                     case ACHIEVEMENTS, QUALIFICATIONS -> {
-                        int numberOfPoints = dataInputStream.readInt();
-                        List<String> list = new ArrayList<>(numberOfPoints);
-                        for (int j = 0; j < numberOfPoints; j++) {
-                            list.add(dataInputStream.readUTF());
-                        }
+                        List<String> list = (List<String>) readWithException(dataInputStream, dataInputStream::readUTF);
                         resume.addSection(sectionType, new ListSection(list));
                     }
                     case EDUCATION, EXPERIENCE -> {
-                        int numberOfCompanies = dataInputStream.readInt();
-                        List<Company> companies = new ArrayList<>();
-                        for (int j = 0; j < numberOfCompanies; j++) {
-                            int numberOfPeriods = dataInputStream.readInt();
+                        List<Company> companies = (List<Company>) readWithException(dataInputStream, () -> {
                             String name = dataInputStream.readUTF();
                             String url = dataInputStream.readUTF();
-                            List<Company.Period> periods = new ArrayList<>();
-                            for (int k = 0; k < numberOfPeriods; k++) {
+                            List<Company.Period> periods = (List<Company.Period>) readWithException(dataInputStream,
+                                    () -> {
                                 String title = dataInputStream.readUTF();
                                 String description = dataInputStream.readUTF();
                                 LocalDate startDate = LocalDate.parse(dataInputStream.readUTF());
                                 LocalDate endDate = LocalDate.parse(dataInputStream.readUTF());
-                                periods.add(new Company.Period(title, description, startDate, endDate));
-                            }
-                            companies.add(new Company(name, url, periods));
-                        }
+                                return new Company.Period(title, description, startDate, endDate);
+                            });
+                            return new Company(name, url, periods);
+                        });
                         resume.addSection(sectionType, new CompanySection(companies));
                     }
                 }
@@ -78,18 +70,14 @@ public class DataStreamSerializer implements SerializationStrategy {
                 AbstractSection abstractSection = section.getValue();
                 dataOutputStream.writeUTF(sectionType.name());
                 switch (sectionType) {
-                    case PERSONAL, POSITION -> {
-                        dataOutputStream.writeUTF(((TextSection) abstractSection).getText());
-                    }
+                    case PERSONAL, POSITION -> dataOutputStream.writeUTF(((TextSection) abstractSection).getText());
                     case ACHIEVEMENTS, QUALIFICATIONS -> {
                         List<String> texts = ((ListSection) abstractSection).getTexts();
                         writeWithException(texts, dataOutputStream, dataOutputStream::writeUTF);
                     }
                     case EXPERIENCE, EDUCATION -> {
                         List<Company> companies = ((CompanySection) abstractSection).getCompanies();
-                        writeWithException(companies, dataOutputStream, company -> {
-                            writeCompany(dataOutputStream, company);
-                        });
+                        writeWithException(companies, dataOutputStream, company -> writeCompany(dataOutputStream, company));
                     }
                 }
             }
@@ -97,9 +85,9 @@ public class DataStreamSerializer implements SerializationStrategy {
     }
 
     private void writeCompany(DataOutputStream dataOutputStream, Company company) throws IOException {
-        dataOutputStream.writeInt(company.getPeriods().size());
         dataOutputStream.writeUTF(company.getName());
         dataOutputStream.writeUTF(company.getWebsite().getUrl());
+        dataOutputStream.writeInt(company.getPeriods().size());
         writePeriods(dataOutputStream, company);
     }
 
@@ -113,64 +101,30 @@ public class DataStreamSerializer implements SerializationStrategy {
     }
 
     private <T> void writeWithException(Collection<T> collection, DataOutputStream dataOutputStream,
-                                        Communicator<T> communicator) throws IOException {
+                                        Writer<T> writer) throws IOException {
         Objects.requireNonNull(collection);
         dataOutputStream.writeInt(collection.size());
         for (T t : collection) {
-            communicator.communicate(t);
+            writer.write(t);
         }
+    }
+
+    private <T> Collection<T> readWithException(DataInputStream dataInputStream, Reader<T> reader) throws IOException {
+        Collection<T> collection = new ArrayList<>();
+        int collectionSize = dataInputStream.readInt();
+        for (int i = 0; i < collectionSize; i++) {
+            collection.add(reader.read());
+        }
+        return collection;
     }
 
     @FunctionalInterface
-    interface Communicator<T> {
-        void communicate(T t) throws IOException;
+    interface Writer<T> {
+        void write(T t) throws IOException;
     }
 
-    private void readContacts(Resume resume, DataInputStream dataInputStream) throws IOException {
-        int size = dataInputStream.readInt();
-        for (int i = 0; i < size; i++) {
-            resume.addContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF());
-        }
-    }
-
-    private void readTextSection(SectionType sectionType, Resume resume, DataInputStream dataInputStream) throws IOException {
-        resume.addSection(sectionType, new TextSection(dataInputStream.readUTF()));
-    }
-
-    private void readListSection(SectionType sectionType, Resume resume, DataInputStream dataInputStream) throws IOException {
-        int size = dataInputStream.readInt();
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            list.add(dataInputStream.readUTF());
-        }
-        resume.addSection(sectionType, new ListSection(list));
-    }
-
-    private void readCompanySection(SectionType sectionType, Resume resume, DataInputStream dataInputStream) throws IOException {
-        int numberOfCompanies = dataInputStream.readInt();
-        List<Company> companies = new ArrayList<>();
-        for (int i = 0; i < numberOfCompanies; i++) {
-            companies.add(readCompany(dataInputStream));
-        }
-        resume.addSection(sectionType, new CompanySection(companies));
-    }
-
-    private Company readCompany(DataInputStream dataInputStream) throws IOException {
-        int numberOfPeriods = dataInputStream.readInt();
-        String name = dataInputStream.readUTF();
-        String url = dataInputStream.readUTF();
-        List<Company.Period> periods = new ArrayList<>();
-        for (int i = 0; i < numberOfPeriods; i++) {
-            periods.add(readPeriod(dataInputStream));
-        }
-        return new Company(name, url, periods);
-    }
-
-    private Company.Period readPeriod(DataInputStream dataInputStream) throws IOException {
-        String title = dataInputStream.readUTF();
-        String description = dataInputStream.readUTF();
-        LocalDate startDate = LocalDate.parse(dataInputStream.readUTF());
-        LocalDate endDate = LocalDate.parse(dataInputStream.readUTF());
-        return new Company.Period(title, description, startDate, endDate);
+    @FunctionalInterface
+    interface Reader<T> {
+        T read() throws IOException;
     }
 }
