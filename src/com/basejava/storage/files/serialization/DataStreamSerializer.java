@@ -14,10 +14,10 @@ public class DataStreamSerializer implements SerializationStrategy {
             String fullName = dataInputStream.readUTF();
             Resume resume = new Resume(uuid, fullName);
 
-            int contactsNumber = dataInputStream.readInt();
-            for (int i = 0; i < contactsNumber; i++) {
+            readWithException(dataInputStream, () -> {
                 resume.addContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF());
-            }
+                return null;
+            });
 
             int sectionsNumber = dataInputStream.readInt();
             for (int i = 0; i < sectionsNumber; i++) {
