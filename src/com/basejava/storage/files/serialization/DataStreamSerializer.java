@@ -88,19 +88,27 @@ public class DataStreamSerializer implements SerializationStrategy {
                     case EXPERIENCE, EDUCATION -> {
                         List<Company> companies = ((CompanySection) abstractSection).getCompanies();
                         writeWithException(companies, dataOutputStream, company -> {
-                            dataOutputStream.writeInt(company.getPeriods().size());
-                            dataOutputStream.writeUTF(company.getName());
-                            dataOutputStream.writeUTF(company.getWebsite().getUrl());
-                            for (Company.Period period : company.getPeriods()) {
-                                dataOutputStream.writeUTF(period.getTitle());
-                                dataOutputStream.writeUTF(period.getDescription());
-                                dataOutputStream.writeUTF(period.getStartDate().toString());
-                                dataOutputStream.writeUTF(period.getEndDate().toString());
-                            }
+                            writeCompany(dataOutputStream, company);
                         });
                     }
                 }
             }
+        }
+    }
+
+    private void writeCompany(DataOutputStream dataOutputStream, Company company) throws IOException {
+        dataOutputStream.writeInt(company.getPeriods().size());
+        dataOutputStream.writeUTF(company.getName());
+        dataOutputStream.writeUTF(company.getWebsite().getUrl());
+        writePeriods(dataOutputStream, company);
+    }
+
+    private void writePeriods(DataOutputStream dataOutputStream, Company company) throws IOException {
+        for (Company.Period period : company.getPeriods()) {
+            dataOutputStream.writeUTF(period.getTitle());
+            dataOutputStream.writeUTF(period.getDescription());
+            dataOutputStream.writeUTF(period.getStartDate().toString());
+            dataOutputStream.writeUTF(period.getEndDate().toString());
         }
     }
 
@@ -164,48 +172,5 @@ public class DataStreamSerializer implements SerializationStrategy {
         LocalDate startDate = LocalDate.parse(dataInputStream.readUTF());
         LocalDate endDate = LocalDate.parse(dataInputStream.readUTF());
         return new Company.Period(title, description, startDate, endDate);
-    }
-
-    private void writeContacts(Resume resume, DataOutputStream dataOutputStream) throws IOException {
-        Map<ContactType, String> contacts = resume.getContacts();
-        dataOutputStream.writeInt(contacts.size());
-        for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
-            dataOutputStream.writeUTF(entry.getKey().name());
-            dataOutputStream.writeUTF(entry.getValue());
-        }
-    }
-
-    private void writeTextSection(TextSection textSection, DataOutputStream dataOutputStream) throws IOException {
-        dataOutputStream.writeUTF(textSection.getText());
-    }
-
-    private void writeListSection(ListSection listSection, DataOutputStream dataOutputStream) throws IOException {
-        dataOutputStream.writeInt(listSection.getTexts().size());
-        for (String text : listSection.getTexts()) {
-            dataOutputStream.writeUTF(text);
-        }
-    }
-
-    private void writeCompanySection(CompanySection companySection, DataOutputStream dataOutputStream) throws IOException {
-        dataOutputStream.writeInt(companySection.getCompanies().size());
-        for (Company company : companySection.getCompanies()) {
-            writeCompany(company, dataOutputStream);
-        }
-    }
-
-    private void writeCompany(Company company, DataOutputStream dataOutputStream) throws IOException {
-        dataOutputStream.writeInt(company.getPeriods().size());
-        dataOutputStream.writeUTF(company.getName());
-        dataOutputStream.writeUTF(company.getWebsite().getUrl());
-        for (Company.Period period : company.getPeriods()) {
-            writePeriod(period, dataOutputStream);
-        }
-    }
-
-    private void writePeriod(Company.Period period, DataOutputStream dataOutputStream) throws IOException {
-        dataOutputStream.writeUTF(period.getTitle());
-        dataOutputStream.writeUTF(period.getDescription());
-        dataOutputStream.writeUTF(period.getStartDate().toString());
-        dataOutputStream.writeUTF(period.getEndDate().toString());
     }
 }
