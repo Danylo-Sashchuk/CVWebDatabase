@@ -66,12 +66,10 @@ public class DataStreamSerializer implements SerializationStrategy {
             dataOutputStream.writeUTF(resume.getFullName());
 
             Map<ContactType, String> contacts = resume.getContacts();
-            dataOutputStream.writeInt(contacts.size());
-            Set<Map.Entry<ContactType, String>> entries = contacts.entrySet();
-            writeWithException(entries, dataOutputStream, ((entry, dataOutputStream1) -> {
-                dataOutputStream1.writeUTF(entry.getKey().name());
-                dataOutputStream1.writeUTF(entry.getValue());
-            }));
+            writeWithException(contacts.entrySet(), dataOutputStream, entry -> {
+                dataOutputStream.writeUTF(entry.getKey().name());
+                dataOutputStream.writeUTF(entry.getValue());
+            });
 
             Map<SectionType, AbstractSection> sections = resume.getSections();
             dataOutputStream.writeInt(sections.size());
@@ -85,24 +83,21 @@ public class DataStreamSerializer implements SerializationStrategy {
                     }
                     case ACHIEVEMENTS, QUALIFICATIONS -> {
                         List<String> texts = ((ListSection) abstractSection).getTexts();
-                        dataOutputStream.writeInt(texts.size());
-                        writeWithException(texts, dataOutputStream,
-                                (text, dataOutputStream1) -> dataOutputStream1.writeUTF(text));
+                        writeWithException(texts, dataOutputStream, dataOutputStream::writeUTF);
                     }
                     case EXPERIENCE, EDUCATION -> {
                         List<Company> companies = ((CompanySection) abstractSection).getCompanies();
-                        dataOutputStream.writeInt(companies.size());
-                        writeWithException(companies, dataOutputStream, ((company, dataOutputStream1) -> {
-                            dataOutputStream1.writeInt(company.getPeriods().size());
-                            dataOutputStream1.writeUTF(company.getName());
-                            dataOutputStream1.writeUTF(company.getWebsite().getUrl());
+                        writeWithException(companies, dataOutputStream, company -> {
+                            dataOutputStream.writeInt(company.getPeriods().size());
+                            dataOutputStream.writeUTF(company.getName());
+                            dataOutputStream.writeUTF(company.getWebsite().getUrl());
                             for (Company.Period period : company.getPeriods()) {
-                                dataOutputStream1.writeUTF(period.getTitle());
-                                dataOutputStream1.writeUTF(period.getDescription());
-                                dataOutputStream1.writeUTF(period.getStartDate().toString());
-                                dataOutputStream1.writeUTF(period.getEndDate().toString());
+                                dataOutputStream.writeUTF(period.getTitle());
+                                dataOutputStream.writeUTF(period.getDescription());
+                                dataOutputStream.writeUTF(period.getStartDate().toString());
+                                dataOutputStream.writeUTF(period.getEndDate().toString());
                             }
-                        }));
+                        });
                     }
                 }
             }
@@ -112,14 +107,15 @@ public class DataStreamSerializer implements SerializationStrategy {
     private <T> void writeWithException(Collection<T> collection, DataOutputStream dataOutputStream,
                                         Communicator<T> communicator) throws IOException {
         Objects.requireNonNull(collection);
+        dataOutputStream.writeInt(collection.size());
         for (T t : collection) {
-            communicator.communicate(t, dataOutputStream);
+            communicator.communicate(t);
         }
     }
 
     @FunctionalInterface
     interface Communicator<T> {
-        void communicate(T t, DataOutputStream dataOutputStream) throws IOException;
+        void communicate(T t) throws IOException;
     }
 
     private void readContacts(Resume resume, DataInputStream dataInputStream) throws IOException {
