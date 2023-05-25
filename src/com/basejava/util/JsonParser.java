@@ -9,9 +9,9 @@ import java.io.Writer;
 import java.time.LocalDate;
 
 public class JsonParser {
-    private static final Gson GSON = new GsonBuilder()
-                    .registerTypeAdapter(AbstractSection.class, new SectionAdapter()) //TODO change to the TypeAdapter
-                    .registerTypeAdapter(LocalDate.class, new LocalDateAdapterJson()).create();
+    private static final Gson GSON = new GsonBuilder().registerTypeAdapter(LocalDate.class,
+            new LocalDateAdapterJson()).registerTypeAdapter(AbstractSection.class, new JsonSectionAdapter()).setPrettyPrinting().create();
+    //TODO change to the TypeAdapter
 
     public static <T> T read(Reader reader, Class<T> clazz) {
         return GSON.fromJson(reader, clazz);
