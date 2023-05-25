@@ -76,59 +76,79 @@ public class JsonSectionAdapter extends TypeAdapter<AbstractSection> {
             String sectionType = in.nextString();
             switch (sectionType) {
                 case "TextSection" -> {
-                    TextSection textSection = new TextSection();
-                    in.nextName();
-                    textSection.setText(in.nextString());
-                    in.endObject();
-                    return textSection;
+                    return readTextSection(in);
                 }
                 case "ListSection" -> {
-                    in.nextName();
-                    in.beginArray();
-                    List<String> texts = new ArrayList<>();
-                    while (in.hasNext()) {
-                        texts.add(in.nextString());
-                    }
-                    in.endArray();
-                    in.endObject();
-                    return new ListSection(texts);
+                    return readListSection(in);
                 }
                 case "CompanySection" -> {
-                    List<Company> companies = new ArrayList<>();
-                    in.nextName();
-                    in.beginArray();
-                    while (in.hasNext()) {
-                        in.beginObject();
-                        in.nextName();
-                        String name = in.nextString();
-                        in.nextName();
-                        String url = in.nextString();
-                        List<Company.Period> periods = new ArrayList<>();
-                        in.nextName();
-                        in.beginArray();
-                        while (in.hasNext()) {
-                            in.beginObject();
-                            in.nextName();
-                            String title = in.nextString();
-                            in.nextName();
-                            String description = in.nextString();
-                            in.nextName();
-                            LocalDate startDate = LocalDate.parse(in.nextString());
-                            in.nextName();
-                            LocalDate endDate = LocalDate.parse(in.nextString());
-                            periods.add(new Company.Period(title, description, startDate, endDate));
-                            in.endObject();
-                        }
-                        in.endArray();
-                        companies.add(new Company(name, url, periods));
-                        in.endObject();
-                    }
-                    in.endArray();
-                    in.endObject();
-                    return new CompanySection(companies);
+                    return readCompanySection(in);
                 }
             }
         }
         return null;
+    }
+
+    private CompanySection readCompanySection(JsonReader in) throws IOException {
+        List<Company> companies = new ArrayList<>();
+        in.nextName();
+        in.beginArray();
+        while (in.hasNext()) {
+            readCompany(in, companies);
+        }
+        in.endArray();
+        in.endObject();
+        return new CompanySection(companies);
+    }
+
+    private void readCompany(JsonReader in, List<Company> companies) throws IOException {
+        in.beginObject();
+        in.nextName();
+        String name = in.nextString();
+        in.nextName();
+        String url = in.nextString();
+        List<Company.Period> periods = new ArrayList<>();
+        in.nextName();
+        in.beginArray();
+        while (in.hasNext()) {
+            readPeriod(in, periods);
+        }
+        in.endArray();
+        companies.add(new Company(name, url, periods));
+        in.endObject();
+    }
+
+    private void readPeriod(JsonReader in, List<Company.Period> periods) throws IOException {
+        in.beginObject();
+        in.nextName();
+        String title = in.nextString();
+        in.nextName();
+        String description = in.nextString();
+        in.nextName();
+        LocalDate startDate = LocalDate.parse(in.nextString());
+        in.nextName();
+        LocalDate endDate = LocalDate.parse(in.nextString());
+        periods.add(new Company.Period(title, description, startDate, endDate));
+        in.endObject();
+    }
+
+    private ListSection readListSection(JsonReader in) throws IOException {
+        in.nextName();
+        in.beginArray();
+        List<String> texts = new ArrayList<>();
+        while (in.hasNext()) {
+            texts.add(in.nextString());
+        }
+        in.endArray();
+        in.endObject();
+        return new ListSection(texts);
+    }
+
+    private TextSection readTextSection(JsonReader in) throws IOException {
+        TextSection textSection = new TextSection();
+        in.nextName();
+        textSection.setText(in.nextString());
+        in.endObject();
+        return textSection;
     }
 }
