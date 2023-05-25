@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class JsonParser {
     private static final Gson GSON = new GsonBuilder().registerTypeAdapter(LocalDate.class,
             new LocalDateAdapterJson()).registerTypeAdapter(AbstractSection.class, new JsonSectionAdapter()).setPrettyPrinting().create();
-    //TODO Implement TypeAdapterFactory§
+    //TODO change to the TypeAdapter
 
     public static <T> T read(Reader reader, Class<T> clazz) {
         return GSON.fromJson(reader, clazz);
