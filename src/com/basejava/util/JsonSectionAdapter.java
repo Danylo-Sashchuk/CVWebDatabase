@@ -11,51 +11,61 @@ import java.util.ArrayList;
 import java.util.List;
 
 //TODO Simplify nextName
-//TODO transform into TypeAdapterFactory
 public class JsonSectionAdapter extends TypeAdapter<AbstractSection> {
     @Override
     public void write(JsonWriter out, AbstractSection section) throws IOException {
-        Class<? extends AbstractSection> objectClass = section.getClass();
+        String sectionType = section.getClass().getSimpleName();
         out.beginObject();
-        out.name("SectionType").value(objectClass.getSimpleName());
-        switch (objectClass.getSimpleName()) {
-            case "TextSection" -> {
-                TextSection textSection = (TextSection) section;
-                out.name("text").value(textSection.getText());
-            }
-            case "ListSection" -> {
-                ListSection listSection = (ListSection) section;
-                out.name("texts").beginArray();
-                for (String text : listSection.getTexts()) {
-                    out.value(text);
-                }
-                out.endArray();
-            }
-            case "CompanySection" -> {
-                CompanySection companySection = (CompanySection) section;
-                List<Company> companies = companySection.getCompanies();
-                out.name("companies").beginArray();
-                for (Company company : companies) {
-                    out.beginObject();
-                    out.name("name").value(company.getName());
-                    out.name("website").value(company.getWebsite().getUrl());
-                    List<Company.Period> periods = company.getPeriods();
-                    out.name("periods").beginArray();
-                    for (Company.Period period : periods) {
-                        out.beginObject();
-                        out.name("title").value(period.getTitle());
-                        out.name("description").value(period.getDescription());
-                        out.name("start").value(period.getStartDate().toString());
-                        out.name("end").value(period.getEndDate().toString());
-                        out.endObject();
-                    }
-                    out.endArray();
-                    out.endObject();
-                }
-                out.endArray();
-            }
+        out.name("SectionType").value(sectionType);
+        switch (sectionType) {
+            case "TextSection" -> writeSection(out, (TextSection) section);
+            case "ListSection" -> writeSection(out, (ListSection) section);
+            case "CompanySection" -> writeSection(out, (CompanySection) section);
         }
         out.endObject();
+    }
+
+    private void writeSection(JsonWriter out, CompanySection section) throws IOException {
+        out.name("companies").beginArray();
+        for (Company company : section.getCompanies()) {
+            writeCompany(out, company);
+        }
+        out.endArray();
+    }
+
+    private void writeCompany(JsonWriter out, Company company) throws IOException {
+        out.beginObject();
+        out.name("name").value(company.getName());
+        out.name("website").value(company.getWebsite().getUrl());
+
+        out.name("periods").beginArray();
+        for (Company.Period period : company.getPeriods()) {
+            writePeriod(out, period);
+        }
+        out.endArray();
+
+        out.endObject();
+    }
+
+    private void writePeriod(JsonWriter out, Company.Period period) throws IOException {
+        out.beginObject();
+        out.name("title").value(period.getTitle());
+        out.name("description").value(period.getDescription());
+        out.name("start").value(period.getStartDate().toString());
+        out.name("end").value(period.getEndDate().toString());
+        out.endObject();
+    }
+
+    private void writeSection(JsonWriter out, TextSection section) throws IOException {
+        out.name("text").value(section.getText());
+    }
+
+    private void writeSection(JsonWriter out, ListSection section) throws IOException {
+        out.name("texts").beginArray();
+        for (String text : section.getTexts()) {
+            out.value(text);
+        }
+        out.endArray();
     }
 
     @Override
