@@ -14,10 +14,8 @@ public class DataStreamSerializer implements SerializationStrategy {
             String fullName = dataInputStream.readUTF();
             Resume resume = new Resume(uuid, fullName);
 
-            readWithException(dataInputStream, () -> {
-                resume.addContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF());
-                return null;
-            });
+            readWithException(dataInputStream, () -> resume.addContact(ContactType.valueOf(dataInputStream.readUTF())
+                    , dataInputStream.readUTF()));
 
             int sectionsNumber = dataInputStream.readInt();
             for (int i = 0; i < sectionsNumber; i++) {
@@ -26,7 +24,7 @@ public class DataStreamSerializer implements SerializationStrategy {
                     case PERSONAL, POSITION ->
                             resume.addSection(sectionType, new TextSection(dataInputStream.readUTF()));
                     case ACHIEVEMENTS, QUALIFICATIONS -> {
-                        List<String> list = readWithException(dataInputStream, dataInputStream::readUTF);
+                        List<String> list = readWithException(dataInputStream, () -> dataInputStream.readUTF());
                         resume.addSection(sectionType, new ListSection(list));
                     }
                     case EDUCATION, EXPERIENCE -> {
@@ -117,6 +115,13 @@ public class DataStreamSerializer implements SerializationStrategy {
         return list;
     }
 
+    private void readWithException(DataInputStream dataInputStream, Absorber absorber) throws IOException {
+        int size = dataInputStream.readInt();
+        for (int i = 0; i < size; i++) {
+            absorber.absorb();
+        }
+    }
+
     @FunctionalInterface
     interface Writer<T> {
         void write(T t) throws IOException;
@@ -125,5 +130,9 @@ public class DataStreamSerializer implements SerializationStrategy {
     @FunctionalInterface
     interface Reader<T> {
         T read() throws IOException;
+    }
+
+    interface Absorber {
+        void absorb() throws IOException;
     }
 }
