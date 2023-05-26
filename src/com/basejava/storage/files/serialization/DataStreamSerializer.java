@@ -26,15 +26,14 @@ public class DataStreamSerializer implements SerializationStrategy {
                     case PERSONAL, POSITION ->
                             resume.addSection(sectionType, new TextSection(dataInputStream.readUTF()));
                     case ACHIEVEMENTS, QUALIFICATIONS -> {
-                        List<String> list = (List<String>) readWithException(dataInputStream, dataInputStream::readUTF);
+                        List<String> list = readWithException(dataInputStream, dataInputStream::readUTF);
                         resume.addSection(sectionType, new ListSection(list));
                     }
                     case EDUCATION, EXPERIENCE -> {
-                        List<Company> companies = (List<Company>) readWithException(dataInputStream, () -> {
+                        List<Company> companies = readWithException(dataInputStream, () -> {
                             String name = dataInputStream.readUTF();
                             String url = dataInputStream.readUTF();
-                            List<Company.Period> periods = (List<Company.Period>) readWithException(dataInputStream,
-                                    () -> {
+                            List<Company.Period> periods = readWithException(dataInputStream, () -> {
                                 String title = dataInputStream.readUTF();
                                 String description = dataInputStream.readUTF();
                                 LocalDate startDate = LocalDate.parse(dataInputStream.readUTF());
@@ -109,13 +108,13 @@ public class DataStreamSerializer implements SerializationStrategy {
         }
     }
 
-    private <T> Collection<T> readWithException(DataInputStream dataInputStream, Reader<T> reader) throws IOException {
-        Collection<T> collection = new ArrayList<>();
+    private <T> List<T> readWithException(DataInputStream dataInputStream, Reader<T> reader) throws IOException {
+        List<T> list = new ArrayList<>();
         int collectionSize = dataInputStream.readInt();
         for (int i = 0; i < collectionSize; i++) {
-            collection.add(reader.read());
+            list.add(reader.read());
         }
-        return collection;
+        return list;
     }
 
     @FunctionalInterface
