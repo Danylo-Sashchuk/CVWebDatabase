@@ -17,8 +17,7 @@ public class DataStreamSerializer implements SerializationStrategy {
             readWithException(dataInputStream, () -> resume.addContact(ContactType.valueOf(dataInputStream.readUTF())
                     , dataInputStream.readUTF()));
 
-            int sectionsNumber = dataInputStream.readInt();
-            for (int i = 0; i < sectionsNumber; i++) {
+            readWithException(dataInputStream, () -> {
                 SectionType sectionType = SectionType.valueOf(dataInputStream.readUTF());
                 switch (sectionType) {
                     case PERSONAL, POSITION ->
@@ -43,7 +42,7 @@ public class DataStreamSerializer implements SerializationStrategy {
                         resume.addSection(sectionType, new CompanySection(companies));
                     }
                 }
-            }
+            });
             return resume;
         }
     }
