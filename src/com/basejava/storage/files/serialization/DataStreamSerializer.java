@@ -30,6 +30,9 @@ public class DataStreamSerializer implements SerializationStrategy {
                         List<Company> companies = readWithException(dataInputStream, () -> {
                             String name = dataInputStream.readUTF();
                             String url = dataInputStream.readUTF();
+                            if (url.equals("")) {
+                                url = null;
+                            }
                             List<Company.Period> periods = readWithException(dataInputStream, () -> {
                                 String title = dataInputStream.readUTF();
                                 String description = dataInputStream.readUTF();
@@ -82,7 +85,11 @@ public class DataStreamSerializer implements SerializationStrategy {
 
     private void writeCompany(DataOutputStream dataOutputStream, Company company) throws IOException {
         dataOutputStream.writeUTF(company.getName());
-        dataOutputStream.writeUTF(company.getWebsite().getUrl());
+        String url = company.getWebsite().getUrl();
+        if (url == null) {
+            url = "";
+        }
+        dataOutputStream.writeUTF(url);
         dataOutputStream.writeInt(company.getPeriods().size());
         writePeriods(dataOutputStream, company);
     }
