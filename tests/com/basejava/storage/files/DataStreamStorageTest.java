@@ -1,14 +1,13 @@
 package com.basejava.storage.files;
 
-import com.basejava.model.CompanySection;
-import com.basejava.model.Resume;
-import com.basejava.model.SectionType;
-import com.basejava.storage.ResumeTestData;
+import com.basejava.model.*;
 import com.basejava.storage.files.serialization.DataStreamSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
 
 public class DataStreamStorageTest extends AbstractFilesStorageTest {
     protected DataStreamStorageTest() {
@@ -16,7 +15,7 @@ public class DataStreamStorageTest extends AbstractFilesStorageTest {
     }
 
     @Test
-    void getSave_addMoreInformationAndCompare_true() {
+    void getSave_withMoreInformation() {
         CompanySection experience = (CompanySection) resume1.getSections().get(SectionType.EXPERIENCE);
         experience.getCompanies().add(resumeTestData.getExperiences().get(0));
         experience.getCompanies().add(resumeTestData.getExperiences().get(1));
@@ -24,5 +23,21 @@ public class DataStreamStorageTest extends AbstractFilesStorageTest {
         storage.save(resume1);
         Resume actual = storage.get(UUID_1);
         Assertions.assertEquals(resume1, actual);
+    }
+
+    @Test
+    void saveGet_when_urlAndDescriptionAreEqualToNull() {
+        Map<SectionType, AbstractSection> sections = resume1.getSections();
+        CompanySection companySection = (CompanySection) sections.get(SectionType.EXPERIENCE);
+        List<Company> companies = companySection.getCompanies();
+        Company company = companies.get(0);
+
+        Link website = company.getWebsite();
+        website.setUrl(null);
+        company.getPeriods().get(0).setDescription(null);
+        storage.delete(UUID_1);
+        storage.save(resume1);
+        Resume got = storage.get(UUID_1);
+        Assertions.assertEquals(got, resume1);
     }
 }
