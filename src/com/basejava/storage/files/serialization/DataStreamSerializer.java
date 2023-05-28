@@ -36,6 +36,9 @@ public class DataStreamSerializer implements SerializationStrategy {
                             List<Company.Period> periods = readWithException(dataInputStream, () -> {
                                 String title = dataInputStream.readUTF();
                                 String description = dataInputStream.readUTF();
+                                if (description.equals("")) {
+                                    description = null;
+                                }
                                 LocalDate startDate = LocalDate.parse(dataInputStream.readUTF());
                                 LocalDate endDate = LocalDate.parse(dataInputStream.readUTF());
                                 return new Company.Period(title, description, startDate, endDate);
@@ -97,7 +100,11 @@ public class DataStreamSerializer implements SerializationStrategy {
     private void writePeriods(DataOutputStream dataOutputStream, Company company) throws IOException {
         for (Company.Period period : company.getPeriods()) {
             dataOutputStream.writeUTF(period.getTitle());
-            dataOutputStream.writeUTF(period.getDescription());
+            String description = period.getDescription();
+            if (description == null) {
+                description = "";
+            }
+            dataOutputStream.writeUTF(description);
             dataOutputStream.writeUTF(period.getStartDate().toString());
             dataOutputStream.writeUTF(period.getEndDate().toString());
         }

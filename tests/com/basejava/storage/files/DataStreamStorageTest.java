@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
 
 public class DataStreamStorageTest extends AbstractFilesStorageTest {
     protected DataStreamStorageTest() {
@@ -27,10 +25,7 @@ public class DataStreamStorageTest extends AbstractFilesStorageTest {
 
     @Test
     void saveGet_when_urlAndDescriptionAreEqualToNull() {
-        Map<SectionType, AbstractSection> sections = resume1.getSections();
-        CompanySection companySection = (CompanySection) sections.get(SectionType.EXPERIENCE);
-        List<Company> companies = companySection.getCompanies();
-        Company company = companies.get(0);
+        Company company = ((CompanySection) resume1.getSections().get(SectionType.EXPERIENCE)).getCompanies().get(0);
 
         Link website = company.getWebsite();
         website.setUrl(null);
