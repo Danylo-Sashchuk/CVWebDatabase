@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO Simplify nextName
 public class JsonSectionAdapter extends TypeAdapter<AbstractSection> {
     @Override
     public void write(JsonWriter out, AbstractSection section) throws IOException {
