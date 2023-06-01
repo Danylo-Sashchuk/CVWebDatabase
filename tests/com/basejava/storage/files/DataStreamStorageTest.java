@@ -1,6 +1,9 @@
 package com.basejava.storage.files;
 
-import com.basejava.model.*;
+import com.basejava.model.Company;
+import com.basejava.model.CompanySection;
+import com.basejava.model.Resume;
+import com.basejava.model.SectionType;
 import com.basejava.storage.files.serialization.DataStreamSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -29,8 +32,7 @@ public class DataStreamStorageTest extends AbstractFilesStorageTest {
     @Test
     void saveGet_when_urlIsNull() {
         Company company = getCompany(resume1, 0);
-        Link website = company.getWebsite();
-        website.setUrl(null);
+        company.getWebsite().setUrl(null);
 
         deleteThenSave(UUID_1, resume1);
 
