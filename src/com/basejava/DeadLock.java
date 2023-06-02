@@ -6,20 +6,15 @@ public class DeadLock {
         Object firstLock = new Object();
         Object secondLock = new Object();
 
-        Thread thread1 = new Thread(() -> {
-            synchronized (firstLock) {
-                try {
-                    Thread.sleep(300);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                synchronized (secondLock) {
+        Thread thread1 = lockTwoObjects(secondLock, firstLock);
 
-                }
-            }
-        });
+        Thread thread2 = lockTwoObjects(firstLock, secondLock);
+        thread2.start();
+        thread1.start();
+    }
 
-        Thread thread2 = new Thread(() -> {
+    private static Thread lockTwoObjects(Object firstLock, Object secondLock) {
+        return new Thread(() -> {
             synchronized (secondLock) {
                 try {
                     Thread.sleep(300);
@@ -31,7 +26,5 @@ public class DeadLock {
                 }
             }
         });
-        thread2.start();
-        thread1.start();
     }
 }
