@@ -21,18 +21,25 @@ public class StreamsMain {
 
     private static int minValue(int[] values) {
         AtomicInteger res = new AtomicInteger();
-        Arrays.stream(values).distinct().sorted().forEach(i -> res.updateAndGet(v -> v * 10 + i));
+        Arrays.stream(values)
+              .distinct()
+              .sorted()
+              .forEach(i -> res.updateAndGet(v -> v * 10 + i));
         return res.get();
     }
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
-        int sum = integers.stream().mapToInt(Integer::intValue).sum();
-        return integers.stream().filter(i -> {
-            if (sum % 2 == 0) {
-                return i % 2 != 0;
-            }
-            return i % 2 == 0;
-        }).toList();
+        int sum = integers.stream()
+                          .mapToInt(Integer::intValue)
+                          .sum();
+        return integers.stream()
+                       .filter(i -> {
+                           if (sum % 2 == 0) {
+                               return i % 2 != 0;
+                           }
+                           return i % 2 == 0;
+                       })
+                       .toList();
     }
 
     private static List<Integer> oddOrEven2(List<Integer> integers) {
@@ -40,18 +47,22 @@ public class StreamsMain {
         List<Integer> even = new ArrayList<>();
         List<Integer> odd = new ArrayList<>();
 
-        integers.stream().mapToInt(Integer::intValue).forEach(i -> {
-            sum.updateAndGet(v -> v + i);
-            if (i % 2 == 0) {
-                even.add(i);
-            } else {
-                odd.add(i);
-            }
-        });
+        integers.stream()
+                .mapToInt(Integer::intValue)
+                .forEach(i -> {
+                    sum.updateAndGet(v -> v + i);
+                    if (i % 2 == 0) {
+                        even.add(i);
+                    } else {
+                        odd.add(i);
+                    }
+                });
 
         if (sum.get() % 2 == 0) {
             return odd;
         }
         return even;
     }
+
+
 }
