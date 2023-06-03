@@ -17,29 +17,33 @@ public class StreamsMain {
 
         System.out.println(oddOrEven2(List.of(2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 20)));
         System.out.println(oddOrEven2(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 20)));
+        System.out.println("\n ----- third approach -----");
+
+        System.out.println(oddOrEven3(List.of(2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 20)));
+        System.out.println(oddOrEven3(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 20)));
     }
 
     private static int minValue(int[] values) {
         AtomicInteger res = new AtomicInteger();
         Arrays.stream(values)
-              .distinct()
-              .sorted()
-              .forEach(i -> res.updateAndGet(v -> v * 10 + i));
+                .distinct()
+                .sorted()
+                .forEach(i -> res.updateAndGet(v -> v * 10 + i));
         return res.get();
     }
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
         int sum = integers.stream()
-                          .mapToInt(Integer::intValue)
-                          .sum();
+                .mapToInt(Integer::intValue)
+                .sum();
         return integers.stream()
-                       .filter(i -> {
-                           if (sum % 2 == 0) {
-                               return i % 2 != 0;
-                           }
-                           return i % 2 == 0;
-                       })
-                       .toList();
+                .filter(i -> {
+                    if (sum % 2 == 0) {
+                        return i % 2 != 0;
+                    }
+                    return i % 2 == 0;
+                })
+                .toList();
     }
 
     private static List<Integer> oddOrEven2(List<Integer> integers) {
@@ -64,5 +68,22 @@ public class StreamsMain {
         return even;
     }
 
+    private static List<Integer> oddOrEven3(List<Integer> integers) {
+        //if the number of odd numbers is odd - result is also odd.
+        AtomicInteger oddCounter = new AtomicInteger();
+        return integers.stream()
+                .peek(i -> {
+                    if (i % 2 == 0) {
+                        oddCounter.getAndIncrement();
+                    }
+                })
+                .filter(i -> {
+                    if (oddCounter.get() % 2 == 0) {
+                        return i % 2 != 0;
+                    }
+                    return i % 2 == 0;
 
+                })
+                .toList();
+    }
 }
