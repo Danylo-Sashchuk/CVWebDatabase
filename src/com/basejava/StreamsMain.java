@@ -3,33 +3,24 @@ package com.basejava;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class StreamsMain {
     public static void main(String[] args) {
         System.out.println(minValue(new int[]{1, 2, 3, 3, 3, 2, 1, 2, 4}));
 
-        System.out.println("\n ---- first approach ----");
-        System.out.println(oddOrEven(List.of(2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 20)));
-        System.out.println(oddOrEven(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 20)));
-
-        System.out.println("\n ----- second approach -----");
-
-        System.out.println(oddOrEven2(List.of(2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 20)));
-        System.out.println(oddOrEven2(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 20)));
         System.out.println("\n ----- third approach -----");
-
-        System.out.println(oddOrEven3(List.of(2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 20)));
-        System.out.println(oddOrEven3(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 20)));
+        System.out.println(oddOrEven4(List.of(1, 2, 3)));
+        System.out.println(oddOrEven4(List.of(1, 2, 3, 3)));
     }
 
     private static int minValue(int[] values) {
-        AtomicInteger res = new AtomicInteger();
-        Arrays.stream(values)
+        return Arrays.stream(values)
                 .distinct()
                 .sorted()
-                .forEach(i -> res.updateAndGet(v -> v * 10 + i));
-        return res.get();
+                .reduce(0, (v, i) -> v * 10 + i);
     }
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
@@ -85,5 +76,15 @@ public class StreamsMain {
 
                 })
                 .toList();
+    }
+
+    private static List<Integer> oddOrEven4(List<Integer> integers) {
+        Map<Boolean, List<Integer>> collect = integers.stream()
+                .collect(Collectors.partitioningBy(i -> i % 2 == 0));
+        if (collect.get(false)
+                .size() % 2 != 0) {
+            return collect.get(true);
+        }
+        return collect.get(false);
     }
 }
