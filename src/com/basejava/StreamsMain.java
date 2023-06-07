@@ -14,6 +14,7 @@ public class StreamsMain {
         System.out.println("\n ----- third approach -----");
         System.out.println(oddOrEven4(List.of(1, 2, 3)));
         System.out.println(oddOrEven4(List.of(1, 2, 3, 3)));
+        int[] num = new int[10];
     }
 
     private static int minValue(int[] values) {
