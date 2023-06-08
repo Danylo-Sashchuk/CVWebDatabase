@@ -14,6 +14,6 @@ class SqlStorageTest extends AbstractStorageTest {
     @Test
     void update() {
         storage.update(resume1);
-        Assertions.assertEquals(resume1, storage.get(resume1.getUuid()));
+        Assertions.assertEquals(resume1, storage.get(UUID_1));
     }
 }
