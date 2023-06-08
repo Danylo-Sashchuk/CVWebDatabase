@@ -3,6 +3,7 @@ package com.basejava.storage;
 import com.basejava.exceptions.ExistStorageException;
 import com.basejava.exceptions.NotExistStorageException;
 import com.basejava.model.Resume;
+import com.basejava.util.Config;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class AbstractStorageTest {
-    protected static final String STORAGE_DIR = "/Users/Danylo/Desktop/Workspace/basejava/storage";
+    protected static final String STORAGE_DIR = Config.get()
+                                                      .getStorageDir();
     protected static final ResumeTestData resumeTestData = ResumeTestData.getInstance();
     protected static final String UUID_1 = "uuid1";
     protected static final String UUID_2 = "uuid2";
@@ -34,6 +36,12 @@ public abstract class AbstractStorageTest {
         this.storage = storage;
     }
 
+    @Test
+    protected void getAllSorted() {
+        List<Resume> expected = Arrays.asList(resume2, resume1, resume3);
+        Assertions.assertEquals(expected, storage.getAllSorted());
+    }
+
     @BeforeEach
     final void setUp() {
         storage.clear();
@@ -41,12 +49,6 @@ public abstract class AbstractStorageTest {
         storage.save(resume2);
         storage.save(resume3);
 
-    }
-
-    @Test
-    protected void getAllSorted() {
-        List<Resume> expected = Arrays.asList(resume2, resume1, resume3);
-        Assertions.assertEquals(expected, storage.getAllSorted());
     }
 
     @Test
