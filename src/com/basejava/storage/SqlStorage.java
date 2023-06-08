@@ -97,6 +97,13 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-
+        try (Connection connection = connectionFactory.getConnection(); PreparedStatement statement =
+                connection.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
+            statement.setString(1, resume.getFullName());
+            statement.setString(2, resume.getUuid());
+            statement.execute();
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
     }
 }
