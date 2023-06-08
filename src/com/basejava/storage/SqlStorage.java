@@ -1,5 +1,6 @@
 package com.basejava.storage;
 
+import com.basejava.exceptions.ExistStorageException;
 import com.basejava.exceptions.NotExistStorageException;
 import com.basejava.exceptions.StorageException;
 import com.basejava.model.Resume;
@@ -34,6 +35,9 @@ public class SqlStorage implements Storage {
             statement.setString(2, resume.getFullName());
             statement.execute();
         } catch (SQLException e) {
+            if (e.getMessage().contains("duplicate key value violates unique constraint \"resume_pk\"")) {
+                throw new ExistStorageException(resume.getUuid());
+            }
             throw new StorageException(e);
         }
     }
@@ -58,7 +62,10 @@ public class SqlStorage implements Storage {
         try (Connection connection = connectionFactory.getConnection(); PreparedStatement statement =
                 connection.prepareStatement("DELETE FROM resume WHERE uuid = ?")) {
             statement.setString(1, uuid);
-            statement.execute();
+            int deleted = statement.executeUpdate();
+            if (deleted == 0) {
+                throw new NotExistStorageException(uuid);
+            }
         } catch (SQLException e) {
             throw new StorageException(e);
         }
@@ -82,7 +89,7 @@ public class SqlStorage implements Storage {
     }
 
     @Override
-    public int size() { //todo test 0 elements
+    public int size() {
         try (Connection connection = connectionFactory.getConnection(); PreparedStatement statement =
                 connection.prepareStatement("SELECT COUNT(*) FROM resume")) {
             ResultSet resultSet = statement.executeQuery();
@@ -101,7 +108,10 @@ public class SqlStorage implements Storage {
                 connection.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
             statement.setString(1, resume.getFullName());
             statement.setString(2, resume.getUuid());
-            statement.execute();
+            int deleted = statement.executeUpdate();
+            if (deleted == 0) {
+                throw new NotExistStorageException(resume.getUuid());
+            }
         } catch (SQLException e) {
             throw new StorageException(e);
         }
