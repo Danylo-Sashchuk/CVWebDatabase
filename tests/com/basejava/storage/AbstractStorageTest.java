@@ -97,7 +97,7 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    final void save() {
+    protected void save() {
         storage.save(resume4);
         assertSize(4);
         assertGet(resume4);
@@ -114,7 +114,7 @@ public abstract class AbstractStorageTest {
         Assertions.assertEquals(size, storage.size());
     }
 
-    private void assertGet(Resume resume) {
+    protected void assertGet(Resume resume) {
         Assertions.assertEquals(resume, storage.get(resume.getUuid()));
     }
 }

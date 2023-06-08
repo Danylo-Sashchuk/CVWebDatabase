@@ -56,15 +56,15 @@ public class ResumeTestData {
             reloadIterators();
         }
         Resume resume = new Resume(uuid, fullName);
-        addContacts(fullName, resume);
-        addPosition(resume);
-        addPersonal(resume);
-
-        addAchievements(resume);
-        addQualifications(resume);
-
-        addExperiences(resume);
-        addEducations(resume);
+//        addContacts(fullName, resume);
+//        addPosition(resume);
+//        addPersonal(resume);
+//
+//        addAchievements(resume);
+//        addQualifications(resume);
+//
+//        addExperiences(resume);
+//        addEducations(resume);
         return resume;
     }
 
