@@ -36,21 +36,6 @@ public class SqlStorage implements Storage {
         }, "INSERT INTO resume (uuid, full_name) VALUES (?, ?)");
     }
 
-    //    @Override
-    //    public void save(Resume resume) {
-    //        try (Connection connection = connectionFactory.getConnection(); PreparedStatement statement =
-    //                connection.prepareStatement("INSERT INTO resume (uuid, full_name) VALUES (?, ?)")) {
-    //            statement.setString(1, resume.getUuid());
-    //            statement.setString(2, resume.getFullName());
-    //            statement.execute();
-    //        } catch (SQLException e) {
-    //            if (e.getMessage().contains("duplicate key value violates unique constraint \"resume_pk\"")) {
-    //                throw new ExistStorageException(resume.getUuid());
-    //            }
-    //            throw new StorageException(e);
-    //        }
-    //    }
-
     @Override
     public Resume get(String uuid) {
         SqlTemplate sqlTemplate = new SqlTemplate(connectionFactory);
@@ -63,21 +48,6 @@ public class SqlStorage implements Storage {
             return new Resume(uuid, resultSet.getString("full_name"));
         }, "SELECT * FROM resume r WHERE r.uuid = ?");
     }
-
-    //    @Override
-    //    public Resume get(String uuid) {
-    //        try (Connection connection = connectionFactory.getConnection(); PreparedStatement statement =
-    //                connection.prepareStatement("SELECT * FROM resume r WHERE r.uuid = ?")) {
-    //            statement.setString(1, uuid);
-    //            ResultSet resultSet = statement.executeQuery();
-    //            if (!resultSet.next()) {
-    //                throw new NotExistStorageException(uuid);
-    //            }
-    //            return new Resume(uuid, resultSet.getString("full_name"));
-    //        } catch (SQLException e) {
-    //            throw new StorageException(e);
-    //        }
-    //    }
 
     @Override
     public void delete(String uuid) {
@@ -99,7 +69,7 @@ public class SqlStorage implements Storage {
         sqlTemplate.execute(statement -> {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                String uuid = resultSet.getString("uuid").trim();
+                String uuid = resultSet.getString("uuid");
                 String fullName = resultSet.getString("full_name");
                 resumes.add(new Resume(uuid, fullName));
             }
@@ -113,10 +83,7 @@ public class SqlStorage implements Storage {
         SqlTemplate sqlTemplate = new SqlTemplate(connectionFactory);
         return sqlTemplate.execute(statement -> {
             ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getInt(1);
-            }
-            return 0;
+            return resultSet.next() ? resultSet.getInt(1) : 0;
         }, "SELECT COUNT(*) FROM resume");
     }
 

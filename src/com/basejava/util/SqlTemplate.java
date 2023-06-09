@@ -22,8 +22,9 @@ public class SqlTemplate {
         } catch (NotExistStorageException | ExistStorageException e) {
             throw e;
         } catch (SQLException e) {
-            if (e.getMessage().contains("duplicate key value violates unique constraint \"resume_pk\"")) {
-                throw new ExistStorageException("i");
+            if (e.getSQLState()
+                    .equals("23505")) {
+                throw new ExistStorageException(e);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
