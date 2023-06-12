@@ -22,48 +22,48 @@ public class SqlStorage implements Storage {
 
     @Override
     public void clear() {
-        sqlTemplate.execute(PreparedStatement::execute, "DELETE FROM resume");
+        sqlTemplate.execute("DELETE FROM resume", PreparedStatement::execute);
     }
 
     @Override
     public void save(Resume resume) {
-        sqlTemplate.execute(statement -> {
+        sqlTemplate.execute("INSERT INTO resume (uuid, full_name) VALUES (?, ?)", statement -> {
             statement.setString(1, resume.getUuid());
             statement.setString(2, resume.getFullName());
             statement.execute();
 
             return null;
-        }, "INSERT INTO resume (uuid, full_name) VALUES (?, ?)");
+        });
     }
 
     @Override
     public Resume get(String uuid) {
-        return sqlTemplate.execute(statement -> {
+        return sqlTemplate.execute("SELECT * FROM resume r WHERE r.uuid = ?", statement -> {
             statement.setString(1, uuid);
             ResultSet resultSet = statement.executeQuery();
             if (!resultSet.next()) {
                 throw new NotExistStorageException(uuid);
             }
             return new Resume(uuid, resultSet.getString("full_name"));
-        }, "SELECT * FROM resume r WHERE r.uuid = ?");
+        });
     }
 
     @Override
     public void delete(String uuid) {
-        sqlTemplate.execute(statement -> {
+        sqlTemplate.execute("DELETE FROM resume WHERE uuid = ?", statement -> {
             statement.setString(1, uuid);
             int deleted = statement.executeUpdate();
             if (deleted == 0) {
                 throw new NotExistStorageException(uuid);
             }
             return null;
-        }, "DELETE FROM resume WHERE uuid = ?");
+        });
     }
 
     @Override
     public List<Resume> getAllSorted() {
         List<Resume> resumes = new ArrayList<>();
-        sqlTemplate.execute(statement -> {
+        sqlTemplate.execute("SELECT * FROM resume r ORDER BY full_name, uuid", statement -> {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 String uuid = resultSet.getString("uuid");
@@ -71,21 +71,21 @@ public class SqlStorage implements Storage {
                 resumes.add(new Resume(uuid, fullName));
             }
             return resumes;
-        }, "SELECT * FROM resume r ORDER BY full_name, uuid");
+        });
         return resumes;
     }
 
     @Override
     public int size() {
-        return sqlTemplate.execute(statement -> {
+        return sqlTemplate.execute("SELECT COUNT(*) FROM resume", statement -> {
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next() ? resultSet.getInt(1) : 0;
-        }, "SELECT COUNT(*) FROM resume");
+        });
     }
 
     @Override
     public void update(Resume resume) {
-        sqlTemplate.execute(statement -> {
+        sqlTemplate.execute("UPDATE resume SET full_name = ? WHERE uuid = ?", statement -> {
             statement.setString(1, resume.getFullName());
             statement.setString(2, resume.getUuid());
             int updated = statement.executeUpdate();
@@ -93,6 +93,6 @@ public class SqlStorage implements Storage {
                 throw new NotExistStorageException(resume.getUuid());
             }
             return null;
-        }, "UPDATE resume SET full_name = ? WHERE uuid = ?");
+        });
     }
 }
