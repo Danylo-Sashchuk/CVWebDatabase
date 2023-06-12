@@ -22,13 +22,11 @@ public class SqlStorage implements Storage {
 
     @Override
     public void clear() {
-        SqlTemplate sqlTemplate = new SqlTemplate(connectionFactory);
         sqlTemplate.execute(PreparedStatement::execute, "DELETE FROM resume");
     }
 
     @Override
     public void save(Resume resume) {
-        SqlTemplate sqlTemplate = new SqlTemplate(connectionFactory);
         sqlTemplate.execute(statement -> {
             statement.setString(1, resume.getUuid());
             statement.setString(2, resume.getFullName());
@@ -40,7 +38,6 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        SqlTemplate sqlTemplate = new SqlTemplate(connectionFactory);
         return sqlTemplate.execute(statement -> {
             statement.setString(1, uuid);
             ResultSet resultSet = statement.executeQuery();
@@ -53,7 +50,6 @@ public class SqlStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
-        SqlTemplate sqlTemplate = new SqlTemplate(connectionFactory);
         sqlTemplate.execute(statement -> {
             statement.setString(1, uuid);
             int deleted = statement.executeUpdate();
@@ -67,7 +63,6 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         List<Resume> resumes = new ArrayList<>();
-        SqlTemplate sqlTemplate = new SqlTemplate(connectionFactory);
         sqlTemplate.execute(statement -> {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -82,7 +77,6 @@ public class SqlStorage implements Storage {
 
     @Override
     public int size() {
-        SqlTemplate sqlTemplate = new SqlTemplate(connectionFactory);
         return sqlTemplate.execute(statement -> {
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next() ? resultSet.getInt(1) : 0;
@@ -91,7 +85,6 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        SqlTemplate sqlTemplate = new SqlTemplate(connectionFactory);
         sqlTemplate.execute(statement -> {
             statement.setString(1, resume.getFullName());
             statement.setString(2, resume.getUuid());
