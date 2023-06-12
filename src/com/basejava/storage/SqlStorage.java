@@ -13,9 +13,11 @@ import java.util.List;
 
 public class SqlStorage implements Storage {
     public final ConnectionFactory connectionFactory;
+    private final SqlTemplate sqlTemplate;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
         connectionFactory = () -> DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+        sqlTemplate = new SqlTemplate(connectionFactory);
     }
 
     @Override

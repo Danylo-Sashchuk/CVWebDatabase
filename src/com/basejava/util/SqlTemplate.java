@@ -2,6 +2,7 @@ package com.basejava.util;
 
 import com.basejava.exceptions.ExistStorageException;
 import com.basejava.exceptions.NotExistStorageException;
+import com.basejava.exceptions.StorageException;
 import com.basejava.sql.ConnectionFactory;
 
 import java.sql.Connection;
@@ -19,16 +20,15 @@ public class SqlTemplate {
         try (Connection connection = connectionFactory.getConnection(); PreparedStatement statement =
                 connection.prepareStatement(sql)) {
             return functional.execute(statement);
-        } catch (NotExistStorageException | ExistStorageException e) {
-            throw e;
         } catch (SQLException e) {
             if (e.getSQLState()
                     .equals("23505")) {
                 throw new ExistStorageException(e);
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new StorageException(e);
         }
+
         return null;
     }
 }
