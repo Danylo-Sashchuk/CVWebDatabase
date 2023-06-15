@@ -30,3 +30,5 @@ CREATE UNIQUE INDEX contact_resume_uuid_type_uindex
 
 ALTER TABLE contact
     OWNER TO postgres;
+
+CREATE TYPE section_type AS ENUM ('PERSONAL', 'POSITION', 'ACHIEVEMENTS', 'QUALIFICATIONS', 'EXPERIENCE', 'EDUCATION');
