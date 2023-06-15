@@ -1,6 +1,5 @@
 package com.basejava.storage;
 
-import com.basejava.exceptions.StorageException;
 import com.basejava.util.Config;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

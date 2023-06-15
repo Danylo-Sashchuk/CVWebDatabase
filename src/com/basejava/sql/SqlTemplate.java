@@ -1,8 +1,6 @@
-package com.basejava.util;
+package com.basejava.sql;
 
-import com.basejava.exceptions.ExistStorageException;
 import com.basejava.exceptions.StorageException;
-import com.basejava.sql.ConnectionFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,8 +18,23 @@ public class SqlTemplate {
                 connection.prepareStatement(sql)) {
             return functional.execute(statement);
         } catch (SQLException e) {
-            throw e.getSQLState()
-                    .equals("23505") ? new ExistStorageException(e) : new StorageException(e);
+            throw ExceptionUtil.convertException(e);
+        }
+    }
+
+    public <T> T transactionExecute(SqlTransaction<T> executor) {
+        try (Connection connection = connectionFactory.getConnection()) {
+            try {
+                connection.setAutoCommit(false);
+                T result = executor.execute(connection);
+                connection.commit();
+                return result;
+            } catch (SQLException e) {
+                connection.rollback();
+                throw ExceptionUtil.convertException(e);
+            }
+        } catch (SQLException e) {
+            throw new StorageException(e);
         }
     }
 }
