@@ -57,12 +57,11 @@ public class ResumeTestData {
         }
         Resume resume = new Resume(uuid, fullName);
         addContacts(fullName, resume);
-        addPosition(resume);
-        addPersonal(resume);
+//        addPosition(resume);
 
-        addAchievements(resume);
-        addQualifications(resume);
-//
+//        addAchievements(resume);
+//        addQualifications(resume);
+
 //        addExperiences(resume);
 //        addEducations(resume);
         return resume;
