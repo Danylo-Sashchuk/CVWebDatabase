@@ -1,34 +1,83 @@
-CREATE TABLE resume
+create type section_type as enum ('PERSONAL', 'POSITION', 'ACHIEVEMENTS', 'QUALIFICATIONS', 'EXPERIENCE', 'EDUCATION');
+
+alter type section_type owner to postgres;
+
+create table resume
 (
-    uuid      CHAR(36) NOT NULL
-        CONSTRAINT resume_pk
-            PRIMARY KEY,
-    full_name TEXT     NOT NULL
+    uuid      char(36) not null
+        constraint resume_pk
+            primary key,
+    full_name text     not null
 );
 
-ALTER TABLE resume
-    OWNER TO postgres;
+alter table resume
+    owner to postgres;
 
-CREATE TABLE public.contact
+create table contact
 (
-    id          SERIAL
-        CONSTRAINT contact_pk
-            PRIMARY KEY,
-    type        TEXT NOT NULL,
-    value       TEXT NOT NULL,
-    resume_uuid CHAR(36)
-        CONSTRAINT contact_resume_uuid_fk
-            REFERENCES public.resume
-            ON DELETE CASCADE
+    id          serial
+        constraint contact_pk
+            primary key,
+    type        text not null,
+    value       text not null,
+    resume_uuid char(36)
+        constraint contact_resume_uuid_fk
+            references resume
+            on delete cascade
 );
 
-ALTER TABLE public.contact
-    OWNER TO postgres;
+alter table contact
+    owner to postgres;
 
-CREATE UNIQUE INDEX contact_resume_uuid_type_uindex
-    ON public.contact (resume_uuid, type);
+create unique index contact_resume_uuid_type_uindex
+    on contact (resume_uuid, type);
 
-ALTER TABLE contact
-    OWNER TO postgres;
+create table text_section
+(
+    id          serial
+        constraint text_section_pk
+            primary key,
+    text        text         not null,
+    resume_uuid char(36)     not null
+        constraint text_section_resume_uuid_fk
+            references resume
+            on delete cascade,
+    type        section_type not null
+);
 
-CREATE TYPE section_type AS ENUM ('PERSONAL', 'POSITION', 'ACHIEVEMENTS', 'QUALIFICATIONS', 'EXPERIENCE', 'EDUCATION');
+alter table text_section
+    owner to postgres;
+
+create table list_section
+(
+    id          serial
+        constraint list_section_pk
+            primary key,
+    resume_uuid char(36)     not null
+        constraint list_section_resume_uuid_fk
+            references resume
+            on delete cascade,
+    type        section_type not null
+);
+
+alter table list_section
+    owner to postgres;
+
+create index list_section_resume_uuid_index
+    on list_section (resume_uuid, type);
+
+create table list_content
+(
+    id              serial
+        constraint list_content_pk
+            primary key,
+    text            text    not null,
+    list_section_id integer not null
+        constraint list_content_list_section_id_fk
+            references list_section
+            on delete cascade
+);
+
+alter table list_content
+    owner to postgres;
+

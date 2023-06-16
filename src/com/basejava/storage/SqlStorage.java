@@ -13,8 +13,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class SqlStorage implements Storage {
+    private static final Logger LOG = Logger.getLogger(SqlStorage.class.getName());
     public final ConnectionFactory connectionFactory;
     private final SqlTemplate sqlTemplate;
 
@@ -37,6 +39,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
+        LOG.info("Save resume " + resume);
         sqlTemplate.transactionExecute(connection -> {
             try (PreparedStatement statement = connection.prepareStatement("""
                     INSERT INTO resume (uuid, full_name)
@@ -66,6 +69,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
+        LOG.info("get resume: " + uuid);
         return sqlTemplate.transactionExecute(connection -> {
             try (PreparedStatement statement = connection.prepareStatement("""
                     SELECT r.full_name AS full_name,
@@ -95,6 +99,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
+        LOG.info("delete resume: " + uuid);
         sqlTemplate.transactionExecute(connection -> {
             try (PreparedStatement statement = connection.prepareStatement("DELETE FROM resume WHERE uuid = ?")) {
                 statement.setString(1, uuid);
@@ -109,6 +114,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
+        LOG.info("get all sorted");
         return sqlTemplate.transactionExecute(connection -> {
             try (PreparedStatement statement = connection.prepareStatement("""
                     SELECT uuid, full_name, type, value
@@ -150,10 +156,12 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
+        LOG.info("update resume");
         sqlTemplate.transactionExecute(connection -> {
             try (PreparedStatement statement = connection.prepareStatement("""
                     UPDATE resume
-                    SET full_name = ? WHERE uuid = ?
+                       SET full_name = ?
+                     WHERE uuid = ?
                     """)) {
                 statement.setString(1, resume.getFullName());
                 statement.setString(2, resume.getUuid());
