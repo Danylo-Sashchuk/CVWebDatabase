@@ -41,8 +41,7 @@ public class SqlStorage implements Storage {
             }
             try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, " +
                                                               "value)   VALUES (?, ?, ?)")) {
-                for (Map.Entry<ContactType, String> e : resume.getContacts()
-                        .entrySet()) {
+                for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
                     ps.setString(1, resume.getUuid());
                     ps.setString(2, e.getKey()
                             .name());
