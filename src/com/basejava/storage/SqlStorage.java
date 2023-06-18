@@ -141,7 +141,7 @@ public class SqlStorage implements Storage {
     @Override
     public void update(Resume resume) {
         String uuid = resume.getUuid();
-        LOG.info("updating resume: " + uuid);
+        LOG.info("updating resume: " + resume);
         sqlTemplate.transactionExecute(conn -> {
             Map<ContactType, String> contactsInResume = resume.getContacts();
             Map<ContactType, String> contactsInDB = new HashMap<>();
@@ -186,7 +186,7 @@ public class SqlStorage implements Storage {
             try (PreparedStatement insert = conn.prepareStatement("INSERT INTO contact (type, value, resume_uuid) " +
                                                                   "VALUES (?, ?, ?)")) {
                 for (ContactType type : newContacts) {
-                    insert.setString(1, type.toString());
+                    insert.setString(1, type.name());
                     insert.setString(2, contactsInResume.get(type));
                     insert.setString(3, uuid);
                     insert.addBatch();
@@ -197,7 +197,7 @@ public class SqlStorage implements Storage {
             try (PreparedStatement delete = conn.prepareStatement("DELETE FROM contact WHERE type = ? AND resume_uuid" +
                                                                   " = ?")) {
                 for (ContactType type : deletedContacts) {
-                    delete.setString(1, type.toString());
+                    delete.setString(1, type.name());
                     delete.setString(2, uuid);
                     delete.addBatch();
                 }

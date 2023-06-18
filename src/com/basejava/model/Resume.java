@@ -47,7 +47,7 @@ public class Resume implements Serializable {
     }
 
     public void removeContact(ContactType type) {
-
+        contacts.remove(type);
     }
 
     public Map<SectionType, AbstractSection> getSections() {

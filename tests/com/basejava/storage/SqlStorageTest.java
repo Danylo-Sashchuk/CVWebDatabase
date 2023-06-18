@@ -10,8 +10,15 @@ class SqlStorageTest extends AbstractStorageTest {
     private static final String EMAIL = "email_for_first_resume_test@test.com";
     private static final String UUID = "TestUUID";
     private static final String FULL_NAME = "John Doe";
-    public static final String PHONE_NUMBER = "+1 234 567 8901";
-    public static final String GITHUB = "git.com/first_resume";
+    private static final String PHONE_NUMBER = "+1 234 567 8901";
+    private static final String GITHUB = "git.com/first_resume";
+    private static final Resume RESUME;
+    static {
+        RESUME = new Resume(UUID, FULL_NAME);
+        RESUME.addContact(ContactType.EMAIL, EMAIL);
+        RESUME.addContact(ContactType.PHONE_NUMBER, PHONE_NUMBER);
+        RESUME.addContact(ContactType.GITHUB, GITHUB);
+    }
 
 
     protected SqlStorageTest() {
@@ -27,25 +34,35 @@ class SqlStorageTest extends AbstractStorageTest {
     }
 
     @Test
-    void update_whenContactsUpdated_shouldTrue() {
+    void update_whenContactsUpdated_shouldTrue() { //TODO DELETE CLEAR
         storage.clear();
-        Resume testResume = new Resume(UUID, FULL_NAME);
-        testResume.addContact(ContactType.EMAIL, EMAIL);
-        testResume.addContact(ContactType.PHONE_NUMBER, PHONE_NUMBER);
-        testResume.addContact(ContactType.GITHUB, GITHUB);
-        storage.save(testResume);
+        storage.save(RESUME);
 
-        testResume.addContact(ContactType.PHONE_NUMBER, "222222222");
-        storage.update(testResume);
+        RESUME.addContact(ContactType.PHONE_NUMBER, "222222222");
+        storage.update(RESUME);
 
-        Assertions.assertEquals(testResume, storage.get(testResume.getUuid()));
+        Assertions.assertEquals(RESUME, storage.get(UUID));
     }
 
     @Test
     void update_whenSavedResume_HasMoreContactsThenActual_shouldTrue() {
         storage.clear();
-        Resume testResume = new Resume(UUID, FULL_NAME);
-        testResume.addContact(ContactType.EMAIL, EMAIL);
-        testResume.addContact(ContactType.GITHUB, GITHUB);
+        storage.save(RESUME);
+
+        RESUME.removeContact(ContactType.GITHUB);
+        storage.update(RESUME);
+
+        Assertions.assertEquals(RESUME, storage.get(UUID));
+    }
+
+    @Test
+    void update_whenSavedResume_HasLessContactsThenActual_shouldTrue() {
+        storage.clear();
+        storage.save(RESUME);
+
+        RESUME.addContact(ContactType.LINKEDIN, "linkedin.com/john_doe_unique");
+        storage.update(RESUME);
+
+        Assertions.assertEquals(RESUME, storage.get(UUID));
     }
 }
