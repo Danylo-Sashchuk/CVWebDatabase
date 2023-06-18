@@ -5,7 +5,6 @@ import com.basejava.exceptions.StorageException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Collection;
 
 public class SqlTemplate {
     private final ConnectionFactory connectionFactory;
@@ -36,18 +35,6 @@ public class SqlTemplate {
             }
         } catch (SQLException e) {
             throw new StorageException(e);
-        }
-    }
-
-    public <T> void statementExecute(String sql, Connection conn, Collection<T> collection, SqlAbsorber<T> absorber) {
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            for (T item : collection) {
-                absorber.absorb(item, statement);
-                statement.addBatch();
-            }
-            statement.executeBatch();
-        } catch (SQLException e) {
-            throw ExceptionUtil.convertException(e);
         }
     }
 }

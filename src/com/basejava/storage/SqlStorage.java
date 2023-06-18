@@ -3,11 +3,11 @@ package com.basejava.storage;
 import com.basejava.exceptions.NotExistStorageException;
 import com.basejava.model.ContactType;
 import com.basejava.model.Resume;
+import com.basejava.sql.ExceptionUtil;
+import com.basejava.sql.SqlConductor;
 import com.basejava.sql.SqlTemplate;
 
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -189,21 +189,21 @@ public class SqlStorage implements Storage {
                 }
             }
 
-            sqlTemplate.statementExecute("INSERT INTO contact (type, value, resume_uuid) " +
-                                         "VALUES (?, ?, ?)", conn, newContacts, (type, ps) -> {
+            conductStatement("INSERT INTO contact (type, value, resume_uuid) " +
+                             "VALUES (?, ?, ?)", conn, newContacts, (type, ps) -> {
                 ps.setString(1, type.name());
                 ps.setString(2, contactsInResume.get(type));
                 ps.setString(3, uuid);
             });
 
-            sqlTemplate.statementExecute("DELETE FROM contact WHERE type = ? AND resume_uuid" +
-                                         " = ?", conn, deletedContacts, (type, ps) -> {
+            conductStatement("DELETE FROM contact WHERE type = ? AND resume_uuid" +
+                             " = ?", conn, deletedContacts, (type, ps) -> {
                 ps.setString(1, type.name());
                 ps.setString(2, uuid);
             });
 
-            sqlTemplate.statementExecute("UPDATE contact SET value = ? WHERE type = ? AND " +
-                                         "resume_uuid = ?", conn, editedContacts, (type, ps) -> {
+            conductStatement("UPDATE contact SET value = ? WHERE type = ? AND " +
+                             "resume_uuid = ?", conn, editedContacts, (type, ps) -> {
                 ps.setString(1, contactsInResume.get(type));
                 ps.setString(2, type.name());
                 ps.setString(3, uuid);
@@ -218,5 +218,18 @@ public class SqlStorage implements Storage {
             return;
         }
         resume.addContact(ContactType.valueOf(type), value);
+    }
+
+    private void conductStatement(String sql, Connection conn, Set<ContactType> set,
+                                  SqlConductor<ContactType> conductor) {
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            for (ContactType type : set) {
+                conductor.conduct(type, statement);
+                statement.addBatch();
+            }
+            statement.executeBatch();
+        } catch (SQLException e) {
+            throw ExceptionUtil.convertException(e);
+        }
     }
 }
