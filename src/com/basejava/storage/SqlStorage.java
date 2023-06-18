@@ -118,9 +118,12 @@ public class SqlStorage implements Storage {
                         resume = new Resume(uuid, fullName);
                         processedResumes.put(uuid, resume);
                     }
-                    ContactType type = ContactType.valueOf(rs.getString("type"));
+                    String type = rs.getString("type");
+                    if (type == null) {
+                        continue;
+                    }
                     String value = rs.getString("value");
-                    resume.addContact(type, value);
+                    resume.addContact(ContactType.valueOf(type), value);
                 }
                 return new ArrayList<>(processedResumes.values());
             }
@@ -158,7 +161,6 @@ public class SqlStorage implements Storage {
             Set<ContactType> contactTypesInResume = contactsInResume.keySet();
             Set<ContactType> contactTypesInDB = new HashSet<>();
 
-            //get all contacts from resume
             try (PreparedStatement ps = conn.prepareStatement("""
                     SELECT *
                       FROM resume

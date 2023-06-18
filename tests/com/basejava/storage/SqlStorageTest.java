@@ -77,4 +77,16 @@ class SqlStorageTest extends AbstractStorageTest {
 
         assertGet(RESUME);
     }
+
+    @Test
+    void getAllSorted_WhenResumeWithoutContacts() {
+        storage.save(RESUME);
+
+        RESUME.removeContact(ContactType.EMAIL);
+        RESUME.removeContact(ContactType.PHONE_NUMBER);
+        RESUME.removeContact(ContactType.GITHUB);
+        storage.update(RESUME);
+
+        storage.getAllSorted();
+    }
 }
