@@ -140,53 +140,70 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        LOG.info("update resume");
+        String uuid = resume.getUuid();
+        LOG.info("updating resume: " + uuid);
         sqlTemplate.transactionExecute(conn -> {
-            try (PreparedStatement ps = conn.prepareStatement("UPDATE resume" +
-                                                              "       SET full_name = ?" +
-                                                              "     WHERE uuid = ?")) {
-                ps.setString(1, resume.getFullName());
-                ps.setString(2, resume.getUuid());
-                int updated = ps.executeUpdate();
-                if (updated == 0) {
-                    throw new NotExistStorageException(resume.getUuid());
-                }
-                return null;
-            }
-        });
-    }
-
-    private void reviewContacts(Resume resume) {
-        sqlTemplate.transactionExecute(conn -> {
+            Map<ContactType, String> contactsInResume = resume.getContacts();
+            Set<ContactType> contactTypesInResume = contactsInResume.keySet();
+            Map<ContactType, String> contactsInDB = new HashMap<>();
+            Set<ContactType> contactTypesInDB = new HashSet<>();
             try (PreparedStatement ps = conn.prepareStatement("""
                     SELECT *
                       FROM resume
                                INNER JOIN contact c ON resume.uuid = c.resume_uuid
                      WHERE resume_uuid = ?;
                                                             """)) {
-                ps.setString(1, resume.getUuid());
+                ps.setString(1, uuid);
                 ResultSet rs = ps.executeQuery();
-
-                Map<ContactType, String> contactsInDB = new HashMap<>();
                 while (rs.next()) {
                     contactsInDB.put(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+                    contactTypesInDB.add(ContactType.valueOf(rs.getString("type")));
                 }
-                Map<ContactType, String> contactsInResume = resume.getContacts();
-                Map<ContactType, String> editedContacts = new HashMap<>();
-                Map<ContactType, String> deletedContacts = new HashMap<>();
-
-                for (Map.Entry<ContactType, String> e : contactsInResume.entrySet()) {
-                    if (contactsInDB.containsKey(e.getKey())) {
-                        if (!contactsInDB.get(e.getKey()).equals(e.getValue())) {
-                            editedContacts.put(e.getKey(), e.getValue());
-                        }
-                    } else {
-                        deletedContacts.put(e.getKey(), e.getValue());
-                    }
-                }
-
-                return null;
             }
+
+            //determine contacts that are new in the resume
+            Set<ContactType> newContacts = new HashSet<>(contactTypesInResume);
+            newContacts.removeAll(contactTypesInDB);
+
+            //determine contact that are not in resume, but stored in DB
+            Set<ContactType> deletedContacts = new HashSet<>(contactTypesInDB);
+            deletedContacts.removeAll(contactTypesInResume);
+
+            //determine contacts that has been edited
+            Set<ContactType> editedContacts = new HashSet<>(contactTypesInResume);
+            editedContacts.retainAll(contactTypesInDB);
+
+            try (PreparedStatement insert = conn.prepareStatement("INSERT INTO contact (type, value, resume_uuid) " +
+                                                                  "VALUES (?, ?, ?)")) {
+                for (ContactType type : newContacts) {
+                    insert.setString(1, type.toString());
+                    insert.setString(2, contactsInResume.get(type));
+                    insert.setString(3, uuid);
+                    insert.addBatch();
+                }
+                insert.executeBatch();
+            }
+
+            try (PreparedStatement delete = conn.prepareStatement("DELETE FROM contact WHERE type = ? AND resume_uuid" +
+                                                                  " = ?")) {
+                for (ContactType type : deletedContacts) {
+                    delete.setString(1, type.toString());
+                    delete.setString(2, uuid);
+                    delete.addBatch();
+                }
+                delete.executeBatch();
+            }
+
+            try (PreparedStatement update = conn.prepareStatement("UPDATE contact SET value = ? WHERE type = ? AND resume_uuid = ?")) {
+                for (ContactType type : editedContacts) {
+                    update.setString(1, contactsInResume.get(type));
+                    update.setString(2, type.toString());
+                    update.addBatch();
+                }
+                update.executeBatch();
+            }
+
+            return null;
         });
     }
 }
