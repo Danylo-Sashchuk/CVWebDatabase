@@ -6,10 +6,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Initial resume class
@@ -42,11 +39,15 @@ public class Resume implements Serializable {
     }
 
     public Map<ContactType, String> getContacts() {
-        return contacts;
+        return new HashMap<>(contacts);
     }
 
     public void addContact(ContactType type, String value) {
         contacts.put(type, value);
+    }
+
+    public void removeContact(ContactType type) {
+
     }
 
     public Map<SectionType, AbstractSection> getSections() {
