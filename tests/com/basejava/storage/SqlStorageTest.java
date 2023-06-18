@@ -35,7 +35,6 @@ class SqlStorageTest extends AbstractStorageTest {
 
     @Test
     void update_whenContactsUpdated_shouldTrue() { //TODO DELETE CLEAR
-        storage.clear();
         storage.save(RESUME);
 
         RESUME.addContact(ContactType.PHONE_NUMBER, "222222222");
@@ -46,23 +45,36 @@ class SqlStorageTest extends AbstractStorageTest {
 
     @Test
     void update_whenSavedResume_HasMoreContactsThenActual_shouldTrue() {
-        storage.clear();
         storage.save(RESUME);
 
         RESUME.removeContact(ContactType.GITHUB);
         storage.update(RESUME);
 
-        Assertions.assertEquals(RESUME, storage.get(UUID));
+        assertGet(RESUME);
     }
 
     @Test
     void update_whenSavedResume_HasLessContactsThenActual_shouldTrue() {
-        storage.clear();
         storage.save(RESUME);
 
         RESUME.addContact(ContactType.LINKEDIN, "linkedin.com/john_doe_unique");
         storage.update(RESUME);
 
-        Assertions.assertEquals(RESUME, storage.get(UUID));
+        assertGet(RESUME);
+    }
+
+    @Test
+    void update_ifResumeDoesNotHaveContacts() {
+        storage.save(RESUME);
+
+        RESUME.removeContact(ContactType.EMAIL);
+        RESUME.removeContact(ContactType.PHONE_NUMBER);
+        RESUME.removeContact(ContactType.GITHUB);
+        storage.update(RESUME);
+
+        RESUME.addContact(ContactType.SKYPE, "noskype");
+        storage.update(RESUME);
+
+        assertGet(RESUME);
     }
 }

@@ -143,6 +143,16 @@ public class SqlStorage implements Storage {
         String uuid = resume.getUuid();
         LOG.info("updating resume: " + resume);
         sqlTemplate.transactionExecute(conn -> {
+            try (PreparedStatement ps = conn.prepareStatement("UPDATE resume" +
+                                                              "       SET full_name = ?" +
+                                                              "     WHERE uuid = ?")) {
+                ps.setString(1, resume.getFullName());
+                ps.setString(2, resume.getUuid());
+                int updated = ps.executeUpdate();
+                if (updated == 0) {
+                    throw new NotExistStorageException(resume.getUuid());
+                }
+            }
             Map<ContactType, String> contactsInResume = resume.getContacts();
             Map<ContactType, String> contactsInDB = new HashMap<>();
             Set<ContactType> contactTypesInResume = contactsInResume.keySet();
