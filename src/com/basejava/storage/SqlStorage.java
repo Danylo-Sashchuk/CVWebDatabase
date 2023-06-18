@@ -8,10 +8,7 @@ import com.basejava.sql.SqlTemplate;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class SqlStorage implements Storage {
@@ -37,16 +34,18 @@ public class SqlStorage implements Storage {
         LOG.info("Save resume " + resume);
         sqlTemplate.transactionExecute(conn -> {
             try (PreparedStatement ps = conn.prepareStatement("INSERT INTO resume (uuid, full_name)" +
-                                                                           "  VALUES (?, ?)")) {
+                                                              "  VALUES (?, ?)")) {
                 ps.setString(1, resume.getUuid());
                 ps.setString(2, resume.getFullName());
                 ps.execute();
             }
             try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, " +
-                                                                           "value)   VALUES (?, ?, ?)")) {
-                for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
+                                                              "value)   VALUES (?, ?, ?)")) {
+                for (Map.Entry<ContactType, String> e : resume.getContacts()
+                        .entrySet()) {
                     ps.setString(1, resume.getUuid());
-                    ps.setString(2, e.getKey().name());
+                    ps.setString(2, e.getKey()
+                            .name());
                     ps.setString(3, e.getValue());
                     ps.addBatch();
                 }
@@ -152,6 +151,40 @@ public class SqlStorage implements Storage {
                 if (updated == 0) {
                     throw new NotExistStorageException(resume.getUuid());
                 }
+                return null;
+            }
+        });
+    }
+
+    private void reviewContacts(Resume resume) {
+        sqlTemplate.transactionExecute(conn -> {
+            try (PreparedStatement ps = conn.prepareStatement("""
+                    SELECT *
+                      FROM resume
+                               INNER JOIN contact c ON resume.uuid = c.resume_uuid
+                     WHERE resume_uuid = ?;
+                                                            """)) {
+                ps.setString(1, resume.getUuid());
+                ResultSet rs = ps.executeQuery();
+
+                Map<ContactType, String> contactsInDB = new HashMap<>();
+                while (rs.next()) {
+                    contactsInDB.put(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+                }
+                Map<ContactType, String> contactsInResume = resume.getContacts();
+                Map<ContactType, String> editedContacts = new HashMap<>();
+                Map<ContactType, String> deletedContacts = new HashMap<>();
+
+                for (Map.Entry<ContactType, String> e : contactsInResume.entrySet()) {
+                    if (contactsInDB.containsKey(e.getKey())) {
+                        if (!contactsInDB.get(e.getKey()).equals(e.getValue())) {
+                            editedContacts.put(e.getKey(), e.getValue());
+                        }
+                    } else {
+                        deletedContacts.put(e.getKey(), e.getValue());
+                    }
+                }
+
                 return null;
             }
         });
