@@ -56,6 +56,22 @@ public class SqlStorage implements Storage {
     }
 
     @Override
+    public void delete(String uuid) {
+        LOG.info("delete resume: " + uuid);
+        sqlTemplate.transactionExecute(conn -> {
+            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM resume " +
+                                                              "          WHERE uuid = ?")) {
+                ps.setString(1, uuid);
+                int deleted = ps.executeUpdate();
+                if (deleted == 0) {
+                    throw new NotExistStorageException(uuid);
+                }
+                return null;
+            }
+        });
+    }
+
+    @Override
     public Resume get(String uuid) {
         LOG.info("get resume: " + uuid);
         return sqlTemplate.transactionExecute(conn -> {
@@ -70,30 +86,13 @@ public class SqlStorage implements Storage {
                 if (!rs.next()) {
                     throw new NotExistStorageException(uuid);
                 }
+
                 Resume resume = new Resume(uuid, rs.getString("full_name"));
-
                 do {
-                    ContactType type = ContactType.valueOf(rs.getString("type"));
-                    String value = rs.getString("value");
-                    resume.addContact(type, value);
+                    addContact(resume, rs.getString("type"), rs.getString("value"));
                 } while (rs.next());
-                return resume;
-            }
-        });
-    }
 
-    @Override
-    public void delete(String uuid) {
-        LOG.info("delete resume: " + uuid);
-        sqlTemplate.transactionExecute(conn -> {
-            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM resume " +
-                                                              "          WHERE uuid = ?")) {
-                ps.setString(1, uuid);
-                int deleted = ps.executeUpdate();
-                if (deleted == 0) {
-                    throw new NotExistStorageException(uuid);
-                }
-                return null;
+                return resume;
             }
         });
     }
@@ -118,12 +117,7 @@ public class SqlStorage implements Storage {
                         resume = new Resume(uuid, fullName);
                         processedResumes.put(uuid, resume);
                     }
-                    String type = rs.getString("type");
-                    if (type == null) {
-                        continue;
-                    }
-                    String value = rs.getString("value");
-                    resume.addContact(ContactType.valueOf(type), value);
+                    addContact(resume, rs.getString("type"), rs.getString("value"));
                 }
                 return new ArrayList<>(processedResumes.values());
             }
@@ -229,5 +223,12 @@ public class SqlStorage implements Storage {
 
             return null;
         });
+    }
+
+    private void addContact(Resume resume, String type, String value) {
+        if (type == null) {
+            return;
+        }
+        resume.addContact(ContactType.valueOf(type), value);
     }
 }

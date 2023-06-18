@@ -13,6 +13,7 @@ class SqlStorageTest extends AbstractStorageTest {
     private static final String PHONE_NUMBER = "+1 234 567 8901";
     private static final String GITHUB = "git.com/first_resume";
     private static final Resume RESUME;
+
     static {
         RESUME = new Resume(UUID, FULL_NAME);
         RESUME.addContact(ContactType.EMAIL, EMAIL);
@@ -24,6 +25,12 @@ class SqlStorageTest extends AbstractStorageTest {
     protected SqlStorageTest() {
         super(Config.get()
                 .getStorage());
+    }
+
+    private void cleanContacts() {
+        SqlStorageTest.RESUME.removeContact(ContactType.EMAIL);
+        SqlStorageTest.RESUME.removeContact(ContactType.PHONE_NUMBER);
+        SqlStorageTest.RESUME.removeContact(ContactType.GITHUB);
     }
 
     @Override
@@ -44,7 +51,7 @@ class SqlStorageTest extends AbstractStorageTest {
     }
 
     @Test
-    void update_whenSavedResume_HasMoreContactsThenActual_shouldTrue() {
+    void update_whenSavedResume_hasMoreContactsThenActual_shouldTrue() {
         storage.save(RESUME);
 
         RESUME.removeContact(ContactType.GITHUB);
@@ -54,7 +61,7 @@ class SqlStorageTest extends AbstractStorageTest {
     }
 
     @Test
-    void update_whenSavedResume_HasLessContactsThenActual_shouldTrue() {
+    void update_whenSavedResume_hasLessContactsThenActual_shouldTrue() {
         storage.save(RESUME);
 
         RESUME.addContact(ContactType.LINKEDIN, "linkedin.com/john_doe_unique");
@@ -67,9 +74,7 @@ class SqlStorageTest extends AbstractStorageTest {
     void update_ifResumeDoesNotHaveContacts() {
         storage.save(RESUME);
 
-        RESUME.removeContact(ContactType.EMAIL);
-        RESUME.removeContact(ContactType.PHONE_NUMBER);
-        RESUME.removeContact(ContactType.GITHUB);
+        cleanContacts();
         storage.update(RESUME);
 
         RESUME.addContact(ContactType.SKYPE, "noskype");
@@ -79,14 +84,22 @@ class SqlStorageTest extends AbstractStorageTest {
     }
 
     @Test
-    void getAllSorted_WhenResumeWithoutContacts() {
+    void getAllSorted_whenResumeWithoutContacts() {
         storage.save(RESUME);
 
-        RESUME.removeContact(ContactType.EMAIL);
-        RESUME.removeContact(ContactType.PHONE_NUMBER);
-        RESUME.removeContact(ContactType.GITHUB);
+        cleanContacts();
         storage.update(RESUME);
 
         storage.getAllSorted();
+    }
+
+    @Test
+    void get_whenResumeDoesNotHaveContacts() {
+        storage.save(RESUME);
+
+        cleanContacts();
+        storage.update(RESUME);
+
+        assertGet(RESUME);
     }
 }
