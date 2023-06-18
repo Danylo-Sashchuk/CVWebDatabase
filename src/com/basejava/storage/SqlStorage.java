@@ -144,9 +144,11 @@ public class SqlStorage implements Storage {
         LOG.info("updating resume: " + uuid);
         sqlTemplate.transactionExecute(conn -> {
             Map<ContactType, String> contactsInResume = resume.getContacts();
-            Set<ContactType> contactTypesInResume = contactsInResume.keySet();
             Map<ContactType, String> contactsInDB = new HashMap<>();
+            Set<ContactType> contactTypesInResume = contactsInResume.keySet();
             Set<ContactType> contactTypesInDB = new HashSet<>();
+
+            //get all contacts from resume
             try (PreparedStatement ps = conn.prepareStatement("""
                     SELECT *
                       FROM resume
@@ -165,13 +167,21 @@ public class SqlStorage implements Storage {
             Set<ContactType> newContacts = new HashSet<>(contactTypesInResume);
             newContacts.removeAll(contactTypesInDB);
 
-            //determine contact that are not in resume, but stored in DB
+            //determine contacts that are not in resume, but stored in DB
             Set<ContactType> deletedContacts = new HashSet<>(contactTypesInDB);
             deletedContacts.removeAll(contactTypesInResume);
 
-            //determine contacts that has been edited
-            Set<ContactType> editedContacts = new HashSet<>(contactTypesInResume);
-            editedContacts.retainAll(contactTypesInDB);
+            //determine contact types that are stored in DB and resume simultaneously
+            Set<ContactType> sameContactTypes = new HashSet<>(contactTypesInResume);
+            sameContactTypes.retainAll(contactTypesInDB);
+
+            //determine which contacts have been changed
+            Set<ContactType> editedContacts = new HashSet<>();
+            for (ContactType type : sameContactTypes) {
+                if (!contactsInResume.get(type).equals(contactsInDB.get(type))) {
+                    editedContacts.add(type);
+                }
+            }
 
             try (PreparedStatement insert = conn.prepareStatement("INSERT INTO contact (type, value, resume_uuid) " +
                                                                   "VALUES (?, ?, ?)")) {
@@ -194,10 +204,12 @@ public class SqlStorage implements Storage {
                 delete.executeBatch();
             }
 
-            try (PreparedStatement update = conn.prepareStatement("UPDATE contact SET value = ? WHERE type = ? AND resume_uuid = ?")) {
+            try (PreparedStatement update = conn.prepareStatement("UPDATE contact SET value = ? WHERE type = ? AND " +
+                                                                  "resume_uuid = ?")) {
                 for (ContactType type : editedContacts) {
                     update.setString(1, contactsInResume.get(type));
-                    update.setString(2, type.toString());
+                    update.setString(2, type.name());
+                    update.setString(3, uuid);
                     update.addBatch();
                 }
                 update.executeBatch();
