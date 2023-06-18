@@ -21,10 +21,8 @@ public class SqlStorage implements Storage {
 
     @Override
     public void clear() {
-        sqlTemplate.transactionExecute(conn -> {
-            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM resume")) {
-                ps.execute();
-            }
+        sqlTemplate.execute("DELETE FROM resume", ps -> {
+            ps.execute();
             return null;
         });
     }
@@ -57,80 +55,71 @@ public class SqlStorage implements Storage {
     @Override
     public void delete(String uuid) {
         LOG.info("delete resume: " + uuid);
-        sqlTemplate.transactionExecute(conn -> {
-            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM resume " +
-                                                              "          WHERE uuid = ?")) {
-                ps.setString(1, uuid);
-                int deleted = ps.executeUpdate();
-                if (deleted == 0) {
-                    throw new NotExistStorageException(uuid);
-                }
-                return null;
+        sqlTemplate.execute("DELETE FROM resume WHERE uuid = ?", ps -> {
+            ps.setString(1, uuid);
+            int deleted = ps.executeUpdate();
+            if (deleted == 0) {
+                throw new NotExistStorageException(uuid);
             }
+            return null;
         });
     }
 
     @Override
     public Resume get(String uuid) {
         LOG.info("get resume: " + uuid);
-        return sqlTemplate.transactionExecute(conn -> {
-            try (PreparedStatement ps = conn.prepareStatement("""
-                    SELECT *
-                      FROM resume
-                               LEFT JOIN contact ON resume.uuid = contact.resume_uuid
-                     WHERE resume.uuid = ?;
-                                                         """)) {
-                ps.setString(1, uuid);
-                ResultSet rs = ps.executeQuery();
-                if (!rs.next()) {
-                    throw new NotExistStorageException(uuid);
-                }
 
-                Resume resume = new Resume(uuid, rs.getString("full_name"));
-                do {
-                    addContact(resume, rs.getString("type"), rs.getString("value"));
-                } while (rs.next());
-
-                return resume;
+        return sqlTemplate.execute("""
+                SELECT *
+                  FROM resume
+                           LEFT JOIN contact ON resume.uuid = contact.resume_uuid
+                 WHERE resume.uuid = ?;
+                                                     """, ps -> {
+            ps.setString(1, uuid);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                throw new NotExistStorageException(uuid);
             }
+
+            Resume resume = new Resume(uuid, rs.getString("full_name"));
+            do {
+                addContact(resume, rs);
+            } while (rs.next());
+
+            return resume;
         });
     }
 
     @Override
     public List<Resume> getAllSorted() {
         LOG.info("get all sorted");
-        return sqlTemplate.transactionExecute(conn -> {
-            try (PreparedStatement ps = conn.prepareStatement("""
-                    SELECT *
-                      FROM resume
-                               LEFT JOIN contact ON resume.uuid = contact.resume_uuid
-                     ORDER BY full_name, uuid
-                    """)) {
-                ResultSet rs = ps.executeQuery();
-                Map<String, Resume> processedResumes = new LinkedHashMap<>();
-                while (rs.next()) {
-                    String uuid = rs.getString("uuid");
-                    String fullName = rs.getString("full_name");
-                    Resume resume = processedResumes.get(uuid);
-                    if (!processedResumes.containsKey(uuid)) {
-                        resume = new Resume(uuid, fullName);
-                        processedResumes.put(uuid, resume);
-                    }
-                    addContact(resume, rs.getString("type"), rs.getString("value"));
+        return sqlTemplate.execute("""
+                                    SELECT *
+                                      FROM resume
+                                               LEFT JOIN contact ON resume.uuid = contact.resume_uuid
+                                     ORDER BY full_name, uuid
+                """, ps -> {
+            ResultSet rs = ps.executeQuery();
+            Map<String, Resume> processedResumes = new LinkedHashMap<>();
+            while (rs.next()) {
+                String uuid = rs.getString("uuid");
+                String fullName = rs.getString("full_name");
+                Resume resume = processedResumes.get(uuid);
+                if (!processedResumes.containsKey(uuid)) {
+                    resume = new Resume(uuid, fullName);
+                    processedResumes.put(uuid, resume);
                 }
-                return new ArrayList<>(processedResumes.values());
+                addContact(resume, rs);
             }
+            return new ArrayList<>(processedResumes.values());
         });
     }
 
     @Override
     public int size() {
-        return sqlTemplate.transactionExecute(conn -> {
-            try (PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*)" +
-                                                              "      FROM resume")) {
-                ResultSet rs = ps.executeQuery();
-                return rs.next() ? rs.getInt(1) : 0;
-            }
+        return sqlTemplate.execute("SELECT COUNT(*) FROM resume", ps -> {
+            ResultSet rs = ps.executeQuery();
+            return rs.next() ? rs.getInt(1) : 0;
         });
     }
 
@@ -212,7 +201,9 @@ public class SqlStorage implements Storage {
         });
     }
 
-    private void addContact(Resume resume, String type, String value) {
+    private void addContact(Resume resume, ResultSet rs) throws SQLException {
+        String type = rs.getString("type");
+        String value = rs.getString("value");
         if (type == null) {
             return;
         }
