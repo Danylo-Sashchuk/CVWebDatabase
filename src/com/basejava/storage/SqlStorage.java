@@ -3,11 +3,12 @@ package com.basejava.storage;
 import com.basejava.exceptions.NotExistStorageException;
 import com.basejava.model.ContactType;
 import com.basejava.model.Resume;
+import com.basejava.sql.ExceptionUtil;
+import com.basejava.sql.SqlAbsorber;
+import com.basejava.sql.SqlFunctional;
 import com.basejava.sql.SqlTemplate;
 
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -188,6 +189,13 @@ public class SqlStorage implements Storage {
                     editedContacts.add(type);
                 }
             }
+
+            sqlTemplate.statementExecute("INSERT INTO contact (type, value, resume_uuid) " +
+                             "VALUES (?, ?, ?)", conn, newContacts, (type, ps) -> {
+                ps.setString(1, type.name());
+                ps.setString(2, contactsInResume.get(type));
+                ps.setString(3, uuid);
+            });
 
             try (PreparedStatement insert = conn.prepareStatement("INSERT INTO contact (type, value, resume_uuid) " +
                                                                   "VALUES (?, ?, ?)")) {
