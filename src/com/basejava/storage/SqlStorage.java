@@ -169,11 +169,11 @@ public class SqlStorage implements Storage {
                 }
             }
 
-            //determine contacts that are new in the resume
+            //determine contacts that are new in the resume in order to save them
             Set<ContactType> newContacts = new HashSet<>(contactTypesInResume);
             newContacts.removeAll(contactTypesInDB);
 
-            //determine contacts that are not in resume, but stored in DB
+            //determine contacts that are not in the resume, but stored in DB in order to delete them
             Set<ContactType> deletedContacts = new HashSet<>(contactTypesInDB);
             deletedContacts.removeAll(contactTypesInResume);
 
@@ -181,7 +181,7 @@ public class SqlStorage implements Storage {
             Set<ContactType> sameContactTypes = new HashSet<>(contactTypesInResume);
             sameContactTypes.retainAll(contactTypesInDB);
 
-            //determine which contacts have been changed
+            //determine which contacts in the resume have been changed in order to update them
             Set<ContactType> editedContacts = new HashSet<>();
             for (ContactType type : sameContactTypes) {
                 if (!contactsInResume.get(type).equals(contactsInDB.get(type))) {
