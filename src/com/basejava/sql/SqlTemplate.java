@@ -1,12 +1,11 @@
 package com.basejava.sql;
 
 import com.basejava.exceptions.StorageException;
-import com.basejava.model.ContactType;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Set;
+import java.util.Collection;
 
 public class SqlTemplate {
     private final ConnectionFactory connectionFactory;
@@ -40,10 +39,10 @@ public class SqlTemplate {
         }
     }
 
-    public <T> void statementExecute(String sql, Connection conn, Set<T> set, SqlAbsorber<T> absorber) {
+    public <T> void statementExecute(String sql, Connection conn, Collection<T> collection, SqlAbsorber<T> absorber) {
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            for (T type : set) {
-                absorber.absorb(type, statement);
+            for (T item : collection) {
+                absorber.absorb(item, statement);
                 statement.addBatch();
             }
             statement.executeBatch();

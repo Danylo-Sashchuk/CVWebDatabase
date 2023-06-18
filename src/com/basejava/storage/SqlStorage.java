@@ -3,12 +3,11 @@ package com.basejava.storage;
 import com.basejava.exceptions.NotExistStorageException;
 import com.basejava.model.ContactType;
 import com.basejava.model.Resume;
-import com.basejava.sql.ExceptionUtil;
-import com.basejava.sql.SqlAbsorber;
-import com.basejava.sql.SqlFunctional;
 import com.basejava.sql.SqlTemplate;
 
-import java.sql.*;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -191,43 +190,24 @@ public class SqlStorage implements Storage {
             }
 
             sqlTemplate.statementExecute("INSERT INTO contact (type, value, resume_uuid) " +
-                             "VALUES (?, ?, ?)", conn, newContacts, (type, ps) -> {
+                                         "VALUES (?, ?, ?)", conn, newContacts, (type, ps) -> {
                 ps.setString(1, type.name());
                 ps.setString(2, contactsInResume.get(type));
                 ps.setString(3, uuid);
             });
 
-            try (PreparedStatement insert = conn.prepareStatement("INSERT INTO contact (type, value, resume_uuid) " +
-                                                                  "VALUES (?, ?, ?)")) {
-                for (ContactType type : newContacts) {
-                    insert.setString(1, type.name());
-                    insert.setString(2, contactsInResume.get(type));
-                    insert.setString(3, uuid);
-                    insert.addBatch();
-                }
-                insert.executeBatch();
-            }
+            sqlTemplate.statementExecute("DELETE FROM contact WHERE type = ? AND resume_uuid" +
+                                         " = ?", conn, deletedContacts, (type, ps) -> {
+                ps.setString(1, type.name());
+                ps.setString(2, uuid);
+            });
 
-            try (PreparedStatement delete = conn.prepareStatement("DELETE FROM contact WHERE type = ? AND resume_uuid" +
-                                                                  " = ?")) {
-                for (ContactType type : deletedContacts) {
-                    delete.setString(1, type.name());
-                    delete.setString(2, uuid);
-                    delete.addBatch();
-                }
-                delete.executeBatch();
-            }
-
-            try (PreparedStatement update = conn.prepareStatement("UPDATE contact SET value = ? WHERE type = ? AND " +
-                                                                  "resume_uuid = ?")) {
-                for (ContactType type : editedContacts) {
-                    update.setString(1, contactsInResume.get(type));
-                    update.setString(2, type.name());
-                    update.setString(3, uuid);
-                    update.addBatch();
-                }
-                update.executeBatch();
-            }
+            sqlTemplate.statementExecute("UPDATE contact SET value = ? WHERE type = ? AND " +
+                                         "resume_uuid = ?", conn, editedContacts, (type, ps) -> {
+                ps.setString(1, contactsInResume.get(type));
+                ps.setString(2, type.name());
+                ps.setString(3, uuid);
+            });
 
             return null;
         });
