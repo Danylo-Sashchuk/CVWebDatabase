@@ -41,7 +41,7 @@ class SqlStorageTest extends AbstractStorageTest {
     }
 
     @Test
-    void update_whenContactsUpdated_shouldTrue() { //TODO DELETE CLEAR
+    void update_whenContactsUpdated_shouldTrue() {
         storage.save(RESUME);
 
         RESUME.addContact(ContactType.PHONE_NUMBER, "222222222");
