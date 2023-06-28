@@ -51,7 +51,7 @@ public class Resume implements Serializable {
     }
 
     public Map<SectionType, AbstractSection> getSections() {
-        return sections;
+        return new HashMap<>(sections);
     }
 
     public void addSection(SectionType type, AbstractSection section) {
@@ -69,13 +69,15 @@ public class Resume implements Serializable {
     @Override
     public String toString() {
         return "Resume{" + "uuid='" + uuid + '\'' + ", fullName='" + fullName + '\'' + ", contacts=" + contacts + ", "
-                + "sections=" + sections + '}';
+               + "sections=" + sections + '}';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Resume resume = (Resume) o;
         return Objects.equals(uuid, resume.uuid) && Objects.equals(fullName, resume.fullName) && Objects.equals(contacts, resume.contacts) && Objects.equals(sections, resume.sections);
     }

@@ -1,6 +1,12 @@
-create type section_type as enum ('PERSONAL', 'POSITION', 'ACHIEVEMENTS', 'QUALIFICATIONS', 'EXPERIENCE', 'EDUCATION');
+create type text_section_type as enum ('PERSONAL', 'POSITION');
 
-alter type section_type owner to postgres;
+alter type text_section_type owner to postgres;
+
+create type list_section_type as enum ('ACHIEVEMENTS', 'QUALIFICATIONS');
+
+alter type list_section_type owner to postgres;
+
+-- TODO: add enum for contacts
 
 create table resume
 (
@@ -42,7 +48,7 @@ create table text_section
         constraint text_section_resume_uuid_fk
             references resume
             on delete cascade,
-    type        section_type not null
+    type        text_section_type not null
 );
 
 alter table text_section
@@ -54,30 +60,14 @@ create table list_section
         constraint list_section_pk
             primary key,
     resume_uuid char(36)     not null
+        constraint list_section_pk2
+            unique
         constraint list_section_resume_uuid_fk
-            references resume
-            on delete cascade,
-    type        section_type not null
+            references resume,
+    type        list_section_type not null,
+    text        text         not null
 );
 
 alter table list_section
-    owner to postgres;
-
-create index list_section_resume_uuid_index
-    on list_section (resume_uuid, type);
-
-create table list_content
-(
-    id              serial
-        constraint list_content_pk
-            primary key,
-    text            text    not null,
-    list_section_id integer not null
-        constraint list_content_list_section_id_fk
-            references list_section
-            on delete cascade
-);
-
-alter table list_content
     owner to postgres;
 

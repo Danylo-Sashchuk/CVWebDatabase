@@ -1,8 +1,7 @@
 package com.basejava.storage;
 
 import com.basejava.exceptions.NotExistStorageException;
-import com.basejava.model.ContactType;
-import com.basejava.model.Resume;
+import com.basejava.model.*;
 import com.basejava.sql.ExceptionUtil;
 import com.basejava.sql.SqlConductor;
 import com.basejava.sql.SqlTemplate;
@@ -41,6 +40,7 @@ public class SqlStorage implements Storage {
                                                               "value)   VALUES (?, ?, ?)")) {
                 saveContacts(resume, ps);
             }
+            saveSections(resume, conn);
             return null;
         });
     }
@@ -66,6 +66,7 @@ public class SqlStorage implements Storage {
                 SELECT *
                   FROM resume
                            LEFT JOIN contact ON resume.uuid = contact.resume_uuid
+                           LEFT JOIN text_section ON resume.uuid = text_section.resume_uuid
                  WHERE resume.uuid = ?;
                                                      """, ps -> {
             ps.setString(1, uuid);
@@ -78,6 +79,7 @@ public class SqlStorage implements Storage {
             do {
                 addContact(resume, rs);
             } while (rs.next());
+
 
             return resume;
         });
@@ -199,6 +201,34 @@ public class SqlStorage implements Storage {
 
             return null;
         });
+    }
+
+    private void saveSections(Resume resume, Connection conn) throws SQLException {
+        for (Map.Entry<SectionType, AbstractSection> section : resume.getSections().entrySet()) {
+            switch (section.getKey()) {
+                case PERSONAL, POSITION -> {
+                    saveTextSection(section, resume.getUuid(), conn);
+                }
+                case ACHIEVEMENTS, QUALIFICATIONS -> {
+
+                }
+                case EXPERIENCE, EDUCATION -> {
+                    //TODO experience and education
+                }
+            }
+        }
+    }
+
+    private void saveTextSection(Map.Entry<SectionType, AbstractSection> section, String uuid, Connection conn) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO text_section(text, resume_uuid, type)VALUES( " +
+                                                          "?, ?, ?::text_section_type) ")) {
+            TextSection tx = (TextSection) section.getValue();
+            ps.setString(1, tx.getText());
+            ps.setString(2, uuid);
+            ps.setString(3, section.getKey().name());
+            ps.execute();
+        }
+
     }
 
     private void saveContacts(Resume resume, PreparedStatement ps) throws SQLException {
