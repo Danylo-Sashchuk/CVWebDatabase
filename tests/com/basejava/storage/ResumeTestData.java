@@ -28,6 +28,7 @@ public class ResumeTestData {
     private Iterator<String> educationWebsitesIterator;
     private Iterator<String> educationTitlesIterator;
     private Iterator<String> educationDescriptionsIterator;
+
     private ResumeTestData() {
         mockingData = MockingData.getInstance();
         phonesIterator = mockingData.getIterator(mockingData.PHONE_NUMBERS);
@@ -58,19 +59,43 @@ public class ResumeTestData {
         Resume resume = new Resume(uuid, fullName);
         addContacts(fullName, resume);
 
-        addPersonal(resume);
-        addPosition(resume);
-//
+        //        addPersonal(resume);
+        //        addPosition(resume);
+        //
         //        addAchievements(resume);
         //        addQualifications(resume);
 
-//        addExperiences(resume);
-//        addEducations(resume);
+        //        addExperiences(resume);
+        //        addEducations(resume);
         return resume;
     }
 
     public Resume createResume(String fullName) {
         return createResume(UUID.randomUUID().toString(), fullName);
+    }
+
+    public void addPosition(Resume resume) {
+        resume.addSection(SectionType.POSITION, new TextSection(positionsIterator.next()));
+    }
+
+    public void addPersonal(Resume resume) {
+        resume.addSection(SectionType.PERSONAL, new TextSection(personalsIterator.next()));
+    }
+
+    public void addAchievements(Resume resume) {
+        ListSection achievementsSection = createListSection(achievementsIterator);
+        resume.addSection(SectionType.ACHIEVEMENTS, achievementsSection);
+    }
+
+    public void addExperiences(Resume resume) {
+        CompanySection experienceSection = new CompanySection(createCompaniesList(companyNamesIterator,
+                companyWebsitesIterator, workTitlesIterator, workDescriptionsIterator));
+        resume.addSection(SectionType.EXPERIENCE, experienceSection);
+    }
+
+    public List<Company> getExperiences() {
+        return createCompaniesList(companyNamesIterator, companyWebsitesIterator, workTitlesIterator,
+                workDescriptionsIterator);
     }
 
     private boolean hasMoreData() {
@@ -118,19 +143,6 @@ public class ResumeTestData {
         return fullName;
     }
 
-    public void addPosition(Resume resume) {
-        resume.addSection(SectionType.POSITION, new TextSection(positionsIterator.next()));
-    }
-
-    public void addPersonal(Resume resume) {
-        resume.addSection(SectionType.PERSONAL, new TextSection(personalsIterator.next()));
-    }
-
-    public void addAchievements(Resume resume) {
-        ListSection achievementsSection = createListSection(achievementsIterator);
-        resume.addSection(SectionType.ACHIEVEMENTS, achievementsSection);
-    }
-
     private ListSection createListSection(Iterator<String> infoIterator) {
         List<String> list = createComposedList(infoIterator);
         return new ListSection(list);
@@ -149,20 +161,10 @@ public class ResumeTestData {
         resume.addSection(SectionType.QUALIFICATIONS, qualificationsSection);
     }
 
-    public void addExperiences(Resume resume) {
-        CompanySection experienceSection = new CompanySection(createCompaniesList(companyNamesIterator,
-                companyWebsitesIterator, workTitlesIterator, workDescriptionsIterator));
-        resume.addSection(SectionType.EXPERIENCE, experienceSection);
-    }
-
     private void addEducations(Resume resume) {
         CompanySection educationSection = new CompanySection(createCompaniesList(educationNamesIterator,
                 educationWebsitesIterator, educationTitlesIterator, educationDescriptionsIterator));
         resume.addSection(SectionType.EDUCATION, educationSection);
-    }
-
-    public List<Company> getExperiences() {
-        return createCompaniesList(companyNamesIterator, companyWebsitesIterator, workTitlesIterator, workDescriptionsIterator);
     }
 
     private List<Company> createCompaniesList(Iterator<String> namesIterator, Iterator<String> websitesIterator,

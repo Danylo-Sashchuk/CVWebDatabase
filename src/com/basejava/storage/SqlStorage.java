@@ -40,7 +40,7 @@ public class SqlStorage implements Storage {
                                                               "value)   VALUES (?, ?, ?)")) {
                 saveContacts(resume, ps);
             }
-            saveSections(resume, conn);
+            //saveSections(resume, conn);
             return null;
         });
     }
@@ -76,8 +76,9 @@ public class SqlStorage implements Storage {
             }
 
             Resume resume = new Resume(uuid, rs.getString("full_name"));
+            Map<String, ContactType> processedContacts = new HashMap<>();
             do {
-                addContact(resume, rs);
+                addContact(resume, processedContacts, rs);
             } while (rs.next());
 
 
@@ -96,6 +97,7 @@ public class SqlStorage implements Storage {
                 """, ps -> {
             ResultSet rs = ps.executeQuery();
             Map<String, Resume> processedResumes = new LinkedHashMap<>();
+            Map<String, ContactType> processedContacts = new HashMap<>();
             while (rs.next()) {
                 String uuid = rs.getString("uuid");
                 String fullName = rs.getString("full_name");
@@ -104,7 +106,7 @@ public class SqlStorage implements Storage {
                     resume = new Resume(uuid, fullName);
                     processedResumes.put(uuid, resume);
                 }
-                addContact(resume, rs);
+                addContact(resume, processedContacts, rs);
             }
             return new ArrayList<>(processedResumes.values());
         });
@@ -255,12 +257,14 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void addContact(Resume resume, ResultSet rs) throws SQLException {
+    private void addContact(Resume resume, Map<String, ContactType> processedContacts, ResultSet rs) throws SQLException {
         String type = rs.getString("type");
         String value = rs.getString("value");
-        if (type == null) {
+        if (type == null || (processedContacts.get(resume.getUuid()) != null && processedContacts.get(resume.getUuid())
+                .equals(ContactType.valueOf(type)))) {
             return;
         }
+        processedContacts.put(resume.getUuid(), ContactType.valueOf(type));
         resume.addContact(ContactType.valueOf(type), value);
     }
 
