@@ -59,11 +59,11 @@ public class ResumeTestData {
         Resume resume = new Resume(uuid, fullName);
         addContacts(fullName, resume);
 
-        //        addPersonal(resume);
-        //        addPosition(resume);
-        //
-        //        addAchievements(resume);
-        //        addQualifications(resume);
+                addPersonal(resume);
+                addPosition(resume);
+
+                addAchievements(resume);
+                addQualifications(resume);
 
         //        addExperiences(resume);
         //        addEducations(resume);

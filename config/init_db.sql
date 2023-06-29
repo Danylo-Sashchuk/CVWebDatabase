@@ -1,14 +1,14 @@
-create type text_section_type as enum ('PERSONAL', 'POSITION');
+create type public.text_section_type as enum ('PERSONAL', 'POSITION');
 
-alter type text_section_type owner to postgres;
+alter type public.text_section_type owner to postgres;
 
-create type list_section_type as enum ('ACHIEVEMENTS', 'QUALIFICATIONS');
+create type public.list_section_type as enum ('ACHIEVEMENTS', 'QUALIFICATIONS');
 
-alter type list_section_type owner to postgres;
+alter type public.list_section_type owner to postgres;
 
--- TODO: add enum for contacts
+--todo create enum for contacts
 
-create table resume
+create table public.resume
 (
     uuid      char(36) not null
         constraint resume_pk
@@ -16,10 +16,10 @@ create table resume
     full_name text     not null
 );
 
-alter table resume
+alter table public.resume
     owner to postgres;
 
-create table contact
+create table public.contact
 (
     id          serial
         constraint contact_pk
@@ -28,46 +28,45 @@ create table contact
     value       text not null,
     resume_uuid char(36)
         constraint contact_resume_uuid_fk
-            references resume
+            references public.resume
             on delete cascade
 );
 
-alter table contact
+alter table public.contact
     owner to postgres;
 
 create unique index contact_resume_uuid_type_uindex
-    on contact (resume_uuid, type);
+    on public.contact (resume_uuid, type);
 
-create table text_section
+create table public.text_section
 (
     id          serial
         constraint text_section_pk
             primary key,
-    text        text         not null,
-    resume_uuid char(36)     not null
+    text        text              not null,
+    resume_uuid char(36)          not null
         constraint text_section_resume_uuid_fk
-            references resume
+            references public.resume
             on delete cascade,
     type        text_section_type not null
 );
 
-alter table text_section
+alter table public.text_section
     owner to postgres;
 
-create table list_section
+create table public.list_section
 (
     id          serial
         constraint list_section_pk
             primary key,
-    resume_uuid char(36)     not null
-        constraint list_section_pk2
-            unique
+    resume_uuid char(36)          not null
         constraint list_section_resume_uuid_fk
-            references resume,
+            references public.resume
+            on delete cascade,
     type        list_section_type not null,
-    text        text         not null
+    text        text              not null
 );
 
-alter table list_section
+alter table public.list_section
     owner to postgres;
 
