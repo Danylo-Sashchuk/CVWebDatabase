@@ -40,7 +40,17 @@ public class SqlStorage implements Storage {
                                                               "value)   VALUES (?, ?, ?)")) {
                 saveContacts(resume, ps);
             }
-            saveSections(resume, conn);
+            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO text_section(text, resume_uuid, type) " +
+                                                              "VALUES( " +
+                                                              "?, ?, ?::text_section_type) ")) {
+                saveTextSections(resume, ps);
+            }
+            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO list_section(text, resume_uuid, type) " +
+                                                              "VALUES( " +
+                                                              "?, ?, ?::list_section_type) ")) {
+                saveListSections(resume, ps);
+            }
+
             return null;
         });
     }
@@ -238,10 +248,6 @@ public class SqlStorage implements Storage {
         resume.addSection(SectionType.valueOf(type), new ListSection(list));
     }
 
-    private List<String> parseText(String text) {
-        return new ArrayList<>(Arrays.asList(text.split("\n")));
-    }
-
     private void addTextSection(Resume resume, Map<String, SectionType> processedSections, ResultSet rs) throws SQLException {
         String type = rs.getString("text_section_type");
         String text = rs.getString("text_section_text");
@@ -252,34 +258,6 @@ public class SqlStorage implements Storage {
         resume.addSection(SectionType.valueOf(type), new TextSection(text));
     }
 
-
-    private void saveSections(Resume resume, Connection conn) throws SQLException {
-        for (Map.Entry<SectionType, AbstractSection> section : resume.getSections().entrySet()) {
-            switch (section.getKey()) {
-                case PERSONAL, POSITION -> {
-                    saveTextSection(section, resume.getUuid(), conn);
-                }
-                case ACHIEVEMENTS, QUALIFICATIONS -> {
-                    saveListSection(section, resume.getUuid(), conn);
-                }
-                case EXPERIENCE, EDUCATION -> {
-
-                }
-            }
-        }
-    }
-
-    private void saveListSection(Map.Entry<SectionType, AbstractSection> section, String uuid, Connection conn) throws SQLException {
-        String text = concatStrings((ListSection) section.getValue());
-        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO list_section(text, resume_uuid, type)VALUES( " +
-                                                          "?, ?, ?::list_section_type) ")) {
-            ps.setString(1, text);
-            ps.setString(2, uuid);
-            ps.setString(3, section.getKey().name());
-            ps.execute();
-        }
-    }
-
     private String concatStrings(ListSection section) {
         StringBuilder sb = new StringBuilder();
         for (String s : section.getTexts()) {
@@ -288,16 +266,39 @@ public class SqlStorage implements Storage {
         return sb.toString();
     }
 
-    //todo concat with saveListSection like saveContacts
-    private void saveTextSection(Map.Entry<SectionType, AbstractSection> section, String uuid, Connection conn) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO text_section(text, resume_uuid, type)VALUES( " +
-                                                          "?, ?, ?::text_section_type) ")) {
-            TextSection tx = (TextSection) section.getValue();
-            ps.setString(1, tx.getText());
-            ps.setString(2, uuid);
-            ps.setString(3, section.getKey().name());
-            ps.execute();
+    private List<String> parseText(String text) {
+        return new ArrayList<>(Arrays.asList(text.split("\n")));
+    }
+
+    private void saveTextSections(Resume resume, PreparedStatement ps) throws SQLException {
+        String[] textSectionsTypes = {"PERSONAL", "POSITION"};
+        for (String type : textSectionsTypes) {
+            TextSection ts = (TextSection) resume.getSections().get(SectionType.valueOf(type));
+            if (ts == null) {
+                return;
+            }
+            ps.setString(1, ts.getText());
+            ps.setString(2, resume.getUuid());
+            ps.setString(3, type);
+            ps.addBatch();
         }
+        ps.executeBatch();
+    }
+
+    private void saveListSections(Resume resume, PreparedStatement ps) throws SQLException {
+        String[] listSectionsTypes = {"ACHIEVEMENTS", "QUALIFICATIONS"};
+        for (String type : listSectionsTypes) {
+            ListSection ls = (ListSection) resume.getSections().get(SectionType.valueOf(type));
+            if (ls == null) {
+                return;
+            }
+            String text = concatStrings(ls);
+            ps.setString(1, text);
+            ps.setString(2, resume.getUuid());
+            ps.setString(3, type);
+            ps.addBatch();
+        }
+        ps.executeBatch();
     }
 
     private void saveContacts(Resume resume, PreparedStatement ps) throws SQLException {
