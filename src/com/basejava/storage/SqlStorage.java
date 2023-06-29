@@ -40,7 +40,7 @@ public class SqlStorage implements Storage {
                                                               "value)   VALUES (?, ?, ?)")) {
                 saveContacts(resume, ps);
             }
-            //saveSections(resume, conn);
+            saveSections(resume, conn);
             return null;
         });
     }
@@ -63,12 +63,16 @@ public class SqlStorage implements Storage {
         LOG.info("get resume: " + uuid);
 
         return sqlTemplate.execute("""
-                SELECT *
+                SELECT resume.uuid,
+                       resume.full_name,
+                       contact.type      AS contact_type,
+                       contact.value     AS contact_value,
+                       text_section.type AS text_section_type,
+                       text_section.text AS text_section_text
                   FROM resume
                            LEFT JOIN contact ON resume.uuid = contact.resume_uuid
                            LEFT JOIN text_section ON resume.uuid = text_section.resume_uuid
-                 WHERE resume.uuid = ?;
-                                                     """, ps -> {
+                 WHERE resume.uuid = ?""", ps -> {
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
             if (!rs.next()) {
@@ -77,8 +81,10 @@ public class SqlStorage implements Storage {
 
             Resume resume = new Resume(uuid, rs.getString("full_name"));
             Map<String, ContactType> processedContacts = new HashMap<>();
+            Map<String, SectionType> processedSections = new HashMap<>();
             do {
                 addContact(resume, processedContacts, rs);
+                addSection(resume, processedSections, rs);
             } while (rs.next());
 
 
@@ -90,11 +96,17 @@ public class SqlStorage implements Storage {
     public List<Resume> getAllSorted() {
         LOG.info("get all sorted");
         return sqlTemplate.execute("""
-                                    SELECT *
-                                      FROM resume
-                                               LEFT JOIN contact ON resume.uuid = contact.resume_uuid
-                                     ORDER BY full_name, uuid
-                """, ps -> {
+                SELECT resume.uuid,
+                       resume.full_name,
+                       contact.type      AS contact_type,
+                       contact.value     AS contact_value,
+                       text_section.type AS text_section_type,
+                       text_section.text AS text_section_text
+                  FROM resume
+                           LEFT JOIN contact ON resume.uuid = contact.resume_uuid
+                           LEFT JOIN text_section ON resume.uuid = text_section.resume_uuid
+                 ORDER BY full_name, uuid
+                                """, ps -> {
             ResultSet rs = ps.executeQuery();
             Map<String, Resume> processedResumes = new LinkedHashMap<>();
             Map<String, ContactType> processedContacts = new HashMap<>();
@@ -205,6 +217,26 @@ public class SqlStorage implements Storage {
         });
     }
 
+    private void addSection(Resume resume, Map<String, SectionType> processedSections, ResultSet rs) throws SQLException {
+        String type = rs.getString("text_section_type");
+        String text = rs.getString("text_section_text");
+        SectionType processedSection = processedSections.get(resume.getUuid());
+        if (type == null || (processedSection != null && processedSection.equals(SectionType.valueOf(type)))) {
+            return;
+        }
+        switch (SectionType.valueOf(type)) {
+            case PERSONAL, POSITION -> {
+                resume.addSection(SectionType.valueOf(type), new TextSection(text));
+            }
+            case ACHIEVEMENTS, QUALIFICATIONS -> {
+
+            }
+            case EXPERIENCE, EDUCATION -> {
+
+            }
+        }
+    }
+
     private void saveSections(Resume resume, Connection conn) throws SQLException {
         for (Map.Entry<SectionType, AbstractSection> section : resume.getSections().entrySet()) {
             switch (section.getKey()) {
@@ -258,10 +290,10 @@ public class SqlStorage implements Storage {
     }
 
     private void addContact(Resume resume, Map<String, ContactType> processedContacts, ResultSet rs) throws SQLException {
-        String type = rs.getString("type");
-        String value = rs.getString("value");
-        if (type == null || (processedContacts.get(resume.getUuid()) != null && processedContacts.get(resume.getUuid())
-                .equals(ContactType.valueOf(type)))) {
+        String type = rs.getString("contact_type");
+        String value = rs.getString("contact_value");
+        ContactType processedContact = processedContacts.get(resume.getUuid());
+        if (type == null || (processedContact != null && processedContact.equals(ContactType.valueOf(type)))) {
             return;
         }
         processedContacts.put(resume.getUuid(), ContactType.valueOf(type));
