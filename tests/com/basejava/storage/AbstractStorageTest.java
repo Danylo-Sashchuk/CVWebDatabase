@@ -4,6 +4,7 @@ import com.basejava.exceptions.ExistStorageException;
 import com.basejava.exceptions.NotExistStorageException;
 import com.basejava.model.Resume;
 import com.basejava.util.Config;
+import com.basejava.util.ResumeTestData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,6 @@
-package com.basejava.storage;
+package com.basejava.util;
 
 import com.basejava.model.*;
-import com.basejava.util.DateUtil;
 
 import java.time.LocalDate;
 import java.time.YearMonth;

@@ -1,4 +1,4 @@
-package com.basejava.storage;
+package com.basejava.util;
 
 import java.util.Arrays;
 import java.util.Iterator;
