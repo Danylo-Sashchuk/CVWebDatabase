@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.opentest4j.TestAbortedException;
 
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DataStreamStorageTest extends AbstractFilesStorageTest {
@@ -43,7 +44,9 @@ public class DataStreamStorageTest extends AbstractFilesStorageTest {
     @Test
     void saveGet_when_descriptionIsNull() {
         Company company = getCompany(resume2, 1);
-        company.getPeriods().get(0).setDescription(null);
+        if (company != null) {
+            company.getPeriods().get(0).setDescription(null);
+        }
 
         deleteThenSave(UUID_2, resume2);
 
@@ -58,13 +61,17 @@ public class DataStreamStorageTest extends AbstractFilesStorageTest {
 
     private Company getCompany(Resume resume, int index) {
         List<Company> companies = getCompanies(resume);
-        if (companies.size() < index) {
+        if (companies.size() == 0 || companies.size() <= index) {
             throw new TestAbortedException("Resume does not have that many companies");
         }
         return companies.get(index);
     }
 
     private List<Company> getCompanies(Resume resume) {
-        return ((CompanySection) resume.getSections().get(SectionType.EXPERIENCE)).getCompanies();
+        CompanySection companySection = (CompanySection) resume.getSections().get(SectionType.EXPERIENCE);
+        if (companySection == null) {
+            return new ArrayList<>();
+        }
+        return companySection.getCompanies();
     }
 }

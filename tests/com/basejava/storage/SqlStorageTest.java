@@ -33,13 +33,6 @@ class SqlStorageTest extends AbstractStorageTest {
         SqlStorageTest.RESUME.removeContact(ContactType.GITHUB);
     }
 
-    @Override
-    @Test
-    void update() {
-        storage.update(resume1);
-        Assertions.assertEquals(resume1, storage.get(UUID_1));
-    }
-
     @Test
     void update_whenContactsUpdated_shouldTrue() {
         storage.save(RESUME);

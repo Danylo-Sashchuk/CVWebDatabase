@@ -52,17 +52,15 @@ public class ResumeTestData {
     }
 
     public Resume createResume(String uuid, String fullName) {
-        if (!hasMoreData()) {
-            reloadIterators();
-        }
+        checkIterators();
         Resume resume = new Resume(uuid, fullName);
         addContacts(fullName, resume);
 
-                addPersonal(resume);
-                addPosition(resume);
+        updatePersonal(resume);
+        updatePosition(resume);
 
-                addAchievements(resume);
-                addQualifications(resume);
+        updateAchievements(resume);
+        addQualifications(resume);
 
         //        addExperiences(resume);
         //        addEducations(resume);
@@ -73,15 +71,15 @@ public class ResumeTestData {
         return createResume(UUID.randomUUID().toString(), fullName);
     }
 
-    public void addPosition(Resume resume) {
+    public void updatePosition(Resume resume) {
         resume.addSection(SectionType.POSITION, new TextSection(positionsIterator.next()));
     }
 
-    public void addPersonal(Resume resume) {
+    public void updatePersonal(Resume resume) {
         resume.addSection(SectionType.PERSONAL, new TextSection(personalsIterator.next()));
     }
 
-    public void addAchievements(Resume resume) {
+    public void updateAchievements(Resume resume) {
         ListSection achievementsSection = createListSection(achievementsIterator);
         resume.addSection(SectionType.ACHIEVEMENTS, achievementsSection);
     }
@@ -97,26 +95,52 @@ public class ResumeTestData {
                 workDescriptionsIterator);
     }
 
-    private boolean hasMoreData() {
-        return phonesIterator.hasNext();
-    }
-
-    private void reloadIterators() {
-        phonesIterator = mockingData.getIterator(mockingData.PHONE_NUMBERS);
-        emailsIterator = mockingData.getIterator(mockingData.EMAILS);
-        positionsIterator = mockingData.getIterator(mockingData.POSITIONS);
-        personalsIterator = mockingData.getIterator(mockingData.PERSONALS);
-        achievementsIterator = mockingData.getIterator(mockingData.ACHIEVEMENTS);
-        qualificationsIterator = mockingData.getIterator(mockingData.QUALIFICATIONS);
-        workTitlesIterator = mockingData.getIterator(mockingData.WORK_TITLES);
-        workDescriptionsIterator = mockingData.getIterator(mockingData.WORK_DESCRIPTIONS);
-        datesIterator = mockingData.getIterator(mockingData.DATES);
-        companyNamesIterator = mockingData.getIterator(mockingData.COMPANY_NAMES);
-        companyWebsitesIterator = mockingData.getIterator(mockingData.COMPANY_WEBSITES);
-        educationNamesIterator = mockingData.getIterator(mockingData.EDUCATION_NAMES);
-        educationWebsitesIterator = mockingData.getIterator(mockingData.EDUCATION_WEBSITES);
-        educationTitlesIterator = mockingData.getIterator(mockingData.EDUCATION_TITLE);
-        educationDescriptionsIterator = mockingData.getIterator(mockingData.EDUCATION_DESCRIPTION);
+    private void checkIterators() {
+        if (!phonesIterator.hasNext()) {
+            phonesIterator = mockingData.getIterator(mockingData.PHONE_NUMBERS);
+        }
+        if (!emailsIterator.hasNext()) {
+            emailsIterator = mockingData.getIterator(mockingData.EMAILS);
+        }
+        if (!positionsIterator.hasNext()) {
+            positionsIterator = mockingData.getIterator(mockingData.POSITIONS);
+        }
+        if (!personalsIterator.hasNext()) {
+            personalsIterator = mockingData.getIterator(mockingData.PERSONALS);
+        }
+        if (!achievementsIterator.hasNext()) {
+            achievementsIterator = mockingData.getIterator(mockingData.ACHIEVEMENTS);
+        }
+        if (!qualificationsIterator.hasNext()) {
+            qualificationsIterator = mockingData.getIterator(mockingData.QUALIFICATIONS);
+        }
+        if (!workTitlesIterator.hasNext()) {
+            workTitlesIterator = mockingData.getIterator(mockingData.WORK_TITLES);
+        }
+        if (!workDescriptionsIterator.hasNext()) {
+            workDescriptionsIterator = mockingData.getIterator(mockingData.WORK_DESCRIPTIONS);
+        }
+        if (!datesIterator.hasNext()) {
+            datesIterator = mockingData.getIterator(mockingData.DATES);
+        }
+        if (!companyNamesIterator.hasNext()) {
+            companyNamesIterator = mockingData.getIterator(mockingData.COMPANY_NAMES);
+        }
+        if (!companyWebsitesIterator.hasNext()) {
+            companyWebsitesIterator = mockingData.getIterator(mockingData.COMPANY_WEBSITES);
+        }
+        if (!educationNamesIterator.hasNext()) {
+            educationNamesIterator = mockingData.getIterator(mockingData.EDUCATION_NAMES);
+        }
+        if (!educationWebsitesIterator.hasNext()) {
+            educationWebsitesIterator = mockingData.getIterator(mockingData.EDUCATION_WEBSITES);
+        }
+        if (!educationTitlesIterator.hasNext()) {
+            educationTitlesIterator = mockingData.getIterator(mockingData.EDUCATION_TITLE);
+        }
+        if (!educationDescriptionsIterator.hasNext()) {
+            educationDescriptionsIterator = mockingData.getIterator(mockingData.EDUCATION_DESCRIPTION);
+        }
     }
 
     private void addContacts(String fullName, Resume resume) {
