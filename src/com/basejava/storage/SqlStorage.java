@@ -42,7 +42,7 @@ public class SqlStorage implements Storage {
                 ps.execute();
             }
             try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, " +
-                                                              "value)   VALUES (?, ?, ?)")) {
+                                                              "value)   VALUES (?, ?::contact_type, ?)")) {
                 saveContacts(resume, ps);
             }
             try (PreparedStatement ps = conn.prepareStatement("INSERT INTO text_section(text, resume_uuid, type) " +
@@ -161,7 +161,7 @@ public class SqlStorage implements Storage {
                 ps.executeUpdate();
             }
             try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) " +
-                                                              "         VALUES (?, ?, ?)")) {
+                                                              "         VALUES (?, ?::contact_type, ?)")) {
                 saveContacts(resume, ps);
             }
             try (PreparedStatement ps = conn.prepareStatement("INSERT INTO text_section(text, resume_uuid, type) " +

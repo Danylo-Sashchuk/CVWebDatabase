@@ -2,6 +2,10 @@ create type public.section_type as enum ('PERSONAL', 'POSITION', 'ACHIEVEMENTS',
 
 alter type public.section_type owner to postgres;
 
+CREATE TYPE public.contact_type AS ENUM ('PHONE_NUMBER', 'EMAIL', 'SKYPE', 'LINKEDIN', 'GITHUB');
+
+alter type public.contact_type owner to postgres;
+
 create table public.resume
 (
     uuid      char(36) not null
@@ -18,7 +22,7 @@ create table public.contact
     id          serial
         constraint contact_pk
             primary key,
-    type        text not null,
+    type        contact_type not null,
     value       text not null,
     resume_uuid char(36)
         constraint contact_resume_uuid_fk
