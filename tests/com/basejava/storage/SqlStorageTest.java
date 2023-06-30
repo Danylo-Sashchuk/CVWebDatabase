@@ -27,10 +27,14 @@ class SqlStorageTest extends AbstractStorageTest {
                 .getStorage());
     }
 
-    private void cleanContacts() {
-        SqlStorageTest.RESUME.removeContact(ContactType.EMAIL);
-        SqlStorageTest.RESUME.removeContact(ContactType.PHONE_NUMBER);
-        SqlStorageTest.RESUME.removeContact(ContactType.GITHUB);
+    @Override
+    @Test
+    void update() {
+        resumeTestData.updatePosition(resume1);
+        resumeTestData.updatePersonal(resume1);
+        resumeTestData.updateAchievements(resume1);
+        storage.update(resume1);
+        Assertions.assertEquals(resume1, storage.get(UUID_1));
     }
 
     @Test
@@ -94,5 +98,11 @@ class SqlStorageTest extends AbstractStorageTest {
         storage.update(RESUME);
 
         assertGet(RESUME);
+    }
+
+    private void cleanContacts() {
+        SqlStorageTest.RESUME.removeContact(ContactType.EMAIL);
+        SqlStorageTest.RESUME.removeContact(ContactType.PHONE_NUMBER);
+        SqlStorageTest.RESUME.removeContact(ContactType.GITHUB);
     }
 }

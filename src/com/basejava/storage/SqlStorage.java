@@ -156,9 +156,18 @@ public class SqlStorage implements Storage {
                 ps.setString(1, resume.getUuid());
                 ps.executeUpdate();
             }
+            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM text_section WHERE resume_uuid = ?")) {
+                ps.setString(1, resume.getUuid());
+                ps.executeUpdate();
+            }
             try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) " +
                                                               "         VALUES (?, ?, ?)")) {
                 saveContacts(resume, ps);
+            }
+            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO text_section(text, resume_uuid, type) " +
+                                                              "VALUES( " +
+                                                              "?, ?, ?::section_type) ")) {
+                saveSections(resume, ps);
             }
             return null;
         });

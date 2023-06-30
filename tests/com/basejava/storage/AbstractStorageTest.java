@@ -74,10 +74,10 @@ public abstract class AbstractStorageTest {
 
     @Test
     void update() {
-        storage.update(resume1);
         resumeTestData.updatePosition(resume1);
         resumeTestData.updatePersonal(resume1);
         resumeTestData.updateAchievements(resume1);
+        storage.update(resume1);
         Assertions.assertSame(resume1, storage.get(UUID_1));
     }
 
