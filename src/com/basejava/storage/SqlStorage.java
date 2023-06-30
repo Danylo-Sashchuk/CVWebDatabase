@@ -10,7 +10,6 @@ import java.sql.*;
 import java.util.*;
 import java.util.logging.Logger;
 
-//TODO UPDATE
 public class SqlStorage implements Storage {
     private static final Logger LOG = Logger.getLogger(SqlStorage.class.getName());
     private final SqlTemplate sqlTemplate;
@@ -109,17 +108,18 @@ public class SqlStorage implements Storage {
     public List<Resume> getAllSorted() {
         LOG.info("get all sorted");
         return sqlTemplate.execute("""
+                --using allies because two tables have 'type' column
                 SELECT uuid,
-                             full_name,
-                             contact.type      AS contact_type,
-                             value,
-                             text_section.type AS text_section_type,
-                             text
+                       full_name,
+                       contact.type      AS contact_type,
+                       value,
+                       text_section.type AS text_section_type,
+                       text
                   FROM resume
                            LEFT JOIN contact ON resume.uuid = contact.resume_uuid
                            LEFT JOIN text_section ON resume.uuid = text_section.resume_uuid
                  ORDER BY full_name, uuid
-                                """, ps -> {
+                                                """, ps -> {
             ResultSet rs = ps.executeQuery();
             Map<String, Resume> processedResumes = new LinkedHashMap<>();
             Map<String, ContactType> processedContacts = new HashMap<>();

@@ -1,12 +1,6 @@
-create type public.text_section_type as enum ('PERSONAL', 'POSITION');
+create type public.section_type as enum ('PERSONAL', 'POSITION', 'ACHIEVEMENTS', 'QUALIFICATIONS');
 
-alter type public.text_section_type owner to postgres;
-
-create type public.list_section_type as enum ('ACHIEVEMENTS', 'QUALIFICATIONS');
-
-alter type public.list_section_type owner to postgres;
-
---todo create enum for contacts
+alter type public.section_type owner to postgres;
 
 create table public.resume
 (
@@ -43,30 +37,14 @@ create table public.text_section
     id          serial
         constraint text_section_pk
             primary key,
-    text        text              not null,
-    resume_uuid char(36)          not null
+    text        text         not null,
+    resume_uuid char(36)     not null
         constraint text_section_resume_uuid_fk
             references public.resume
             on delete cascade,
-    type        text_section_type not null
+    type        section_type not null
 );
 
 alter table public.text_section
-    owner to postgres;
-
-create table public.list_section
-(
-    id          serial
-        constraint list_section_pk
-            primary key,
-    resume_uuid char(36)          not null
-        constraint list_section_resume_uuid_fk
-            references public.resume
-            on delete cascade,
-    type        list_section_type not null,
-    text        text              not null
-);
-
-alter table public.list_section
     owner to postgres;
 
