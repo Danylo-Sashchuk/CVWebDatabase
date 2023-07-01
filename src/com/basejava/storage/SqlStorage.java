@@ -41,16 +41,8 @@ public class SqlStorage implements Storage {
                 ps.setString(2, resume.getFullName());
                 ps.execute();
             }
-            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, " +
-                                                              "value)   VALUES (?, ?::contact_type, ?)")) {
-                saveContacts(resume, ps);
-            }
-            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO text_section(text, resume_uuid, type) " +
-                                                              "VALUES( " +
-                                                              "?, ?, ?::section_type) ")) {
-                saveSections(resume, ps);
-            }
-
+            saveContacts(resume, conn);
+            saveSections(resume, conn);
             return null;
         });
     }
@@ -160,15 +152,8 @@ public class SqlStorage implements Storage {
                 ps.setString(1, resume.getUuid());
                 ps.executeUpdate();
             }
-            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) " +
-                                                              "         VALUES (?, ?::contact_type, ?)")) {
-                saveContacts(resume, ps);
-            }
-            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO text_section(text, resume_uuid, type) " +
-                                                              "VALUES( " +
-                                                              "?, ?, ?::section_type) ")) {
-                saveSections(resume, ps);
-            }
+            saveContacts(resume, conn);
+            saveSections(resume, conn);
             return null;
         });
     }
@@ -253,31 +238,37 @@ public class SqlStorage implements Storage {
         return new ArrayList<>(Arrays.asList(text.split("\n")));
     }
 
-    private void saveSections(Resume resume, PreparedStatement ps) throws SQLException {
-        for (Map.Entry<SectionType, AbstractSection> e : resume.getSections().entrySet()) {
-            StringBuilder text = new StringBuilder();
-            switch (e.getKey()) {
-                case PERSONAL, POSITION -> text = new StringBuilder(((TextSection) e.getValue()).getText());
-                case ACHIEVEMENTS, QUALIFICATIONS ->
-                        text = new StringBuilder(concatStrings(((ListSection) e.getValue()).getTexts()));
+    private void saveSections(Resume resume, Connection conn) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO text_section(text, resume_uuid, type) " +
+                                                          "VALUES(?, ?, ?::section_type) ")) {
+            for (Map.Entry<SectionType, AbstractSection> e : resume.getSections().entrySet()) {
+                StringBuilder text = new StringBuilder();
+                switch (e.getKey()) {
+                    case PERSONAL, POSITION -> text = new StringBuilder(((TextSection) e.getValue()).getText());
+                    case ACHIEVEMENTS, QUALIFICATIONS ->
+                            text = new StringBuilder(concatStrings(((ListSection) e.getValue()).getTexts()));
+                }
+                ps.setString(1, text.toString());
+                ps.setString(2, resume.getUuid());
+                ps.setString(3, e.getKey().name());
+                ps.addBatch();
             }
-            ps.setString(1, text.toString());
-            ps.setString(2, resume.getUuid());
-            ps.setString(3, e.getKey().name());
-            ps.addBatch();
+            ps.executeBatch();
         }
-        ps.executeBatch();
     }
 
-    private void saveContacts(Resume resume, PreparedStatement ps) throws SQLException {
-        for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
-            ps.setString(1, resume.getUuid());
-            ps.setString(2, e.getKey()
-                    .name());
-            ps.setString(3, e.getValue());
-            ps.addBatch();
+    private void saveContacts(Resume resume, Connection conn) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, " +
+                                                          "value)   VALUES (?, ?::contact_type, ?)")) {
+            for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
+                ps.setString(1, resume.getUuid());
+                ps.setString(2, e.getKey()
+                        .name());
+                ps.setString(3, e.getValue());
+                ps.addBatch();
+            }
+            ps.executeBatch();
         }
-        ps.executeBatch();
     }
 
     private void updateName(Resume resume, Connection conn) throws SQLException {
