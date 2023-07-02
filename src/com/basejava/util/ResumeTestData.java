@@ -68,35 +68,34 @@ public class ResumeTestData {
 
     private Map<DataType, Iterator<String>> mapIterators() {
         Map<DataType, Iterator<String>> iterators = new HashMap<>();
-        iterators.put(DataType.PHONE_NUMBER, mockingData.getIterator(mockingData.PHONE_NUMBERS));
-        iterators.put(DataType.EMAIL, mockingData.getIterator(mockingData.EMAILS));
-        iterators.put(DataType.POSITION, mockingData.getIterator(mockingData.POSITIONS));
-        iterators.put(DataType.PERSONAL, mockingData.getIterator(mockingData.PERSONALS));
-        iterators.put(DataType.ACHIEVEMENT, mockingData.getIterator(mockingData.ACHIEVEMENTS));
-        iterators.put(DataType.QUALIFICATION, mockingData.getIterator(mockingData.QUALIFICATIONS));
-        iterators.put(DataType.WORK_TITLE, mockingData.getIterator(mockingData.WORK_TITLES));
-        iterators.put(DataType.WORK_DESCRIPTION, mockingData.getIterator(mockingData.WORK_DESCRIPTIONS));
-        iterators.put(DataType.DATE, mockingData.getIterator(mockingData.DATES));
-        iterators.put(DataType.COMPANY_NAME, mockingData.getIterator(mockingData.COMPANY_NAMES));
-        iterators.put(DataType.COMPANY_WEBSITE, mockingData.getIterator(mockingData.COMPANY_WEBSITES));
-        iterators.put(DataType.EDUCATION_NAME, mockingData.getIterator(mockingData.EDUCATION_NAMES));
-        iterators.put(DataType.EDUCATION_WEBSITE, mockingData.getIterator(mockingData.EDUCATION_WEBSITES));
-        iterators.put(DataType.EDUCATION_TITLE, mockingData.getIterator(mockingData.EDUCATION_TITLE));
-        iterators.put(DataType.EDUCATION_DESCRIPTION, mockingData.getIterator(mockingData.EDUCATION_DESCRIPTION));
+        iterators.put(DataType.PHONE_NUMBER, mockingData.getIterator(DataType.PHONE_NUMBER));
+        iterators.put(DataType.EMAIL, mockingData.getIterator(DataType.EMAIL));
+        iterators.put(DataType.POSITION, mockingData.getIterator(DataType.POSITION));
+        iterators.put(DataType.PERSONAL, mockingData.getIterator(DataType.PERSONAL));
+        iterators.put(DataType.ACHIEVEMENT, mockingData.getIterator(DataType.ACHIEVEMENT));
+        iterators.put(DataType.QUALIFICATION, mockingData.getIterator(DataType.QUALIFICATION));
+        iterators.put(DataType.WORK_TITLE, mockingData.getIterator(DataType.WORK_TITLE));
+        iterators.put(DataType.WORK_DESCRIPTION, mockingData.getIterator(DataType.WORK_DESCRIPTION));
+        iterators.put(DataType.DATE, mockingData.getIterator(DataType.DATE));
+        iterators.put(DataType.COMPANY_NAME, mockingData.getIterator(DataType.COMPANY_NAME));
+        iterators.put(DataType.COMPANY_WEBSITE, mockingData.getIterator(DataType.COMPANY_WEBSITE));
+        iterators.put(DataType.EDUCATION_NAME, mockingData.getIterator(DataType.EDUCATION_NAME));
+        iterators.put(DataType.EDUCATION_WEBSITE, mockingData.getIterator(DataType.EDUCATION_WEBSITE));
+        iterators.put(DataType.EDUCATION_TITLE, mockingData.getIterator(DataType.EDUCATION_TITLE));
+        iterators.put(DataType.EDUCATION_DESCRIPTION, mockingData.getIterator(DataType.EDUCATION_DESCRIPTION));
         return iterators;
     }
 
     private void reloadIterators() {
         for (Map.Entry<DataType, Iterator<String>> entry : iterators.entrySet()) {
             if (!entry.getValue().hasNext()) {
-                entry.getValue().
-                entry.setValue(mockingData.getIterator());
+                entry.setValue(mockingData.getIterator(entry.getKey()));
             }
         }
     }
 
     private void addContacts(String fullName, Resume resume) {
-        resume.addContact(ContactType.PHONE_NUMBER, phonesIterator.next());
+        resume.addContact(ContactType.PHONE_NUMBER, iterators.get(DataType.PHONE_NUMBER).next());
         resume.addContact(ContactType.EMAIL, generateEmail(fullName));
         resume.addContact(ContactType.GITHUB, generateLink(fullName, "https://github.com/"));
         resume.addContact(ContactType.LINKEDIN, generateLink(fullName, "https://www.linkedin.com/in/"));
@@ -105,7 +104,7 @@ public class ResumeTestData {
 
     private String generateEmail(String fullName) {
         fullName = fullName.replaceAll(" ", "").toLowerCase();
-        return fullName + "@" + emailsIterator.next() + ".com";
+        return fullName + "@" + iterators.get(DataType.PHONE_NUMBER).next() + ".com";
     }
 
     private String generateLink(String fullName, String websiteUrl) {
@@ -132,13 +131,14 @@ public class ResumeTestData {
     }
 
     private void addQualifications(Resume resume) {
-        ListSection qualificationsSection = createListSection(qualificationsIterator);
+        ListSection qualificationsSection = createListSection(iterators.get(DataType.QUALIFICATION));
         resume.addSection(SectionType.QUALIFICATIONS, qualificationsSection);
     }
 
     private void addEducations(Resume resume) {
-        CompanySection educationSection = new CompanySection(createCompaniesList(educationNamesIterator,
-                educationWebsitesIterator, educationTitlesIterator, educationDescriptionsIterator));
+        CompanySection educationSection = new CompanySection(createCompaniesList(iterators.get(DataType.EDUCATION_NAME),
+                iterators.get(DataType.EDUCATION_WEBSITE), iterators.get(DataType.EDUCATION_TITLE),
+                iterators.get(DataType.EDUCATION_DESCRIPTION)));
         resume.addSection(SectionType.EDUCATION, educationSection);
     }
 
@@ -159,8 +159,8 @@ public class ResumeTestData {
     }
 
     private Company.Period createPeriod(Iterator<String> titleIterator, Iterator<String> descriptionIterator) {
-        YearMonth start = YearMonth.parse(datesIterator.next());
-        YearMonth end = YearMonth.parse(datesIterator.next());
+        YearMonth start = YearMonth.parse(iterators.get(DataType.DATE).next());
+        YearMonth end = YearMonth.parse(iterators.get(DataType.DATE).next());
         LocalDate startDate = DateUtil.of(start.getYear(), start.getMonth());
         LocalDate endDate = DateUtil.of(end.getYear(), end.getMonth());
         String workTitle = titleIterator.next();
