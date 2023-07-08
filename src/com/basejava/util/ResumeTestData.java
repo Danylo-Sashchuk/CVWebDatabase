@@ -104,7 +104,7 @@ public class ResumeTestData {
 
     private String generateEmail(String fullName) {
         fullName = fullName.replaceAll(" ", "").toLowerCase();
-        return fullName + "@" + iterators.get(DataType.PHONE_NUMBER).next() + ".com";
+        return fullName + "@" + iterators.get(DataType.EMAIL).next() + ".com";
     }
 
     private String generateLink(String fullName, String websiteUrl) {
@@ -159,13 +159,10 @@ public class ResumeTestData {
     }
 
     private Company.Period createPeriod(Iterator<String> titleIterator, Iterator<String> descriptionIterator) {
-        reloadIterators();
         YearMonth start = YearMonth.parse(iterators.get(DataType.DATE).next());
         YearMonth end = YearMonth.parse(iterators.get(DataType.DATE).next());
-        reloadIterators();
         LocalDate startDate = DateUtil.of(start.getYear(), start.getMonth());
         LocalDate endDate = DateUtil.of(end.getYear(), end.getMonth());
-        reloadIterators();
         String workTitle = titleIterator.next();
         reloadIterators();
         String workDescription = descriptionIterator.next();
