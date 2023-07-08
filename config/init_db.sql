@@ -1,54 +1,54 @@
-CREATE TYPE section_type AS ENUM ('PERSONAL', 'POSITION', 'ACHIEVEMENTS', 'QUALIFICATIONS', 'EDUCATION', 'EXPERIENCE');
+CREATE TYPE public.section_type AS ENUM ('PERSONAL', 'POSITION', 'ACHIEVEMENTS', 'QUALIFICATIONS', 'EDUCATION', 'EXPERIENCE');
 
-ALTER TYPE section_type OWNER TO postgres;
+ALTER TYPE public.section_type OWNER TO postgres;
 
 CREATE TYPE public.contact_type AS ENUM ('PHONE_NUMBER', 'EMAIL', 'SKYPE', 'LINKEDIN', 'GITHUB');
 
-alter type public.contact_type owner to postgres;
+ALTER TYPE public.contact_type OWNER TO postgres;
 
-create table public.resume
+CREATE TABLE public.resume
 (
-    uuid      char(36) not null
-        constraint resume_pk
-            primary key,
-    full_name text     not null
+    uuid      CHAR(36) NOT NULL
+        CONSTRAINT resume_pk
+            PRIMARY KEY,
+    full_name TEXT     NOT NULL
 );
 
-alter table public.resume
-    owner to postgres;
+ALTER TABLE public.resume
+    OWNER TO postgres;
 
-create table public.contact
+CREATE TABLE public.contact
 (
-    id          serial
-        constraint contact_pk
-            primary key,
-    type        contact_type not null,
-    value       text not null,
-    resume_uuid char(36)
-        constraint contact_resume_uuid_fk
-            references public.resume
-            on delete cascade
+    id          SERIAL
+        CONSTRAINT contact_pk
+            PRIMARY KEY,
+    type        contact_type NOT NULL,
+    value       TEXT         NOT NULL,
+    resume_uuid CHAR(36)
+        CONSTRAINT contact_resume_uuid_fk
+            REFERENCES public.resume
+            ON DELETE CASCADE
 );
 
-alter table public.contact
-    owner to postgres;
+ALTER TABLE public.contact
+    OWNER TO postgres;
 
-create unique index contact_resume_uuid_type_uindex
-    on public.contact (resume_uuid, type);
+CREATE UNIQUE INDEX contact_resume_uuid_type_uindex
+    ON public.contact (resume_uuid, type);
 
-create table public.section
+CREATE TABLE public.section
 (
-    id          serial
-        constraint text_section_pk
-            primary key,
-    text        text         not null,
-    resume_uuid char(36)     not null
-        constraint text_section_resume_uuid_fk
-            references public.resume
-            on delete cascade,
-    type        section_type not null
+    id           SERIAL
+        CONSTRAINT text_section_pk
+            PRIMARY KEY,
+    text         TEXT         NOT NULL,
+    resume_uuid  CHAR(36)     NOT NULL
+        CONSTRAINT text_section_resume_uuid_fk
+            REFERENCES public.resume
+            ON DELETE CASCADE,
+    section_type section_type NOT NULL
 );
 
-alter table public.section
-    owner to postgres;
+ALTER TABLE public.section
+    OWNER TO postgres;
 
