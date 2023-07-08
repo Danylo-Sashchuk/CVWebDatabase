@@ -50,73 +50,217 @@ public class MockingData {
             "Effective " + "teamwork" + " and collaboration", "Proven ability to meet deadlines", "Strong " +
                                                                                                   "problem-solving " + "and " + "analytical skills", "Proficient in Microsoft Office Suite", "Experience with " + "project management " + "software", "Attention to " + "detail and accuracy", "Strong" + " organizational and " + "time management skills", "Ability to adapt to changing " + "priorities", "Experience in customer service" + " and client relations", "Ability to work independently and " + "take " + "initiative", "Ability to learn " + "quickly and apply new " + "concepts", "Experience in " + "data " + "analysis" + " " + "and " + "interpretation", "Excellent " + "research and writing " + "skills", "Proficiency in a " + "second " + "language", "Ability " + "to work in a " + "fast-paced environment", "Experience in public " + "speaking and " + "presentations", "Knowledge of " + "industry" + "-specific " + "software", "Ability to think" + " creatively and " + "outside the box", "Strong leadership and " + "decision-making skills", "Experience " + "in budget " + "management", "Passion for continuous learning and " + "professional development", "Ability to " + "build" + " and maintain " + "positive " + "relationships with " + "colleagues and " + "clients", "Expertise " + "in " + "problem " + "identification " + "and " + "resolution", "Experience in sales and marketing", "Ability " + "to work " + "well under" + " " + "pressure", "Strong customer service skills", "Proficient " + "in " + "various " + "programming" + " languages " + "including " + "Java, " + "Python, and" + " C++", "Extensive experience with project " + "management tools such as JIRA and Trello", "Excellent communication skills, both written and verbal, " + "with a proven ability to work " + "collaboratively " + "in a team environment"};
     //20 work titles for company experience - 4 per person, (2 companies with 2 periods in each)
-    private final String[] WORK_TITLES = {"Marketing Manager", "Software Engineer", "Operations Coordinator",
-            "Sales " + "Associate", "Graphic Designer", "Financial Analyst", "Human Resources Specialist",
-            "Product " + "Manager", "Customer Service Representative", "Web Developer", "Marketing Coordinator",
-            "Human Resources Manager", "Project Manager", "Sales Representative", "Data Scientist",
-            "Social Media " + "Specialist", "Social Media Manager", "HR Generalist", "Project Coordinator", "Content "
-                                                                                                            + "Writer"
-            , "Sales Associate", "IT Support Specialist", "Digital Marketing Manager", "Software Developer",
-            "Administrative Assistant", "Business Analyst", "Public Relations Specialist", "Account Manager",
-            "Customer Success Manager", "Supply Chain Analyst", "UX/UI Designer", "Operations Manager",
-            "Financial " + "Controller", "Event Coordinator", "Marketing Analyst", "HR Coordinator", "Data Analyst",
-            "Content " + "Marketing Manager", "Business Development Manager", "Sales Manager",
-            "Quality Assurance " + "Tester"};
+    private final String[] WORK_TITLES = {
+            "Marketing Analyst",
+            "Software Development Manager",
+            "Operations Director",
+            "Sales Support Specialist",
+            "UI/UX Designer",
+            "Financial Controller",
+            "HR Consultant",
+            "Product Analyst",
+            "Customer Experience Manager",
+            "Backend Developer",
+            "Brand Strategist",
+            "HR Employee Relations Specialist",
+            "IT Systems Administrator",
+            "Accounting Manager",
+            "Data Analyst",
+            "Content Marketing Strategist",
+            "Supply Chain Coordinator",
+            "User Researcher",
+            "Business Systems Analyst",
+            "Digital Advertising Specialist",
+            "Marketing Operations Manager",
+            "Software Architect",
+            "Operations Manager",
+            "Sales Trainer",
+            "UX/UI Developer",
+            "Financial Risk Analyst",
+            "HR Policy Specialist",
+            "Product Development Manager",
+            "Customer Success Specialist",
+            "Front-End Web Developer",
+            "Brand Ambassador",
+            "HR Benefits Administrator",
+            "IT Network Administrator",
+            "Accounting Analyst",
+            "Data Visualization Specialist",
+            "Content Editor",
+            "Logistics Coordinator",
+            "User Interface Developer",
+            "Business Development Analyst",
+            "Digital Content Manager",
+            "Marketing Strategist",
+            "Software Tester",
+            "Operations Analyst",
+            "Sales Analyst",
+            "UI/UX Researcher",
+            "Financial Advisor",
+            "HR Talent Acquisition Specialist",
+            "Product Marketing Specialist",
+            "Customer Relationship Manager",
+            "Full-Stack Web Developer",
+            "Brand Designer",
+            "Marketing Manager",
+            "Software Engineer",
+            "Operations Coordinator",
+            "Sales Associate",
+            "Graphic Designer",
+            "Financial Analyst",
+            "Human Resources Specialist",
+            "Product Manager",
+            "Customer Service Representative",
+            "Web Developer",
+            "Marketing Coordinator",
+            "Human Resources Manager",
+            "Project Manager",
+            "Sales Representative",
+            "Data Scientist",
+            "Social Media Specialist",
+            "Social Media Manager",
+            "HR Generalist",
+            "Project Coordinator",
+            "Content Writer",
+            "Sales Associate",
+            "IT Support Specialist",
+            "Digital Marketing Manager",
+            "Software Developer",
+            "Administrative Assistant",
+            "Business Analyst",
+            "Public Relations Specialist",
+            "Account Manager",
+            "Customer Success Manager",
+            "Supply Chain Analyst",
+            "UX/UI Designer",
+            "Operations Manager",
+            "Financial Controller",
+            "Event Coordinator",
+            "Marketing Analyst",
+            "HR Coordinator",
+            "Data Analyst",
+            "Content Marketing Manager",
+            "Business Development Manager",
+            "Sales Manager",
+            "Quality Assurance Tester",
+            "Marketing Specialist",
+            "Software Architect",
+            "Operations Supervisor",
+            "Sales Manager",
+            "UX Researcher",
+            "Financial Planner",
+            "HR Recruiter",
+            "Product Marketing Manager",
+            "Technical Support Engineer",
+            "Front-End Developer",
+            "Brand Manager",
+            "HR Business Partner",
+            "IT Project Manager",
+            "Account Executive",
+            "Machine Learning Engineer",
+            "Content Strategist",
+            "Supply Chain Manager",
+            "UI Designer",
+            "Business Operations Analyst",
+            "Digital Marketing Specialist",
+            "Marketing Coordinator",
+            "Software Quality Assurance Analyst",
+            "Operations Analyst",
+            "Sales Operations Manager",
+            "UX/UI Researcher",
+            "Financial Consultant",
+            "HR Training and Development Specialist",
+            "Product Owner",
+            "Customer Support Specialist",
+            "Full-Stack Developer",
+            "Social Media Coordinator",
+            "HR Compensation and Benefits Analyst",
+            "IT Business Analyst",
+            "Account Manager",
+            "Data Engineer",
+            "Content Creator",
+            "Logistics Manager",
+            "User Experience Designer",
+            "Business Intelligence Analyst",
+            "Email Marketing Specialist"
+    };
     //20 work descriptions for company experience - 4 per person, (2 companies with 2 periods in each)
-    private final String[] WORK_DESCRIPTIONS = {"Performed daily tasks related to database management and " +
-                                                "maintenance" + ".",
-            "Collaborated with team members to develop and " + "execute marketing campaigns.", "Conducted " + "market"
-                                                                                               + " research to inform" +
-                                                                                               " product development " +
-                                                                                               "decisions.",
-            "Provided customer " + "support through email, " + "phone, and chat channels.",
-            "Managed social media " + "accounts" + " and " + "created engaging content for " + "various " +
-            "platforms.", "Assisted in the design and " + "development" + " of a" + " new mobile app.", "Handled " +
-                                                                                                        "accounts " +
-                                                                                                        "payable " +
-                                                                                                        "and " +
-                                                                                                        "receivable " +
-                                                                                                        "for a small "
-                                                                                                        + "business."
-            , "Generated " + "weekly " + "reports" + " on sales " + "performance and " + "presented " + "findings to "
-              + "management.", "Provided " + "technical " + "support to clients experiencing " + "issues with " +
-                               "software" + " " + "products.", "Created " + "and delivered " + "presentations on new " +
-                                                               "products to " + "internal and " + "external " +
-                                                               "stakeholders" + ".", "Coordinated with " +
-                                                                                     "cross-functional teams to " +
-                                                                                     "ensure timely delivery of " +
-                                                                                     "projects", "Developed and " +
-                                                                                                 "implemented " +
-                                                                                                 "effective marketing" +
-                                                                                                 " strategies to " +
-                                                                                                 "increase brand " +
-                                                                                                 "awareness",
-            "Provided exceptional customer service, resolving issues and concerns promptly", "Managed and trained a " +
-                                                                                             "team of sales " +
-                                                                                             "representatives to " +
-                                                                                             "exceed sales goals",
-            "Created engaging content for social media platforms to increase engagement and followers", "Performed " +
-                                                                                                        "data " +
-                                                                                                        "analysis and" +
-                                                                                                        " developed " +
-                                                                                                        "actionable " +
-                                                                                                        "insights to " +
-                                                                                                        "improve " +
-                                                                                                        "business " +
-                                                                                                        "performance"
-            , "Maintained accurate records and financial statements for the organization", "Conducted research and " +
-                                                                                           "developed reports on " +
-                                                                                           "market trends and " +
-                                                                                           "competitor analysis",
-            "Designed and developed user-friendly interfaces for web and mobile applications", "Collaborated with " +
-                                                                                               "clients to understand" +
-                                                                                               " their needs and " +
-                                                                                               "provide customized " +
-                                                                                               "solutions", "Project " +
-                                                                                                            "Manager " +
-                                                                                                            "for " +
-                                                                                                            "software" +
-                                                                                                            " development team", "Marketing Analyst for a large corporation", "Human Resources Assistant at a startup company", "IT Support Specialist for a healthcare organization", "Social Media Manager for a fashion brand", "Financial Analyst at an investment firm", "Software Engineer at a tech startup", "Graphic Designer for a web design agency", "Sales Representative for a software company", "Customer Service Representative at a retail store", "Research Scientist at a pharmaceutical company", "Administrative Assistant at a law firm", "Operations Manager for a logistics company", "Content Writer for a digital marketing agency", "Data Analyst at a financial institution", "Event Coordinator for a nonprofit organization", "Web Developer for an e-commerce business", "Art Director for an advertising agency", "Business Development Manager for a consulting firm", "Product Manager for a consumer electronics company"};
+    private final String[] WORK_DESCRIPTIONS = {
+            "Performed daily tasks related to database management and maintenance.",
+            "Collaborated with team members to develop and execute marketing campaigns.",
+            "Conducted market research to inform product development decisions.",
+            "Provided customer support through email, phone, and chat channels.",
+            "Managed social media accounts and created engaging content for various platforms.",
+            "Assisted in the design and development of a new mobile app.",
+            "Handled accounts payable and receivable for a small business.",
+            "Generated weekly reports on sales performance and presented findings to management.",
+            "Provided technical support to clients experiencing issues with software products.",
+            "Created and delivered presentations on new products to internal and external stakeholders.",
+            "Coordinated with cross-functional teams to ensure timely delivery of projects.",
+            "Developed and implemented effective marketing strategies to increase brand awareness.",
+            "Provided exceptional customer service, resolving issues and concerns promptly.",
+            "Managed and trained a team of sales representatives to exceed sales goals.",
+            "Created engaging content for social media platforms to increase engagement and followers.",
+            "Performed data analysis and developed actionable insights to improve business performance.",
+            "Maintained accurate records and financial statements for the organization.",
+            "Conducted research and developed reports on market trends and competitor analysis.",
+            "Designed and developed user-friendly interfaces for web and mobile applications.",
+            "Collaborated with clients to understand their needs and provide customized solutions.",
+            "Project Manager for software development team.",
+            "Marketing Analyst for a large corporation.",
+            "Human Resources Assistant at a startup company.",
+            "IT Support Specialist for a healthcare organization.",
+            "Social Media Manager for a fashion brand.",
+            "Financial Analyst at an investment firm.",
+            "Software Engineer at a tech startup.",
+            "Graphic Designer for a web design agency.",
+            "Sales Representative for a software company.",
+            "Customer Service Representative at a retail store.",
+            "Research Scientist at a pharmaceutical company.",
+            "Administrative Assistant at a law firm.",
+            "Operations Manager for a logistics company.",
+            "Content Writer for a digital marketing agency.",
+            "Data Analyst at a financial institution.",
+            "Event Coordinator for a nonprofit organization.",
+            "Web Developer for an e-commerce business.",
+            "Art Director for an advertising agency.",
+            "Business Development Manager for a consulting firm.",
+            "Product Manager for a consumer electronics company.",
+            "Worked closely with clients to identify their requirements and deliver tailored solutions.",
+            "Collaborated directly with customers to gain insights into their needs and offer customized solutions.",
+            "Engaged with clients to comprehend their unique requirements and develop personalized solutions.",
+            "Partnered with customers to understand their specific needs and provide customized solutions.",
+            "Interacted with clients to ascertain their individual needs and deliver bespoke solutions.",
+            "Conducted in-depth consultations with clients to understand their objectives and provide tailored " +
+            "solutions.",
+            "Established strong client relationships to effectively understand their needs and offer personalized " +
+            "solutions.",
+            "Worked collaboratively with clients to gain a deep understanding of their requirements and deliver " +
+            "customized solutions.",
+            "Conducted client interviews and needs assessments to create customized solutions that meet their unique " +
+            "specifications.",
+            "Leveraged client feedback and requirements to create tailored solutions that address their specific " +
+            "needs.",
+            "Performed extensive market research and competitor analysis to develop comprehensive reports on industry" +
+            " trends.",
+            "Conducted in-depth research on market trends and competitors, producing detailed reports for strategic " +
+            "decision-making.",
+            "Analyzed market trends and conducted competitor research to generate insightful reports and " +
+            "recommendations.",
+            "Evaluated market dynamics and conducted thorough competitor analysis to develop actionable reports.",
+            "Researched market trends and conducted competitor benchmarking to produce data-driven reports and " +
+            "insights.",
+            "Gathered and analyzed data on market trends and competitors, creating reports that informed strategic " +
+            "business decisions.",
+            "Stayed abreast of market trends and conducted competitor assessments, generating reports to inform " +
+            "business strategies.",
+            "Utilized research methodologies to examine market trends and competitors, delivering comprehensive " +
+            "reports and analysis.",
+            "Collected data on market trends and competitors, translating findings into reports that guided business " +
+            "development efforts.",
+            "Conducted extensive market research and competitor analysis, synthesizing findings into insightful " +
+            "reports and presentations."
+    };
     //160 dates - every person have 16 dates
     private final String[] DATES = {"2014-10", "2016-01", "2015-05", "2017-08", "2018-02", "2020-06", "2019-11", "2022"
                                                                                                                  +

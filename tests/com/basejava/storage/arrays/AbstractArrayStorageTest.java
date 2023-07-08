@@ -3,6 +3,7 @@ package com.basejava.storage.arrays;
 import com.basejava.exceptions.StorageException;
 import com.basejava.storage.AbstractStorageTest;
 import com.basejava.storage.Storage;
+import com.basejava.util.ResumeTestData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

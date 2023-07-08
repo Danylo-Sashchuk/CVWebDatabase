@@ -1,6 +1,6 @@
-create type public.section_type as enum ('PERSONAL', 'POSITION', 'ACHIEVEMENTS', 'QUALIFICATIONS');
+CREATE TYPE section_type AS ENUM ('PERSONAL', 'POSITION', 'ACHIEVEMENTS', 'QUALIFICATIONS', 'EDUCATION', 'EXPERIENCE');
 
-alter type public.section_type owner to postgres;
+ALTER TYPE section_type OWNER TO postgres;
 
 CREATE TYPE public.contact_type AS ENUM ('PHONE_NUMBER', 'EMAIL', 'SKYPE', 'LINKEDIN', 'GITHUB');
 
@@ -36,7 +36,7 @@ alter table public.contact
 create unique index contact_resume_uuid_type_uindex
     on public.contact (resume_uuid, type);
 
-create table public.text_section
+create table public.section
 (
     id          serial
         constraint text_section_pk
@@ -49,6 +49,6 @@ create table public.text_section
     type        section_type not null
 );
 
-alter table public.text_section
+alter table public.section
     owner to postgres;
 

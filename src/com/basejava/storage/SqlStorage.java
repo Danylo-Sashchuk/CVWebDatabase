@@ -5,6 +5,7 @@ import com.basejava.model.*;
 import com.basejava.sql.ExceptionUtil;
 import com.basejava.sql.SqlConductor;
 import com.basejava.sql.SqlTemplate;
+import com.basejava.util.JsonParser;
 
 import java.sql.*;
 import java.util.*;
@@ -65,8 +66,6 @@ public class SqlStorage implements Storage {
         LOG.info("get resume: " + uuid);
 
         return sqlTemplate.execute("""
-                --using allies because two tables have 'type' column
-                                
                 SELECT *
                   FROM resume
                            LEFT JOIN contact ON resume.uuid = contact.resume_uuid
@@ -81,7 +80,7 @@ public class SqlStorage implements Storage {
             Resume resume = new Resume(uuid, rs.getString("full_name"));
             do {
                 addContact(resume, rs);
-                addTextSection(resume, rs);
+                addSection(resume, rs);
             } while (rs.next());
 
 
@@ -111,7 +110,7 @@ public class SqlStorage implements Storage {
                     processedResumes.put(uuid, resume);
                 }
                 addContact(resume, rs);
-                addTextSection(resume, rs);
+                addSection(resume, rs);
             }
             return new ArrayList<>(processedResumes.values());
         });
@@ -240,6 +239,7 @@ public class SqlStorage implements Storage {
                     case PERSONAL, POSITION -> ps.setString (1, ((TextSection) e.getValue()).getText());
                     case ACHIEVEMENTS, QUALIFICATIONS ->
                             ps.setString(1, String.join("\n", ((ListSection) e.getValue()).getTexts()));
+                    case EXPERIENCE, EDUCATION -> ps.setString(1, JsonParser.write(e.getValue(), AbstractSection.class));
                 }
                 ps.setString(2, resume.getUuid());
                 ps.setString(3, e.getKey().name());
@@ -250,7 +250,7 @@ public class SqlStorage implements Storage {
     }
 
     private void saveContacts(Resume resume, Connection conn) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, contact_type, " +
+        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, " +
                                                           "value)   VALUES (?, ?::contact_type, ?)")) {
             for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
                 ps.setString(1, resume.getUuid());
@@ -279,18 +279,19 @@ public class SqlStorage implements Storage {
     private void addContact(Resume resume, ResultSet rs) throws SQLException {
         String value = rs.getString("value");
         if (value != null) {
-            String type = rs.getString("contact_type");
+            String type = rs.getString("type");
             resume.addContact(ContactType.valueOf(type), value);
         }
     }
 
-    private void addTextSection(Resume resume, ResultSet rs) throws SQLException {
+    private void addSection(Resume resume, ResultSet rs) throws SQLException {
         String text = rs.getString("text");
         if (text != null) {
             SectionType type = SectionType.valueOf(rs.getString("section_type"));
             switch (type) {
                 case PERSONAL, POSITION -> resume.addSection(type, new TextSection(text));
                 case ACHIEVEMENTS, QUALIFICATIONS -> resume.addSection(type, new ListSection(parseText(text)));
+                case EXPERIENCE,  EDUCATION -> resume.addSection(type, JsonParser.read(text, AbstractSection.class));
             }
         }
     }

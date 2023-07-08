@@ -31,8 +31,8 @@ public class ResumeTestData {
         updateAchievements(resume);
         addQualifications(resume);
 
-        //        addExperiences(resume);
-        //        addEducations(resume);
+        addExperiences(resume);
+        addEducations(resume);
         return resume;
     }
 
@@ -66,6 +66,14 @@ public class ResumeTestData {
                 iterators.get(DataType.WORK_TITLE), iterators.get(DataType.WORK_DESCRIPTION));
     }
 
+    public void reloadIterators() {
+        for (Map.Entry<DataType, Iterator<String>> entry : iterators.entrySet()) {
+            if (!entry.getValue().hasNext()) {
+                entry.setValue(mockingData.getIterator(entry.getKey()));
+            }
+        }
+    }
+
     private Map<DataType, Iterator<String>> mapIterators() {
         Map<DataType, Iterator<String>> iterators = new HashMap<>();
         iterators.put(DataType.PHONE_NUMBER, mockingData.getIterator(DataType.PHONE_NUMBER));
@@ -84,14 +92,6 @@ public class ResumeTestData {
         iterators.put(DataType.EDUCATION_TITLE, mockingData.getIterator(DataType.EDUCATION_TITLE));
         iterators.put(DataType.EDUCATION_DESCRIPTION, mockingData.getIterator(DataType.EDUCATION_DESCRIPTION));
         return iterators;
-    }
-
-    private void reloadIterators() {
-        for (Map.Entry<DataType, Iterator<String>> entry : iterators.entrySet()) {
-            if (!entry.getValue().hasNext()) {
-                entry.setValue(mockingData.getIterator(entry.getKey()));
-            }
-        }
     }
 
     private void addContacts(String fullName, Resume resume) {
@@ -159,11 +159,15 @@ public class ResumeTestData {
     }
 
     private Company.Period createPeriod(Iterator<String> titleIterator, Iterator<String> descriptionIterator) {
+        reloadIterators();
         YearMonth start = YearMonth.parse(iterators.get(DataType.DATE).next());
         YearMonth end = YearMonth.parse(iterators.get(DataType.DATE).next());
+        reloadIterators();
         LocalDate startDate = DateUtil.of(start.getYear(), start.getMonth());
         LocalDate endDate = DateUtil.of(end.getYear(), end.getMonth());
+        reloadIterators();
         String workTitle = titleIterator.next();
+        reloadIterators();
         String workDescription = descriptionIterator.next();
         return new Company.Period(workTitle, workDescription, startDate, endDate);
     }
