@@ -27,21 +27,16 @@ public class ResumeServlet extends HttpServlet {
         switch (action) {
             case "delete" -> {
                 storage.delete(uuid);
+                response.sendRedirect("resume");
+                return;
             }
-            case "view" -> {
-
-            }
-            case "edit" -> {
-                resume = storage.get(uuid);
-            }
-            default -> {
-                throw new IllegalArgumentException("Action " + action + " is illegal");
-            }
+            case "view" -> {}
+            case "edit" -> resume = storage.get(uuid);
+            default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }
         request.setAttribute("resume", resume);
         request.getRequestDispatcher("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
                 .forward(request, response);
-        response.sendRedirect("list");
     }
 
     @Override
