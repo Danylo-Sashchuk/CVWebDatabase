@@ -30,7 +30,7 @@ public class ResumeServlet extends HttpServlet {
                 response.sendRedirect("resume");
                 return;
             }
-            case "view" -> {}
+            case "view" -> {resume = storage.get(uuid);}
             case "edit" -> resume = storage.get(uuid);
             default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }

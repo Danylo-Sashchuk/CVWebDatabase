@@ -5,12 +5,6 @@
   Time: 10:30 PM
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
+<footer>Проект <a href="http://localhost:8080/resumes_war_exploded/resume">CV Web DataBase</a>
+</footer>

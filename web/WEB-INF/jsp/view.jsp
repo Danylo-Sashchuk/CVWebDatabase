@@ -12,7 +12,7 @@
     <title>Резюме ${resume.fullName}</title>
 </head>
 <body>
-<jsp:include page="WEB-INF/jsp/fragments/header.jsp"/>
+<jsp:include page="/WEB-INF/jsp/fragments/header.jsp"/>
 <section>
     <h2>${resume.fullName}&nbsp;<a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/pencil.png"></a></h2>
     <p>
@@ -23,6 +23,6 @@
         </c:forEach>
     <p>
 </section>
-<jsp:include page="WEB-INF/jsp/fragments/footer.jsp"/>
+<jsp:include page="/WEB-INF/jsp/fragments/footer.jsp"/>
 </body>
 </html>
