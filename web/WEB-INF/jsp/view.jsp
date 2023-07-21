@@ -7,9 +7,9 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     <jsp:useBean id="resume" type="com.basejava.model.Resume" scope="request"/>
-    <title>Резюме ${resume.fullName}</title>
+    <title>Resume ${resume.fullName}</title>
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/fragments/header.jsp"/>
