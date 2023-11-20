@@ -4,41 +4,40 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="com.basejava.model.ListSection" %>
-<%@ page import="com.basejava.model.CompanySection" %>
-<%@ page import="com.basejava.model.TextSection" %>
-<%@ page import="com.basejava.util.HtmlUtil" %>
+<%@ page import="com.webcv.model.ListSection" %>
+<%@ page import="com.webcv.model.CompanySection" %>
+<%@ page import="com.webcv.model.TextSection" %>
+<%@ page import="com.webcv.model.SectionType" %>
+<%@ page import="com.webcv.util.HtmlUtil" %>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-    <jsp:useBean id="resume" type="com.basejava.model.Resume" scope="request"/>
+    <jsp:useBean id="resume" type="com.webcv.model.Resume" scope="request"/>
     <title>Resume ${resume.fullName}</title>
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/fragments/header.jsp"/>
 <section>
-    <h2>${resume.fullName}&nbsp;<a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/pencil.png"></a></h2>
+    <h2>${resume.fullName}&nbsp;<a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/edit.png"></a></h2>
     <p>
         <c:forEach var="contactEntry" items="${resume.contacts}">
             <jsp:useBean id="contactEntry"
-                         type="java.util.Map.Entry<com.basejava.model.ContactType, java.lang.String>"/>
+                         type="java.util.Map.Entry<com.webcv.model.ContactType, java.lang.String>"/>
                 <%=contactEntry.getKey().toHtml(contactEntry.getValue())%><br/>
         </c:forEach>
     <p>
     <hr>
-    <table cellpadding="2">
-        <c:forEach var="sectionEntry" items="${resume.sections}">
-            <jsp:useBean id="sectionEntry"
-                         type="java.util.Map.Entry<com.basejava.model.SectionType, com.basejava.model.AbstractSection>"/>
-            <c:set var="type" value="${sectionEntry.key}"/>
-            <c:set var="section" value="${sectionEntry.value}"/>
-            <jsp:useBean id="section" type="com.basejava.model.AbstractSection"/>
+    <table>
+        <c:forEach var="sectionType" items="${SectionType.values()}">
+            <jsp:useBean id="sectionType" type="com.webcv.model.SectionType"/>
+            <c:set var="section" value="${resume.sections.get(sectionType)}"/>
+            <jsp:useBean id="section" type="com.webcv.model.AbstractSection"/>
             <tr>
-                <td colspan="2"><h2><a name="type.name">${type.title}</a></h2></td>
+                <td colspan="2"><h2><a name="sectionType.name">${sectionType.title}</a></h2></td>
             </tr>
             <c:choose>
-                <c:when test="${type=='POSITION'}">
+                <c:when test="${sectionType=='POSITION'}">
                     <tr>
                         <td colspan="2">
                             <h3><%=((TextSection) section).getText()%>
@@ -46,14 +45,14 @@
                         </td>
                     </tr>
                 </c:when>
-                <c:when test="${type=='PERSONAL'}">
+                <c:when test="${sectionType=='PERSONAL'}">
                     <tr>
                         <td colspan="2">
                             <%=((TextSection) section).getText()%>
                         </td>
                     </tr>
                 </c:when>
-                <c:when test="${type=='QUALIFICATIONS' || type=='ACHIEVEMENTS'}">
+                <c:when test="${sectionType=='QUALIFICATIONS' || sectionType=='ACHIEVEMENTS'}">
                     <tr>
                         <td colspan="2">
                             <ul>
@@ -64,7 +63,7 @@
                         </td>
                     </tr>
                 </c:when>
-                <c:when test="${type=='EXPERIENCE' || type=='EDUCATION'}">
+                <c:when test="${sectionType=='EXPERIENCE' || sectionType=='EDUCATION'}">
                     <c:forEach var="company" items="<%=((CompanySection) section).getCompanies()%>">
                         <tr>
                             <td colspan="2">
@@ -79,7 +78,7 @@
                             </td>
                         </tr>
                         <c:forEach var="period" items="${company.periods}">
-                            <jsp:useBean id="period" type="com.basejava.model.Company.Period"/>
+                            <jsp:useBean id="period" type="com.webcv.model.Company.Period"/>
                             <tr>
                                 <td width="15%" style="vertical-align: top"><%=HtmlUtil.formatDates(period)%>
                                 </td>

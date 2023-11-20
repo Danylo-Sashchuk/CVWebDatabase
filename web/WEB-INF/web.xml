@@ -5,7 +5,7 @@
          version="4.0">
     <servlet>
         <servlet-name>resumeServlet</servlet-name>
-        <servlet-class>com.basejava.web.ResumeServlet</servlet-class>
+        <servlet-class>com.webcv.web.ResumeServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>resumeServlet</servlet-name>

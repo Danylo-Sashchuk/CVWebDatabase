@@ -1,4 +1,4 @@
-<%@ page import="com.basejava.model.ContactType" %>
+<%@ page import="com.webcv.model.ContactType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -19,7 +19,7 @@
             <th></th>
         </tr>
         <c:forEach items="${resumes}" var="resume">
-            <jsp:useBean id="resume" type="com.basejava.model.Resume"/>
+            <jsp:useBean id="resume" type="com.webcv.model.Resume"/>
             <tr>
                 <td><a href="resume?uuid=${resume.uuid}&action=view">${resume.fullName}</a></td>
                 <td><%=ContactType.EMAIL.toHtml(resume.getContacts().get(ContactType.EMAIL))%></td>
