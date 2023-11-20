@@ -3,6 +3,8 @@ package com.basejava.storage;
 import com.basejava.model.ContactType;
 import com.basejava.model.Resume;
 import com.basejava.util.Config;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -103,6 +105,15 @@ class SqlStorageTest extends AbstractStorageTest {
     private void cleanContacts() {
         SqlStorageTest.RESUME.removeContact(ContactType.EMAIL);
         SqlStorageTest.RESUME.removeContact(ContactType.PHONE_NUMBER);
+        SqlStorageTest.RESUME.removeContact(ContactType.SKYPE);
         SqlStorageTest.RESUME.removeContact(ContactType.GITHUB);
+        SqlStorageTest.RESUME.removeContact(ContactType.LINKEDIN);
+    }
+
+    @AfterAll
+    static void afterAll() {
+        Config.get()
+                .getStorage()
+                .delete(UUID);
     }
 }

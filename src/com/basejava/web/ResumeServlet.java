@@ -1,6 +1,8 @@
 package com.basejava.web;
 
 import com.basejava.model.Resume;
+import com.basejava.model.SectionType;
+import com.basejava.model.TextSection;
 import com.basejava.storage.Storage;
 import com.basejava.util.Config;
 
@@ -32,18 +34,29 @@ public class ResumeServlet extends HttpServlet {
             }
             case "view" -> {
                 resume = storage.get(uuid);
+                request.setAttribute("resume", resume);
+                request.getRequestDispatcher("/WEB-INF/jsp/view.jsp").forward(request, response);
             }
-            case "edit" -> resume = storage.get(uuid);
+            case "edit" -> {
+                resume = storage.get(uuid);
+                request.setAttribute("resume", resume);
+                request.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(request, response);
+            }
             default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }
-        request.setAttribute("resume", resume);
-        request.getRequestDispatcher("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
-                .forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
-
+        String uuid = request.getParameter("uuid");
+        String name = request.getParameter("fullname");
+        String personal = request.getParameter("personal");
+        String position = request.getParameter("position");
+        Resume resume = new Resume(uuid, name);
+        resume.addSection(SectionType.PERSONAL, new TextSection(personal));
+        resume.addSection(SectionType.POSITION, new TextSection(position));
+        storage.update(resume);
+        response.sendRedirect("resume");
     }
 }
