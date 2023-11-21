@@ -11,7 +11,7 @@ public enum ContactType {
     SKYPE("Skype") {
         @Override
         public String toHtml(String value) {
-            return "<a href='skype:" + value + "'>" + value + "</a>";
+            return this.toHtml1("<a href='skype:" + value + "'>" + value + "</a>");
         }
     },
     LINKEDIN("Профиль LinkedIn"),
