@@ -6,5 +6,4 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
-<footer>Проект <a href="http://localhost:8080/resumes_war_exploded/resume">CV Web DataBase</a>
-</footer>
+<a href="https://github.com/Danylo-Sashchuk/CVWebDatabase">Source code</a>

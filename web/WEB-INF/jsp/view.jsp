@@ -28,7 +28,7 @@
         </c:forEach>
     <p>
     <hr>
-    <table>
+    <table class="view-table">
         <c:forEach var="sectionType" items="${SectionType.values()}">
             <jsp:useBean id="sectionType" type="com.webcv.model.SectionType"/>
             <c:set var="section" value="${resume.sections.get(sectionType)}"/>

@@ -44,6 +44,10 @@ public class ResumeServlet extends HttpServlet {
                 request.setAttribute("resume", resume);
                 request.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(request, response);
             }
+            case "add" -> {
+                request.setAttribute("resume", resume);
+                request.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(request, response);
+            }
             default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }
     }
@@ -53,7 +57,13 @@ public class ResumeServlet extends HttpServlet {
             IOException {
         String uuid = request.getParameter("uuid");
         String fullname = request.getParameter("fullname");
-        Resume resume = storage.get(uuid);
+        boolean isCreate = uuid == null || uuid.length() == 0;
+        Resume resume;
+        if (isCreate) {
+            resume = new Resume(fullname);
+        } else {
+            resume = storage.get(uuid);
+        }
         resume.setFullName(fullname);
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
@@ -107,7 +117,11 @@ public class ResumeServlet extends HttpServlet {
             }
         }
 
-        storage.update(resume);
+        if (isCreate) {
+            storage.save(resume);
+        } else {
+            storage.update(resume);
+        }
         response.sendRedirect("resume");
     }
 }

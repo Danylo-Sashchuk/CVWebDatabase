@@ -31,12 +31,22 @@
             </dl>
         </c:forEach>
         <h3>Sections:</h3>
-        <c:forEach var="sectionEntry" items="<%=resume.getSections()%>">
-            <jsp:useBean id="sectionEntry"
-                         type="java.util.Map.Entry<com.webcv.model.SectionType, com.webcv.model.AbstractSection>"/>
-            <c:set var="sectionType" value="${sectionEntry.key}"/>
-            <c:set var="section" value="${sectionEntry.value}"/>
+        <c:forEach var="sectionType" items="<%=SectionType.values()%>">
             <jsp:useBean id="sectionType" type="com.webcv.model.SectionType"/>
+            <c:set var="section" value="${resume.sections.get(sectionType)}"/>
+            <c:if test="${section == null}">
+                <c:choose>
+                    <c:when test="${sectionType == SectionType.POSITION || sectionType == SectionType.PERSONAL}">
+                        <c:set var="section" value="<%=TextSection.getEmpty()%>"/>
+                    </c:when>
+                    <c:when test="${sectionType == SectionType.ACHIEVEMENTS || sectionType == SectionType.QUALIFICATIONS}">
+                        <c:set var="section" value="<%=ListSection.getEmpty()%>"/>
+                    </c:when>
+                    <c:when test="${sectionType == SectionType.EXPERIENCE || sectionType == SectionType.EDUCATION}">
+                        <c:set var="section" value="<%=CompanySection.getEmpty()%>"/>
+                    </c:when>
+                </c:choose>
+            </c:if>
             <jsp:useBean id="section" type="com.webcv.model.AbstractSection"/>
             <dl>
                 <dt>${sectionType.title}</dt>
@@ -59,46 +69,50 @@
                         <c:forEach var="company" items="<%=((CompanySection) section).getCompanies()%>"
                                    varStatus="counter">
                             <jsp:useBean id="company" type="com.webcv.model.Company"/>
-                            <dl>
-                                <dt>Organization name:</dt>
-                                <dd><input type="text" name="${sectionType}" size=40
-                                           value="${company.name}"></dd>
-                            </dl>
-                            <dl>
-                                <dt>Organization website:</dt>
-                                <dd><input type="text" name="${sectionType}.url" size=40
-                                           value="${company.website.url}"></dd>
-                            </dl>
-                            <br>
-                            <div style="margin-left: 30px">
-                                <c:forEach var="period" items="${company.periods}">
-                                    <jsp:useBean id="period" type="com.webcv.model.Company.Period"/>
-                                    <dl>
-                                        <dt>Position:</dt>
-                                        <dd><input type="text"
-                                                   name="${sectionType}[${counter.index}].title"
-                                                   size=40 value="${period.title}"></dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>Start date:</dt>
-                                        <dd><input type="text"
-                                                   name="${sectionType}[${counter.index}].startDate"
-                                                   value="<%=DateUtil.format(period.getStartDate())%>" placeholder="MM/yyyy"></dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>End date:</dt>
-                                        <dd><input type="text"
-                                                   name="${sectionType}[${counter.index}].endDate"
-                                                   value="<%=DateUtil.format(period.getEndDate())%>" placeholder="MM/yyyy"></dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>Description:</dt>
-                                        <dd><textarea
-                                                name="${sectionType}[${counter.index}].description"
-                                                rows=5 cols=40>${period.description}</textarea></dd>
-                                    </dl>
-                                    <br>
-                                </c:forEach>
+                            <div class="company">
+                                <dl>
+                                    <dt>Organization name:</dt>
+                                    <dd><input type="text" name="${sectionType}" size=40
+                                               value="${company.name}"></dd>
+                                </dl>
+                                <dl>
+                                    <dt>Organization website:</dt>
+                                    <dd><input type="text" name="${sectionType}.url" size=40
+                                               value="${company.website.url}"></dd>
+                                </dl>
+                                <br>
+                                <div style="margin-left: 30px">
+                                    <c:forEach var="period" items="${company.periods}">
+                                        <jsp:useBean id="period" type="com.webcv.model.Company.Period"/>
+                                        <dl>
+                                            <dt>Position:</dt>
+                                            <dd><input type="text"
+                                                       name="${sectionType}[${counter.index}].title"
+                                                       size=40 value="${period.title}"></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>Start date:</dt>
+                                            <dd><input type="text"
+                                                       name="${sectionType}[${counter.index}].startDate"
+                                                       value="<%=DateUtil.format(period.getStartDate())%>"
+                                                       placeholder="MM/yyyy"></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>End date:</dt>
+                                            <dd><input type="text"
+                                                       name="${sectionType}[${counter.index}].endDate"
+                                                       value="<%=DateUtil.format(period.getEndDate())%>"
+                                                       placeholder="MM/yyyy"></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>Description:</dt>
+                                            <dd><textarea
+                                                    name="${sectionType}[${counter.index}].description"
+                                                    rows=5 cols=40>${period.description}</textarea></dd>
+                                        </dl>
+                                        <br>
+                                    </c:forEach>
+                                </div>
                             </div>
                         </c:forEach>
                     </c:when>

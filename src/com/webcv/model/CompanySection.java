@@ -21,14 +21,21 @@ public class CompanySection extends AbstractSection {
         this.companies = companies;
     }
 
+    public static CompanySection getEmpty() {
+        Company.Period period = new Company.Period();
+        return new CompanySection(new Company("", "", List.of(period)), new Company("", "", List.of(period)));
+    }
+
     public List<Company> getCompanies() {
         return companies;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         CompanySection that = (CompanySection) o;
 

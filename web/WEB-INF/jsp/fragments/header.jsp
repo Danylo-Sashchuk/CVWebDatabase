@@ -6,6 +6,4 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<footer>
-    <a href="http://localhost:8080/resumes_war_exploded/resume">Resume Manager</a>
-</footer>
+<a href="http://localhost:8080/webCV_Web_exploded/resume">Resume Manager</a>

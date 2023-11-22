@@ -50,7 +50,20 @@ img {
     height: 25px;
 }
 
-table {
-    margin-left: auto;
+table.view-table {
     margin-right: auto;
+}
+
+table.list-table {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+div.company {
+    margin-left: 50px;
+}
+
+div.company img {
+    width: 50px;
+    height: 50px;
 }

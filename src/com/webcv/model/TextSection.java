@@ -16,6 +16,10 @@ public class TextSection extends AbstractSection {
     public TextSection() {
     }
 
+    public static TextSection getEmpty() {
+        return new TextSection("");
+    }
+
     public String getText() {
         return text;
     }
@@ -31,8 +35,10 @@ public class TextSection extends AbstractSection {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         TextSection that = (TextSection) o;
         return text.equals(that.text);
     }

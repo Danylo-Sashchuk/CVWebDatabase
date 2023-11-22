@@ -13,6 +13,10 @@ public class ListSection extends AbstractSection {
     public ListSection() {
     }
 
+    public static ListSection getEmpty() {
+        return new ListSection("");
+    }
+
     public ListSection(String... texts) {
         this(List.of(texts));
     }
