@@ -88,17 +88,17 @@ public class DataStreamSerializerSecondVersion implements SerializationStrategy 
 
     private void readCompanySection(SectionType sectionType, Resume resume, DataInputStream dataInputStream) throws IOException {
         CompanySection company = getCompanySection(dataInputStream);
-        resume.setContact(sectionType, company);
+        resume.setSection(sectionType, company);
     }
 
     private void readListSection(SectionType sectionType, Resume resume, DataInputStream dataInputStream) throws IOException {
         ListSection qualifications = getListSection(dataInputStream);
-        resume.setContact(sectionType, qualifications);
+        resume.setSection(sectionType, qualifications);
     }
 
     private void readTextSection(SectionType sectionType, Resume resume, DataInputStream dataInputStream) throws IOException {
         TextSection textSection = getTextSection(dataInputStream);
-        resume.setContact(sectionType, textSection);
+        resume.setSection(sectionType, textSection);
     }
 
     private void writeCompany(Company company, DataOutputStream dataOutputStream) throws IOException {

@@ -32,62 +32,64 @@
         <c:forEach var="sectionType" items="${SectionType.values()}">
             <jsp:useBean id="sectionType" type="com.webcv.model.SectionType"/>
             <c:set var="section" value="${resume.sections.get(sectionType)}"/>
-            <jsp:useBean id="section" type="com.webcv.model.AbstractSection"/>
-            <tr>
-                <td colspan="2"><h2><a name="sectionType.name">${sectionType.title}</a></h2></td>
-            </tr>
-            <c:choose>
-                <c:when test="${sectionType=='POSITION'}">
-                    <tr>
-                        <td colspan="2">
-                            <h3><%=((TextSection) section).getText()%>
-                            </h3>
-                        </td>
-                    </tr>
-                </c:when>
-                <c:when test="${sectionType=='PERSONAL'}">
-                    <tr>
-                        <td colspan="2">
-                            <%=((TextSection) section).getText()%>
-                        </td>
-                    </tr>
-                </c:when>
-                <c:when test="${sectionType=='QUALIFICATIONS' || sectionType=='ACHIEVEMENTS'}">
-                    <tr>
-                        <td colspan="2">
-                            <ul>
-                                <c:forEach var="item" items="<%=((ListSection) section).getTexts()%>">
-                                    <li>${item}</li>
-                                </c:forEach>
-                            </ul>
-                        </td>
-                    </tr>
-                </c:when>
-                <c:when test="${sectionType=='EXPERIENCE' || sectionType=='EDUCATION'}">
-                    <c:forEach var="company" items="<%=((CompanySection) section).getCompanies()%>">
+            <c:if test="${section != null}">
+                <jsp:useBean id="section" type="com.webcv.model.AbstractSection"/>
+                <tr>
+                    <td colspan="2"><h2><a name="sectionType.name">${sectionType.title}</a></h2></td>
+                </tr>
+                <c:choose>
+                    <c:when test="${sectionType=='POSITION'}">
                         <tr>
                             <td colspan="2">
-                                <c:choose>
-                                    <c:when test="${empty company.website.url}">
-                                        <h3>${company.website.name}</h3>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <h3><a href="${company.website.url}">${company.website.name}</a></h3>
-                                    </c:otherwise>
-                                </c:choose>
+                                <h3><%=((TextSection) section).getText()%>
+                                </h3>
                             </td>
                         </tr>
-                        <c:forEach var="period" items="${company.periods}">
-                            <jsp:useBean id="period" type="com.webcv.model.Company.Period"/>
+                    </c:when>
+                    <c:when test="${sectionType=='PERSONAL'}">
+                        <tr>
+                            <td colspan="2">
+                                <%=((TextSection) section).getText()%>
+                            </td>
+                        </tr>
+                    </c:when>
+                    <c:when test="${sectionType=='QUALIFICATIONS' || sectionType=='ACHIEVEMENTS'}">
+                        <tr>
+                            <td colspan="2">
+                                <ul>
+                                    <c:forEach var="item" items="<%=((ListSection) section).getTexts()%>">
+                                        <li>${item}</li>
+                                    </c:forEach>
+                                </ul>
+                            </td>
+                        </tr>
+                    </c:when>
+                    <c:when test="${sectionType=='EXPERIENCE' || sectionType=='EDUCATION'}">
+                        <c:forEach var="company" items="<%=((CompanySection) section).getCompanies()%>">
                             <tr>
-                                <td width="15%" style="vertical-align: top"><%=HtmlUtil.formatDates(period)%>
+                                <td colspan="2">
+                                    <c:choose>
+                                        <c:when test="${empty company.website.url}">
+                                            <h3>${company.website.name}</h3>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <h3><a href="${company.website.url}">${company.website.name}</a></h3>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </td>
-                                <td><b>${period.title}</b><br>${period.description}</td>
                             </tr>
+                            <c:forEach var="period" items="${company.periods}">
+                                <jsp:useBean id="period" type="com.webcv.model.Company.Period"/>
+                                <tr>
+                                    <td width="15%" style="vertical-align: top"><%=HtmlUtil.formatDates(period)%>
+                                    </td>
+                                    <td><b>${period.title}</b><br>${period.description}</td>
+                                </tr>
+                            </c:forEach>
                         </c:forEach>
-                    </c:forEach>
-                </c:when>
-            </c:choose>
+                    </c:when>
+                </c:choose>
+            </c:if>
         </c:forEach>
     </table>
     <br/>

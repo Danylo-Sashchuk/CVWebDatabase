@@ -2,12 +2,11 @@
   User: Danylo
   Date: 7/20/23
 --%>
-<%@ page import="com.webcv.model.ContactType" %>
-<%@ page import="com.webcv.model.SectionType" %>
-<%@ page import="com.webcv.model.TextSection" %>
-<%@ page import="com.webcv.model.ListSection" %>
+<%@ page import="com.webcv.model.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="com.webcv.model.SectionType" %>
+<%@ page import="com.webcv.util.DateUtil" %>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -43,31 +42,66 @@
                 <dt>${sectionType.title}</dt>
                 <c:choose>
                     <c:when test="${sectionType == SectionType.POSITION || sectionType == SectionType.PERSONAL}">
-                        <% TextSection textSection = (TextSection) section;%>
                         <dd><input type="text" name="${sectionType}" class="text-input"
-                                   value="<%=textSection.getText()%>" size="50"></dd>
+                                   value="<%=((TextSection) section).getText()%>" size="50"></dd>
                     </c:when>
                     <c:when test="${sectionType == SectionType.ACHIEVEMENTS || sectionType == SectionType.QUALIFICATIONS}">
-                        <% ListSection listSection = (ListSection) section;
+                        <%
                             String cssClassName = sectionType == SectionType.ACHIEVEMENTS ? "achievements-input" : "qualifications-input¬";
                             int areaSize = sectionType == SectionType.ACHIEVEMENTS ? 90 : 40;
                         %>
                         <dd>
                             <textarea name="${sectionType}" class="<%=cssClassName%>" rows=5
-                                      cols=<%=areaSize%>><%=String.join("\n", listSection.getTexts())%></textarea>
+                                      cols=<%=areaSize%>><%=String.join("\n", ((ListSection) section).getTexts())%></textarea>
                         </dd>
                     </c:when>
-<%--                    <c:when test="${sectionType == SectionType.EXPERIENCE || sectionType == SectionType.EDUCATION}">--%>
-<%--                        <c:forEach var="item" items="${section.value}">--%>
-<%--                            <c:forEach var="position" items="${item.positions}">--%>
-<%--                                <dt>${position.startDate} - ${position.endDate}</dt>--%>
-<%--                                <dd><input type="text" name="${section.key.title}" size=50 value="${position.title}">--%>
-<%--                                </dd>--%>
-<%--                                <dd><textarea name="${section.key.title}" rows=5--%>
-<%--                                              cols=50>${position.description}</textarea></dd>--%>
-<%--                            </c:forEach>--%>
-<%--                        </c:forEach>--%>
-<%--                    </c:when>--%>
+                    <c:when test="${sectionType == SectionType.EXPERIENCE || sectionType == SectionType.EDUCATION}">
+                        <c:forEach var="company" items="<%=((CompanySection) section).getCompanies()%>"
+                                   varStatus="counter">
+                            <jsp:useBean id="company" type="com.webcv.model.Company"/>
+                            <dl>
+                                <dt>Organization name:</dt>
+                                <dd><input type="text" name="${sectionType}" size=40
+                                           value="${company.name}"></dd>
+                            </dl>
+                            <dl>
+                                <dt>Organization website:</dt>
+                                <dd><input type="text" name="${sectionType}.url" size=40
+                                           value="${company.website.url}"></dd>
+                            </dl>
+                            <br>
+                            <div style="margin-left: 30px">
+                                <c:forEach var="period" items="${company.periods}">
+                                    <jsp:useBean id="period" type="com.webcv.model.Company.Period"/>
+                                    <dl>
+                                        <dt>Position:</dt>
+                                        <dd><input type="text"
+                                                   name="${sectionType}[${counter.index}].title"
+                                                   size=40 value="${period.title}"></dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Start date:</dt>
+                                        <dd><input type="text"
+                                                   name="${sectionType}[${counter.index}].startDate"
+                                                   value="<%=DateUtil.format(period.getStartDate())%>" placeholder="MM/yyyy"></dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>End date:</dt>
+                                        <dd><input type="text"
+                                                   name="${sectionType}[${counter.index}].endDate"
+                                                   value="<%=DateUtil.format(period.getEndDate())%>" placeholder="MM/yyyy"></dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Description:</dt>
+                                        <dd><textarea
+                                                name="${sectionType}[${counter.index}].description"
+                                                rows=5 cols=40>${period.description}</textarea></dd>
+                                    </dl>
+                                    <br>
+                                </c:forEach>
+                            </div>
+                        </c:forEach>
+                    </c:when>
                 </c:choose>
             </dl>
         </c:forEach>

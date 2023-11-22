@@ -1,16 +1,18 @@
 package com.webcv.web;
 
-import com.webcv.model.Resume;
-import com.webcv.model.SectionType;
-import com.webcv.model.TextSection;
+import com.webcv.model.*;
 import com.webcv.storage.Storage;
 import com.webcv.util.Config;
+import com.webcv.util.DateUtil;
+import com.webcv.util.HtmlUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
     Storage storage = Config.get().getStorage();
@@ -50,12 +52,61 @@ public class ResumeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
         String uuid = request.getParameter("uuid");
-        String name = request.getParameter("fullname");
-        String personal = request.getParameter("personal");
-        String position = request.getParameter("position");
-        Resume resume = new Resume(uuid, name);
-        resume.setContact(SectionType.PERSONAL, new TextSection(personal));
-        resume.setContact(SectionType.POSITION, new TextSection(position));
+        String fullname = request.getParameter("fullname");
+        Resume resume = storage.get(uuid);
+        resume.setFullName(fullname);
+        for (ContactType type : ContactType.values()) {
+            String value = request.getParameter(type.name());
+            if (HtmlUtil.isEmpty(value)) {
+                resume.removeContact(type);
+            } else {
+                resume.setContact(type, value);
+            }
+        }
+
+        for (SectionType type : SectionType.values()) {
+            String value = request.getParameter(type.name());
+            String[] values = request.getParameterValues(type.name());
+            if (HtmlUtil.isEmpty(value) && (values == null || values.length < 2)) {
+                resume.removeSection(type);
+            } else {
+                switch (type) {
+                    case POSITION:
+                    case PERSONAL:
+                        resume.setSection(type, new TextSection(value));
+                        break;
+                    case ACHIEVEMENTS:
+                    case QUALIFICATIONS:
+                        resume.setSection(type, new ListSection(value.split("\\n")));
+                        break;
+                    case EDUCATION:
+                    case EXPERIENCE:
+                        List<Company> companies = new ArrayList<>();
+                        String[] urls = request.getParameterValues(type.name() + ".url");
+                        for (int i = 0; i < values.length; i++) {
+                            String name = values[i];
+                            if (!HtmlUtil.isEmpty(name)) {
+                                List<Company.Period> periods = new ArrayList<>();
+                                String pfx = type.name() + "[" + i + "].";
+                                String[] startDates = request.getParameterValues(pfx + "startDate");
+                                String[] endDates = request.getParameterValues(pfx + "endDate");
+                                String[] titles = request.getParameterValues(pfx + "title");
+                                String[] descriptions = request.getParameterValues(pfx + "description");
+                                for (int j = 0; j < titles.length; j++) {
+                                    if (!HtmlUtil.isEmpty(titles[j])) {
+                                        periods.add(new Company.Period(titles[j], descriptions[j],
+                                                DateUtil.parse(startDates[j]), DateUtil.parse(endDates[j])));
+                                    }
+                                }
+                                companies.add(new Company(name, urls[i], periods));
+                            }
+                        }
+                        resume.setSection(type, new CompanySection(companies));
+                        break;
+                }
+            }
+        }
+
         storage.update(resume);
         response.sendRedirect("resume");
     }

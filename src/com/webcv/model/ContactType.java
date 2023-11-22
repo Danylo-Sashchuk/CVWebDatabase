@@ -1,7 +1,7 @@
 package com.webcv.model;
 
 public enum ContactType {
-    PHONE_NUMBER("Телефон"),
+    PHONE_NUMBER("Phone number"),
     EMAIL("E-mail") {
         @Override
         public String toHtml(String value) {
@@ -14,8 +14,8 @@ public enum ContactType {
             return this.toHtml1("<a href='skype:" + value + "'>" + value + "</a>");
         }
     },
-    LINKEDIN("Профиль LinkedIn"),
-    GITHUB("Профиль GitHub");
+    LINKEDIN("LinkedIn"),
+    GITHUB("GitHub");
 
     private final String title;
 

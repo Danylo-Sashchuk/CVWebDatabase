@@ -57,12 +57,20 @@ public class Resume implements Serializable {
         return new EnumMap<>(sections);
     }
 
-    public void setContact(SectionType type, AbstractSection section) {
+    public void removeSection(SectionType type) {
+        sections.remove(type);
+    }
+
+    public void setSection(SectionType type, AbstractSection section) {
         sections.put(type, section);
     }
 
     public String getFullName() {
         return fullName;
+    }
+
+    public void setFullName(String name) {
+        this.fullName = name;
     }
 
     public String getUuid() {

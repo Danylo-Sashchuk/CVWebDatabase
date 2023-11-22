@@ -41,16 +41,16 @@ public class ResumeTestData {
     }
 
     public void updatePosition(Resume resume) {
-        resume.setContact(SectionType.POSITION, new TextSection(iterators.get(DataType.POSITION).next()));
+        resume.setSection(SectionType.POSITION, new TextSection(iterators.get(DataType.POSITION).next()));
     }
 
     public void updatePersonal(Resume resume) {
-        resume.setContact(SectionType.PERSONAL, new TextSection(iterators.get(DataType.PERSONAL).next()));
+        resume.setSection(SectionType.PERSONAL, new TextSection(iterators.get(DataType.PERSONAL).next()));
     }
 
     public void updateAchievements(Resume resume) {
         ListSection achievementsSection = createListSection(iterators.get(DataType.ACHIEVEMENT));
-        resume.setContact(SectionType.ACHIEVEMENTS, achievementsSection);
+        resume.setSection(SectionType.ACHIEVEMENTS, achievementsSection);
     }
 
     public void addExperiences(Resume resume) {
@@ -58,7 +58,7 @@ public class ResumeTestData {
                 new CompanySection(createCompaniesList(iterators.get(DataType.COMPANY_NAME),
                         iterators.get(DataType.COMPANY_WEBSITE), iterators.get(DataType.WORK_TITLE),
                         iterators.get(DataType.WORK_DESCRIPTION)));
-        resume.setContact(SectionType.EXPERIENCE, experienceSection);
+        resume.setSection(SectionType.EXPERIENCE, experienceSection);
     }
 
     public List<Company> getExperiences() {
@@ -132,14 +132,14 @@ public class ResumeTestData {
 
     private void addQualifications(Resume resume) {
         ListSection qualificationsSection = createListSection(iterators.get(DataType.QUALIFICATION));
-        resume.setContact(SectionType.QUALIFICATIONS, qualificationsSection);
+        resume.setSection(SectionType.QUALIFICATIONS, qualificationsSection);
     }
 
     private void addEducations(Resume resume) {
         CompanySection educationSection = new CompanySection(createCompaniesList(iterators.get(DataType.EDUCATION_NAME),
                 iterators.get(DataType.EDUCATION_WEBSITE), iterators.get(DataType.EDUCATION_TITLE),
                 iterators.get(DataType.EDUCATION_DESCRIPTION)));
-        resume.setContact(SectionType.EDUCATION, educationSection);
+        resume.setSection(SectionType.EDUCATION, educationSection);
     }
 
     private List<Company> createCompaniesList(Iterator<String> namesIterator, Iterator<String> websitesIterator,

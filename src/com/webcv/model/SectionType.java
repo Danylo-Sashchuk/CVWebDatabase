@@ -1,8 +1,8 @@
 package com.webcv.model;
 
 public enum SectionType {
-    POSITION("Позиция"), EXPERIENCE("Опыт работы"), ACHIEVEMENTS("Достижения"), QUALIFICATIONS("Квалификация"),
-    EDUCATION("Образование"), PERSONAL("Личные качества");
+    POSITION("Position"), EXPERIENCE("Experience"), ACHIEVEMENTS("Achievements"), QUALIFICATIONS("Qualifications"),
+    EDUCATION("Education"), PERSONAL("Personal");
 
     private final String title;
 

@@ -21,10 +21,10 @@ public class DataStreamSerializer implements SerializationStrategy {
                 SectionType sectionType = SectionType.valueOf(dataInputStream.readUTF());
                 switch (sectionType) {
                     case PERSONAL, POSITION ->
-                            resume.setContact(sectionType, new TextSection(dataInputStream.readUTF()));
+                            resume.setSection(sectionType, new TextSection(dataInputStream.readUTF()));
                     case ACHIEVEMENTS, QUALIFICATIONS -> {
                         List<String> list = readWithException(dataInputStream, () -> dataInputStream.readUTF());
-                        resume.setContact(sectionType, new ListSection(list));
+                        resume.setSection(sectionType, new ListSection(list));
                     }
                     case EDUCATION, EXPERIENCE -> {
                         List<Company> companies = readWithException(dataInputStream, () -> {
@@ -45,7 +45,7 @@ public class DataStreamSerializer implements SerializationStrategy {
                             });
                             return new Company(name, url, periods);
                         });
-                        resume.setContact(sectionType, new CompanySection(companies));
+                        resume.setSection(sectionType, new CompanySection(companies));
                     }
                 }
             });

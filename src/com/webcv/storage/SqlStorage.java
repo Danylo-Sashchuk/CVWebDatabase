@@ -289,9 +289,9 @@ public class SqlStorage implements Storage {
         if (text != null) {
             SectionType type = SectionType.valueOf(rs.getString("section_type"));
             switch (type) {
-                case PERSONAL, POSITION -> resume.setContact(type, new TextSection(text));
-                case ACHIEVEMENTS, QUALIFICATIONS -> resume.setContact(type, new ListSection(parseText(text)));
-                case EXPERIENCE,  EDUCATION -> resume.setContact(type, JsonParser.read(text, AbstractSection.class));
+                case PERSONAL, POSITION -> resume.setSection(type, new TextSection(text));
+                case ACHIEVEMENTS, QUALIFICATIONS -> resume.setSection(type, new ListSection(parseText(text)));
+                case EXPERIENCE,  EDUCATION -> resume.setSection(type, JsonParser.read(text, AbstractSection.class));
             }
         }
     }
