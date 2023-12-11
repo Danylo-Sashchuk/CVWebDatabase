@@ -1,6 +1,6 @@
 div.main-div {
     width: 800px;
-    margin: auto;
+    margin: auto auto 50px;
 }
 
 img {
@@ -30,7 +30,7 @@ div.bottom {
     padding-top: 20px;
     padding-bottom: 20px;
     text-align: center;
-    margin: 0 auto;
+    margin: auto 0;
 }
 
 div.bottom a {
@@ -49,9 +49,8 @@ a:visited {
 table.list-table {
     margin-right: auto;
     margin-left: auto;
-    min-height: 500px;
     overflow-y: scroll;
-    /*width: 100%;*/
+    width: 100%;
     table-layout:fixed;
 }
 
@@ -89,6 +88,7 @@ tr {
     font-size: 16px;
     font-weight: normal;
     text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
+    height: 50px;
 }
 
 tr:hover td {
@@ -131,6 +131,9 @@ td {
     text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
     border-right: 1px solid #C1C3D1;
     font-family: sans-serif;
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflowing content */
+    text-overflow: ellipsis;
 }
 
 td:last-child {
@@ -180,5 +183,16 @@ body {
 }
 
 div.div-list-table {
-    min-height: 500px;
+    /*min-height: 500px;*/
 }
+
+thead th,
+thead td {
+    height: 50px; /* Adjust the height as needed */
+}
+
+thead tr:hover {
+    background: #333333;
+    color: #ffffff;
+}
+
