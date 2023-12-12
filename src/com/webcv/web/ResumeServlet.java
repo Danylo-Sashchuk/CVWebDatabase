@@ -37,7 +37,8 @@ public class ResumeServlet extends HttpServlet {
             case "view" -> {
                 resume = storage.get(uuid);
                 request.setAttribute("resume", resume);
-                request.getRequestDispatcher("/WEB-INF/jsp/view.jsp").forward(request, response);
+//                request.getRequestDispatcher("/WEB-INF/jsp/view.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/jsp/newedit.jsp").forward(request, response);
             }
             case "edit" -> {
                 resume = storage.get(uuid);
