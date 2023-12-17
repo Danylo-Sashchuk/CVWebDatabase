@@ -1,0 +1,62 @@
+div.form-wrapper {
+    font-family: Open Sans, serif;
+    font-style: normal;
+    font-weight: 600;
+
+    height: 100%;
+    min-width: 610px;
+    width: 50%;
+    margin: 0 0 0 25%;
+    display: block;
+}
+
+div.full-name {
+    font-size: 32px;
+    margin-top: 40px;
+}
+
+div.contacts {
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 30px;
+    margin-top: 21px;
+    display: table;
+    width: 100%;
+
+    background-color: #f9f9f9; /* Set the background color to white */
+    padding: 20px; /* Add some padding inside the div */
+    border-radius: 5px; /* Optional: round the corners of the div */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Horizontal offset, vertical offset, blur radius, and color of the shadow */
+    max-width: 600px; /* Maximum width of the div */
+    margin-left: auto; /* These two margins (left and right) */
+    margin-right: auto; /* center the div on the page */
+    border: 1px solid #ddd; /* Optional: adds a subtle border */
+}
+
+div.contact {
+    display: table-row;
+    margin-bottom: 10px;
+}
+
+div.contact-type {
+    display: table-cell;
+    text-align: right;
+    padding-right: 10px;
+    width: 1%;
+    white-space: nowrap;
+
+    font-weight: bold; /* Optional: makes the contact type bold */
+    margin-right: 10px;
+    color: #333;
+}
+
+div.contact-value {
+    display: table-cell;
+    text-align: left;
+    color: #0056b3;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
