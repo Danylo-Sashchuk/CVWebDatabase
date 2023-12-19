@@ -41,26 +41,33 @@
 
 </div>
 <script>
-    const collapsibleContents = document.getElementsByClassName("collapsible-content");
-    const coll = document.getElementsByClassName("collapse-button");
+    function assignClicksAndExpand() {
+        const coll = document.getElementsByClassName("collapse-button");
 
-    for (let i = 0; i < coll.length; i++) {
-        coll[i].addEventListener("click", function () {
-            this.classList.toggle("activated");
-            const content = this.nextElementSibling;
-            if (content.style.maxHeight) {
-                content.style.maxHeight = null;
-            } else {
-                content.style.maxHeight = content.scrollHeight + "px";
-            }
-        });
-        coll[i].click();
+        for (let i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function () {
+                this.classList.toggle("activated");
+                const content = this.nextElementSibling;
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+            coll[i].click();
+        }
     }
 
-    for (let i = 0; i < collapsibleContents.length; i++) {
-        collapsibleContents[i].style.maxHeight = collapsibleContents[i].scrollHeight + "px";
-        collapsibleContents[i].style.transition = "max-height 0.2s ease-in-out";
+    function assignTransition() {
+        const collapsibleContents = document.getElementsByClassName("collapsible-content");
+        for (let i = 0; i < collapsibleContents.length; i++) {
+            collapsibleContents[i].style.maxHeight = collapsibleContents[i].scrollHeight + "px";
+            collapsibleContents[i].style.transition = "max-height 0.2s ease-in-out";
+        }
     }
+
+    assignClicksAndExpand();
+    assignTransition();
 
 </script>
 
