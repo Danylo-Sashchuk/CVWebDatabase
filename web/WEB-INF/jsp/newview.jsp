@@ -5,6 +5,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.webcv.model.ContactType" %>
+<%@ page import="com.webcv.model.SectionType" %>
+<%@ page import="com.webcv.model.ListSection" %>
 <%@ page import="com.webcv.util.HtmlUtil" %>
 
 <jsp:useBean id="resume" scope="request" type="com.webcv.model.Resume"/>
@@ -38,6 +40,23 @@
     </c:if>
     <%--    /Contacts section   --%>
 
+    <%--    Main sections   --%>
+    <c:set var="sections" value="${resume.sections}"/>
+
+    <%--    Achievements section   --%>
+    <c:set var="achievements" value="${sections.get(SectionType.ACHIEVEMENTS)}"/>
+    <c:set var="achievements" value="${achievements}" target="ListSection"/>
+    <jsp:useBean id="achievements" type="com.webcv.model.ListSection"/>
+    <c:if test="${achievements != null}">
+        <div class="achievements">
+            <button type="button" class="collapse-button">Achievements</button>
+            <div class="collapsible-content">
+                <c:forEach var="achievement" items="${achievements.texts}">
+                    <div class="achievement">${achievement}</div>
+                </c:forEach>
+            </div>
+        </div>
+    </c:if>
 
 </div>
 <script>

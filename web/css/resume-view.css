@@ -23,9 +23,9 @@ div.contacts {
     margin-top: 21px;
     display: table;
     width: 100%;
+    padding: 10px 20px;
 
     background-color: #f9f9f9; /* Set the background color to white */
-    padding: 20px; /* Add some padding inside the div */
     border-radius: 5px; /* Optional: round the corners of the div */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Horizontal offset, vertical offset, blur radius, and color of the shadow */
     max-width: 600px; /* Maximum width of the div */
@@ -69,6 +69,7 @@ a {
     padding-bottom: 18px;
     width: 100%;
     border: none;
+    border-radius: 10px;
     text-align: left;
     outline: none;
 }
