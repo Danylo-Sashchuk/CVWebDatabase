@@ -41,6 +41,7 @@
 
 </div>
 <script>
+    const collapsibleContents = document.getElementsByClassName("collapsible-content");
     const coll = document.getElementsByClassName("collapse-button");
 
     for (let i = 0; i < coll.length; i++) {
@@ -53,6 +54,12 @@
                 content.style.maxHeight = content.scrollHeight + "px";
             }
         });
+        coll[i].click();
+    }
+
+    for (let i = 0; i < collapsibleContents.length; i++) {
+        collapsibleContents[i].style.maxHeight = collapsibleContents[i].scrollHeight + "px";
+        collapsibleContents[i].style.transition = "max-height 0.2s ease-in-out";
     }
 
 </script>
