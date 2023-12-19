@@ -13,6 +13,7 @@ div.form-wrapper {
 div.full-name {
     font-size: 32px;
     margin-top: 40px;
+    text-align: center;
 }
 
 div.contacts {
@@ -35,7 +36,6 @@ div.contacts {
 
 div.contact {
     display: table-row;
-    margin-bottom: 10px;
 }
 
 div.contact-type {
@@ -45,7 +45,6 @@ div.contact-type {
     width: 1%;
     white-space: nowrap;
 
-    font-weight: bold; /* Optional: makes the contact type bold */
     margin-right: 10px;
     color: #333;
 }
@@ -59,4 +58,41 @@ div.contact-value {
 a {
     text-decoration: none;
     color: inherit;
+}
+
+.collapse-button {
+    background-color: inherit;
+    font-size: inherit;
+    font-family: Open Sans, serif;
+    cursor: pointer;
+    padding-top: 18px;
+    padding-bottom: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+}
+
+.collapse-button:hover {
+    background-color: lightgray;
+}
+
+.collapse-button:after {
+    content: '↓'; /* Unicode character for "plus" sign (+) */
+    float: right;
+}
+
+.activated:after {
+    content: '↑'; /* Unicode character for "minus" sign (-) */
+}
+
+.collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    margin-left: 6px;
+}
+
+.instant-expand {
+    transition: none;
 }

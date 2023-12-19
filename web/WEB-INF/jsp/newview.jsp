@@ -23,19 +23,39 @@
     <jsp:useBean id="contacts" type="java.util.Map<com.webcv.model.ContactType, java.lang.String>"/>
     <c:if test="${contacts.size() != 0}">
         <div class="contacts">
-            <c:forEach var="contactType" items="${ContactType.values()}">
-                <c:if test="${contacts.get(contactType) != null}">
-                    <div class="contact">
-                        <div class="contact-type">${contactType.title}:</div>
-                        <div class="contact-value">${HtmlUtil.formatContact(contactType, contacts.get(contactType))}</div>
-                    </div>
-                </c:if>
-            </c:forEach>
+            <button type="button" class="collapse-button">Contacts</button>
+            <div class="collapsible-content">
+                <c:forEach var="contactType" items="${ContactType.values()}">
+                    <c:if test="${contacts.get(contactType) != null}">
+                        <div class="contact">
+                            <div class="contact-type">${contactType.title}:</div>
+                            <div class="contact-value">${HtmlUtil.formatContact(contactType, contacts.get(contactType))}</div>
+                        </div>
+                    </c:if>
+                </c:forEach>
+            </div>
         </div>
     </c:if>
     <%--    /Contacts section   --%>
 
 
 </div>
+<script>
+    const coll = document.getElementsByClassName("collapse-button");
+
+    for (let i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("activated");
+            const content = this.nextElementSibling;
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        });
+    }
+
+</script>
+
 </body>
 </html>
