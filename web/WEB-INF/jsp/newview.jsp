@@ -7,16 +7,21 @@
 <%@ page import="com.webcv.model.ContactType" %>
 <%@ page import="com.webcv.model.SectionType" %>
 <%@ page import="com.webcv.model.ListSection" %>
+<%@ page import="com.webcv.model.TextSection" %>
+
 <%@ page import="com.webcv.util.HtmlUtil" %>
 
 <jsp:useBean id="resume" scope="request" type="com.webcv.model.Resume"/>
 <html>
 <head>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/resume-view.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/intersectional.css">
     <title>Resume ${resume.fullName}</title>
 </head>
 <body>
-<jsp:include page="fragments/header.jsp"/>
+<nav>
+    <jsp:include page="/WEB-INF/jsp/fragments/header.jsp"/>
+</nav>
 <div class="form-wrapper">
     <div class="full-name">${resume.fullName}</div>
 
@@ -54,7 +59,7 @@
             <div class="achievements">
                 <button type="button" class="collapse-button">Achievements</button>
                 <div class="collapsible-content">
-                    <ol class="achievements-list">
+                    <ol class="list-container">
                         <c:forEach var="achievement" items="${achievements.texts}">
                         <li>${achievement}</li>
                         </c:forEach>
@@ -62,7 +67,66 @@
             </div>
         </div>
     </c:if>
+    <%--    /Achievements section   --%>
 
+    <%--    Qualifications section   --%>
+    <c:set var="qualifications" value="${sections.get(SectionType.QUALIFICATIONS)}"/>
+    <c:set var="qualifications" value="${qualifications}" target="ListSection"/>
+    <c:if test="${qualifications != null}">
+        <jsp:useBean id="qualifications" type="com.webcv.model.ListSection"/>
+        <div class="panel">
+            <div class="qualifications">
+                <button type="button" class="collapse-button">Qualifications</button>
+                <div class="collapsible-content">
+                    <ol class="list-container">
+                        <c:forEach var="qualification" items="${qualifications.texts}">
+                            <li>${qualification}</li>
+                        </c:forEach>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </c:if>
+    <%--    /Qualifications section   --%>
+
+    <%--    Postiton section   --%>
+    <c:set var="position" value="${sections.get(SectionType.POSITION)}"/>
+    <c:set var="position" value="${position}" target="TextSection"/>
+    <c:if test="${position != null}">
+        <jsp:useBean id="position" type="com.webcv.model.TextSection"/>
+        <div class="panel">
+            <div class="position">
+                <button type="button" class="collapse-button">Position</button>
+                <div class="collapsible-content">
+                    <div class="text-container">
+                            ${position.text}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </c:if>
+    <%--    /Postiton section   --%>
+
+    <%--    Personal section   --%>
+    <c:set var="personal" value="${sections.get(SectionType.PERSONAL)}"/>
+    <c:set var="personal" value="${personal}" target="TextSection"/>
+    <c:if test="${personal != null}">
+        <jsp:useBean id="personal" type="com.webcv.model.TextSection"/>
+        <div class="panel">
+            <div class="personal">
+                <button type="button" class="collapse-button">Personal</button>
+                <div class="collapsible-content">
+                    <div class="text-container">
+                            ${personal.text}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </c:if>
+    <%--    /Personal section   --%>
+</div>
+<div class="bottom">
+    <jsp:include page="/WEB-INF/jsp/fragments/footer.jsp"/>
 </div>
 <script>
     function assignClicksAndExpand() {
@@ -77,6 +141,7 @@
                 } else {
                     content.style.maxHeight = content.scrollHeight + "px";
                 }
+                adjustMainContentPadding();
             });
             coll[i].click();
         }
@@ -89,6 +154,26 @@
             collapsibleContents[i].style.transition = "max-height 0.2s ease-in-out";
         }
     }
+
+    function adjustMainContentPadding() {
+        // Select the main content element. Replace '.main-content' with the correct selector for your layout.
+        const mainContent = document.querySelector('.form-wrapper');
+
+        // Select all the collapsible content elements.
+        const collapsibleContents = document.getElementsByClassName('collapsible-content');
+
+
+        let totalExpandedHeight = 0;
+        for (let content of collapsibleContents) {
+            if (content.style.maxHeight) {
+                totalExpandedHeight += content.scrollHeight;
+            }
+        }
+
+
+        mainContent.style.paddingBottom = totalExpandedHeight + 'px';
+    }
+
 
     assignClicksAndExpand();
     assignTransition();

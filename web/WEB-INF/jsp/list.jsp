@@ -6,6 +6,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/list.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/intersectional.css">
     <title>All resumes</title>
 </head>
 <body>

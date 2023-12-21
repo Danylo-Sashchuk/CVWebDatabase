@@ -3,7 +3,7 @@ div.form-wrapper {
     font-style: normal;
     font-weight: 600;
 
-    height: 100%;
+    height: 600px;
     min-width: 610px;
     width: 50%;
     margin: 0 0 0 25%;
@@ -68,7 +68,7 @@ a {
 
 .collapse-button {
     background-color: inherit;
-    font-size: 18px;
+    font-size: 22px;
     font-family: Open Sans, serif;
     cursor: pointer;
     padding-top: 15px;
@@ -104,9 +104,18 @@ a {
 .achievements {
 }
 
-.achievements-list {
+.list-container {
     margin-top: 5px;
     margin-bottom: 5px;
     padding-left: 40px;
-    list-style-type: upper-roman;
+    padding-right: 5px;
+    list-style-type: square;
+}
+
+.qualifications {
+}
+
+.text-container {
+    line-height: 1.6; /* Spacing between lines of text */
+    padding-left: 20px;
 }
