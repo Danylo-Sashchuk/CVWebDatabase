@@ -16,22 +16,28 @@ div.full-name {
     text-align: center;
 }
 
-div.contacts {
+div.panel {
+    margin-top: 21px;
+    width: 100%;
+    padding: 10px;
+    margin-right: auto;
+    margin-left: auto;
+
     font-weight: 300;
     font-size: 18px;
     line-height: 30px;
-    margin-top: 21px;
-    display: table;
-    width: 100%;
-    padding: 10px 20px;
+
 
     background-color: #f9f9f9; /* Set the background color to white */
     border-radius: 5px; /* Optional: round the corners of the div */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Horizontal offset, vertical offset, blur radius, and color of the shadow */
     max-width: 600px; /* Maximum width of the div */
-    margin-left: auto; /* These two margins (left and right) */
-    margin-right: auto; /* center the div on the page */
     border: 1px solid #ddd; /* Optional: adds a subtle border */
+}
+
+div.contacts {
+    width: 100%;
+    display: table;
 }
 
 div.contact {
@@ -62,11 +68,11 @@ a {
 
 .collapse-button {
     background-color: inherit;
-    font-size: inherit;
+    font-size: 18px;
     font-family: Open Sans, serif;
     cursor: pointer;
-    padding-top: 18px;
-    padding-bottom: 18px;
+    padding-top: 15px;
+    padding-bottom: 15px;
     width: 100%;
     border: none;
     border-radius: 10px;
@@ -79,17 +85,28 @@ a {
 }
 
 .collapse-button:after {
-    content: '↓'; /* Unicode character for "plus" sign (+) */
+    content: '↓';
     float: right;
 }
 
 .activated:after {
-    content: '↑'; /* Unicode character for "minus" sign (-) */
+    content: '↑';
 }
 
 .collapsible-content {
     max-height: 0;
     overflow: hidden;
-    /*transition: max-height 0.2s ease-out;*/
     margin-left: 6px;
+
+    /*transition: max-height 0.2s ease-out;*/
+}
+
+.achievements {
+}
+
+.achievements-list {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-left: 40px;
+    list-style-type: upper-roman;
 }
