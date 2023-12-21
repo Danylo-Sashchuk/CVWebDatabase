@@ -24,6 +24,16 @@
     <jsp:include page="/WEB-INF/jsp/fragments/header.jsp"/>
 </nav>
 <div class="form-wrapper">
+    <div class="expand-all">
+        <button type="button" class="expand-all-button" onclick="function expandAll() {
+            const coll = document.getElementsByClassName('collapse-button');
+            for (let i = 0; i < coll.length; i++) {
+                coll[i].click();
+            }
+        }
+        expandAll()">Expand all
+        </button>
+    </div>
     <div class="full-name">${resume.fullName}</div>
 
     <%--    Contacts section   --%>
@@ -169,7 +179,7 @@
                 } else {
                     content.style.maxHeight = content.scrollHeight + "px";
                 }
-                adjustMainContentPadding();
+                content.addEventListener('transitionend', adjustMainContentPadding, {once: true});
             });
             coll[i].click();
         }
