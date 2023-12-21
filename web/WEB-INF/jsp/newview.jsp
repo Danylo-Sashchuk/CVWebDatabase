@@ -8,6 +8,7 @@
 <%@ page import="com.webcv.model.SectionType" %>
 <%@ page import="com.webcv.model.ListSection" %>
 <%@ page import="com.webcv.model.TextSection" %>
+<%@ page import="com.webcv.model.CompanySection" %>
 
 <%@ page import="com.webcv.util.HtmlUtil" %>
 
@@ -124,6 +125,33 @@
         </div>
     </c:if>
     <%--    /Personal section   --%>
+
+    <%--    Education section   --%>
+    <c:set var="education" value="${sections.get(SectionType.EDUCATION)}"/>
+    <c:set var="education" value="${education}" target="CompanySection"/>
+    <c:if test="${education != null}">
+        <jsp:useBean id="education" type="com.webcv.model.CompanySection"/>
+        <div class="panel">
+            <div class="education">
+                <button type="button" class="collapse-button">Education</button>
+                <div class="collapsible-content">
+                    <div class="company-container">
+                        <c:forEach var="company" items="${education.companies}">
+                            <div class="company">
+                                <div class="company-name">${company.name}</div>
+                                <c:forEach var="period" items="${company.periods}">
+                                    <div class="company-period">${period}</div>
+                                    <div class="period-title">${period.title}</div>
+                                    <div class="period-time">${period.startDate} - ${period.endDate}</div>
+                                    <div class="period-description">${period.description}</div>
+                                </c:forEach>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </c:if>
 </div>
 <div class="bottom">
     <jsp:include page="/WEB-INF/jsp/fragments/footer.jsp"/>
@@ -162,15 +190,12 @@
         // Select all the collapsible content elements.
         const collapsibleContents = document.getElementsByClassName('collapsible-content');
 
-
         let totalExpandedHeight = 0;
         for (let content of collapsibleContents) {
             if (content.style.maxHeight) {
                 totalExpandedHeight += content.scrollHeight;
             }
         }
-
-
         mainContent.style.paddingBottom = totalExpandedHeight + 'px';
     }
 
