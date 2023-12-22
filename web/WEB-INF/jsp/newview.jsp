@@ -166,14 +166,14 @@
     function clickExpandAll() {
         const buttons = document.querySelectorAll('.collapse-button:not(.activated)');
         buttons.forEach(button => {
-            button.click(); // This simulates a click on each button that is not already activated
+            button.click();
         });
     }
 
     function clickCollapseAll() {
         const buttons = document.querySelectorAll('.collapse-button.activated');
         buttons.forEach(button => {
-            button.click(); // This simulates a click only on buttons that have the 'activated' class as well
+            button.click();
         });
     }
 
@@ -189,10 +189,10 @@
                 } else {
                     content.style.maxHeight = content.scrollHeight + "px";
                 }
-                adjustMainContentPadding();
-                // content.addEventListener('transitionend', adjustMainContentPadding, {once: true});
+                content.addEventListener('transitionend', adjustMainContentPadding);
             });
             coll[i].click();
+            adjustMainContentPadding();
         }
     }
 
@@ -205,10 +205,8 @@
     }
 
     function adjustMainContentPadding() {
-        // Select the main content element. Replace '.main-content' with the correct selector for your layout.
         const mainContent = document.querySelector('.form-wrapper');
 
-        // Select all the collapsible content elements.
         const collapsibleContents = document.getElementsByClassName('collapsible-content');
 
         let totalExpandedHeight = 0;
@@ -221,8 +219,10 @@
     }
 
 
-    assignClicksAndExpand();
-    assignTransition();
+    document.addEventListener('DOMContentLoaded', function () {
+        assignClicksAndExpand();
+        assignTransition();
+    });
 
 </script>
 
