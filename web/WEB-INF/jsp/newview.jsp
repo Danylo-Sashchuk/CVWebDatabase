@@ -25,14 +25,10 @@
 </nav>
 <div class="form-wrapper">
     <div class="expand-all">
-        <button type="button" class="expand-all-button" onclick="function expandAll() {
-            const coll = document.getElementsByClassName('collapse-button');
-            for (let i = 0; i < coll.length; i++) {
-                coll[i].click();
-            }
-        }
-        expandAll()">Expand all
-        </button>
+        <button type="button" class="expand-all-button" onclick="clickExpandAll()">Expand all</button>
+    </div>
+    <div class="collapse-all">
+        <button type="button" class="collapse-all-button" onclick="clickCollapseAll()">Collapse all</button>
     </div>
     <div class="full-name">${resume.fullName}</div>
 
@@ -167,6 +163,20 @@
     <jsp:include page="/WEB-INF/jsp/fragments/footer.jsp"/>
 </div>
 <script>
+    function clickExpandAll() {
+        const buttons = document.querySelectorAll('.collapse-button:not(.activated)');
+        buttons.forEach(button => {
+            button.click(); // This simulates a click on each button that is not already activated
+        });
+    }
+
+    function clickCollapseAll() {
+        const buttons = document.querySelectorAll('.collapse-button.activated');
+        buttons.forEach(button => {
+            button.click(); // This simulates a click only on buttons that have the 'activated' class as well
+        });
+    }
+
     function assignClicksAndExpand() {
         const coll = document.getElementsByClassName("collapse-button");
 
@@ -179,7 +189,8 @@
                 } else {
                     content.style.maxHeight = content.scrollHeight + "px";
                 }
-                content.addEventListener('transitionend', adjustMainContentPadding, {once: true});
+                adjustMainContentPadding();
+                // content.addEventListener('transitionend', adjustMainContentPadding, {once: true});
             });
             coll[i].click();
         }
