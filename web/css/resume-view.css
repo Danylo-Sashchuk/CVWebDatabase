@@ -119,3 +119,65 @@ a {
     line-height: 1.6; /* Spacing between lines of text */
     padding-left: 20px;
 }
+
+.fixed-buttons-container {
+    position: fixed; /* Fixed position to make it stay in place while scrolling */
+    right: 150px; /* Align with the right edge of form-wrapper and add some space */
+    top: 50%; /* Positioned in the middle vertically */
+    transform: translateY(-50%); /* Center the container at the middle */
+    z-index: 1000; /* Ensure it's above other content */
+}
+
+.fixed-button {
+    display: block; /* Stack buttons vertically */
+    margin-bottom: 10px; /* Space between buttons */
+}
+
+.go-top-container {
+    position: fixed;
+    right: 150px; /* Same as the right offset of your other fixed buttons */
+    bottom: calc(50% - 160px);
+    z-index: 1000; /* Ensure it's above other content */
+}
+
+.go-top {
+    display: none; /* Hide by default */
+}
+
+/* General button styling */
+.fixed-button, .go-top {
+    background-color: #f9f9f9; /* White background */
+    color: #333333; /* Dark text */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 15px; /* Padding inside the button */
+    cursor: pointer; /* Cursor becomes a hand icon when hovering over the button */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Simple shadow for depth */
+    font-size: 16px; /* Button text size */
+    margin-bottom: 20px; /* Margin at the bottom of each button */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transition for hover effects */
+}
+
+.fixed-button:hover, .go-top:hover {
+    background-color: #f2f2f2; /* Lighter background on hover */
+    transform: translateY(-2px); /* Slightly raise the button on hover */
+}
+
+/* Use Unicode symbols for buttons */
+.expand-all-button:before {
+    content: '\25BC'; /* Down-pointing triangle */
+    display: inline-block;
+    margin-right: 5px; /* Space between symbol and text */
+}
+
+.collapse-all-button:before {
+    content: '\25B2'; /* Up-pointing triangle */
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.go-top:before {
+    content: '\2191'; /* Upwards arrow */
+    display: inline-block;
+    margin-right: 5px;
+}

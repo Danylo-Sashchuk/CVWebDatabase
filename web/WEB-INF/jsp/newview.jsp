@@ -24,12 +24,15 @@
     <jsp:include page="/WEB-INF/jsp/fragments/header.jsp"/>
 </nav>
 <div class="form-wrapper">
-    <div class="expand-all">
-        <button type="button" class="expand-all-button" onclick="clickExpandAll()">Expand all</button>
+    <div class="fixed-buttons-container">
+        <button type="button" class="fixed-button expand-all-button" onclick="clickExpandAll()">Expand all</button>
+        <button type="button" class="fixed-button collapse-all-button" onclick="clickCollapseAll()">Collapse all
+        </button>
     </div>
-    <div class="collapse-all">
-        <button type="button" class="collapse-all-button" onclick="clickCollapseAll()">Collapse all</button>
+    <div class="go-top-container">
+        <button type="button" class="go-top" onclick="scrollToTop()">Go top</button>
     </div>
+
     <div class="full-name">${resume.fullName}</div>
 
     <%--    Contacts section   --%>
@@ -163,6 +166,13 @@
     <jsp:include page="/WEB-INF/jsp/fragments/footer.jsp"/>
 </div>
 <script>
+    function scrollToTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // Smooth scroll
+        });
+    }
+
     function clickExpandAll() {
         const buttons = document.querySelectorAll('.collapse-button:not(.activated)');
         buttons.forEach(button => {
@@ -218,6 +228,21 @@
         mainContent.style.paddingBottom = totalExpandedHeight + 'px';
     }
 
+    window.addEventListener('scroll', function () {
+        var goTopButton = document.querySelector('.go-top');
+        // Check if the page is scrolled down by 100px
+        if (window.pageYOffset > 100) {
+            goTopButton.style.display = 'block'; // Show the button
+        } else {
+            goTopButton.style.display = 'none'; // Hide the button
+        }
+    });
+
+    // On page load, hide the "Go top" button
+    document.addEventListener('DOMContentLoaded', function () {
+        var goTopButton = document.querySelector('.go-top');
+        goTopButton.style.display = 'none';
+    });
 
     document.addEventListener('DOMContentLoaded', function () {
         assignClicksAndExpand();
