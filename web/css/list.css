@@ -106,8 +106,8 @@ td {
     text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
     border-right: 1px solid #C1C3D1;
     font-family: sans-serif;
-    white-space: nowrap; /* Prevent text from wrapping */
-    overflow: hidden; /* Hide overflowing content */
+    white-space: nowrap;
+    overflow: hidden;
     text-overflow: ellipsis;
 }
 
@@ -159,7 +159,7 @@ body {
 
 thead th,
 thead td {
-    height: 50px; /* Adjust the height as needed */
+    height: 50px;
 }
 
 thead tr:hover {

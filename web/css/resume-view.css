@@ -28,11 +28,11 @@ div.panel {
     line-height: 30px;
 
 
-    background-color: #f9f9f9; /* Set the background color to white */
-    border-radius: 5px; /* Optional: round the corners of the div */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Horizontal offset, vertical offset, blur radius, and color of the shadow */
-    max-width: 600px; /* Maximum width of the div */
-    border: 1px solid #ddd; /* Optional: adds a subtle border */
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    border: 1px solid #ddd;
 }
 
 div.contacts {
@@ -116,68 +116,68 @@ a {
 }
 
 .text-container {
-    line-height: 1.6; /* Spacing between lines of text */
+    line-height: 1.6;
     padding-left: 20px;
 }
 
 .fixed-buttons-container {
-    position: fixed; /* Fixed position to make it stay in place while scrolling */
-    right: 150px; /* Align with the right edge of form-wrapper and add some space */
-    top: 50%; /* Positioned in the middle vertically */
-    transform: translateY(-50%); /* Center the container at the middle */
-    z-index: 1000; /* Ensure it's above other content */
+    position: fixed;
+    right: 150px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
 }
 
 .fixed-button {
-    display: block; /* Stack buttons vertically */
-    margin-bottom: 10px; /* Space between buttons */
+    display: block;
+    margin-bottom: 10px;
 }
 
 .go-top-container {
     position: fixed;
-    right: 150px; /* Same as the right offset of your other fixed buttons */
+    right: 150px;
     bottom: calc(50% - 160px);
-    z-index: 1000; /* Ensure it's above other content */
+    z-index: 1000;
 }
 
 .go-top {
-    display: none; /* Hide by default */
+    display: none;
 }
 
-/* General button styling */
+
 .fixed-button, .go-top {
-    background-color: #f9f9f9; /* White background */
-    color: #333333; /* Dark text */
-    border: none; /* No border */
-    border-radius: 5px; /* Rounded corners */
-    padding: 10px 15px; /* Padding inside the button */
-    cursor: pointer; /* Cursor becomes a hand icon when hovering over the button */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Simple shadow for depth */
-    font-size: 16px; /* Button text size */
-    margin-bottom: 20px; /* Margin at the bottom of each button */
-    transition: background-color 0.3s, transform 0.3s; /* Smooth transition for hover effects */
+    background-color: #f9f9f9;
+    color: #333333;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+    margin-bottom: 20px;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
 .fixed-button:hover, .go-top:hover {
-    background-color: #f2f2f2; /* Lighter background on hover */
-    transform: translateY(-2px); /* Slightly raise the button on hover */
+    background-color: #f2f2f2;
+    transform: translateY(-2px);
 }
 
 /* Use Unicode symbols for buttons */
 .expand-all-button:before {
-    content: '\25BC'; /* Down-pointing triangle */
+    content: '\25BC';
     display: inline-block;
-    margin-right: 5px; /* Space between symbol and text */
+    margin-right: 5px;
 }
 
 .collapse-all-button:before {
-    content: '\25B2'; /* Up-pointing triangle */
+    content: '\25B2';
     display: inline-block;
     margin-right: 5px;
 }
 
 .go-top:before {
-    content: '\2191'; /* Upwards arrow */
+    content: '\2191';
     display: inline-block;
     margin-right: 5px;
 }
