@@ -61,6 +61,54 @@
     <%--    Main sections   --%>
     <c:set var="sections" value="${resume.sections}"/>
 
+    <%--    Postiton section   --%>
+    <c:set var="position" value="${sections.get(SectionType.POSITION)}"/>
+    <c:set var="position" value="${position}" target="TextSection"/>
+    <c:if test="${position != null}">
+        <jsp:useBean id="position" type="com.webcv.model.TextSection"/>
+        <div class="panel">
+            <div class="position">
+                <button type="button" class="collapse-button">Position</button>
+                <div class="collapsible-content">
+                    <div class="text-container">
+                            ${position.text}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </c:if>
+    <%--    /Postiton section   --%>
+
+    <%--    Experience section   --%>
+    <c:set var="experience" value="${sections.get(SectionType.EXPERIENCE)}"/>
+    <c:set var="experience" value="${experience}" target="CompanySection"/>
+    <c:if test="${experience != null}">
+        <jsp:useBean id="experience" type="com.webcv.model.CompanySection"/>
+        <div class="panel">
+            <div class="experience">
+                <button type="button" class="collapse-button">Experience</button>
+                <div class="collapsible-content">
+                    <div class="company-container">
+                        <c:forEach var="company" items="${experience.companies}">
+                            <div class="company">
+                                <div class="company-name">${company.name}</div>
+                                <c:forEach var="period" items="${company.periods}">
+                                    <div class="period">
+                                        <div class="period-title">${period.title}</div>
+                                        <div class="period-time">${DateUtil.format(period.startDate)}
+                                            - ${DateUtil.format(period.endDate)}</div>
+                                    </div>
+                                    <div class="period-description">${period.description}</div>
+                                </c:forEach>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </c:if>
+    <%--    /Experience section   --%>
+
     <%--    Achievements section   --%>
     <c:set var="achievements" value="${sections.get(SectionType.ACHIEVEMENTS)}"/>
     <c:set var="achievements" value="${achievements}" target="ListSection"/>
@@ -100,42 +148,6 @@
     </c:if>
     <%--    /Qualifications section   --%>
 
-    <%--    Postiton section   --%>
-    <c:set var="position" value="${sections.get(SectionType.POSITION)}"/>
-    <c:set var="position" value="${position}" target="TextSection"/>
-    <c:if test="${position != null}">
-        <jsp:useBean id="position" type="com.webcv.model.TextSection"/>
-        <div class="panel">
-            <div class="position">
-                <button type="button" class="collapse-button">Position</button>
-                <div class="collapsible-content">
-                    <div class="text-container">
-                            ${position.text}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </c:if>
-    <%--    /Postiton section   --%>
-
-    <%--    Personal section   --%>
-    <c:set var="personal" value="${sections.get(SectionType.PERSONAL)}"/>
-    <c:set var="personal" value="${personal}" target="TextSection"/>
-    <c:if test="${personal != null}">
-        <jsp:useBean id="personal" type="com.webcv.model.TextSection"/>
-        <div class="panel">
-            <div class="personal">
-                <button type="button" class="collapse-button">Personal</button>
-                <div class="collapsible-content">
-                    <div class="text-container">
-                            ${personal.text}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </c:if>
-    <%--    /Personal section   --%>
-
     <%--    Education section   --%>
     <c:set var="education" value="${sections.get(SectionType.EDUCATION)}"/>
     <c:set var="education" value="${education}" target="CompanySection"/>
@@ -165,35 +177,23 @@
     </c:if>
     <%--    /Education section   --%>
 
-    <%--    Experience section   --%>
-    <c:set var="experience" value="${sections.get(SectionType.EXPERIENCE)}"/>
-    <c:set var="experience" value="${experience}" target="CompanySection"/>
-    <c:if test="${experience != null}">
-        <jsp:useBean id="experience" type="com.webcv.model.CompanySection"/>
+    <%--    Personal section   --%>
+    <c:set var="personal" value="${sections.get(SectionType.PERSONAL)}"/>
+    <c:set var="personal" value="${personal}" target="TextSection"/>
+    <c:if test="${personal != null}">
+        <jsp:useBean id="personal" type="com.webcv.model.TextSection"/>
         <div class="panel">
-            <div class="experience">
-                <button type="button" class="collapse-button">Experience</button>
+            <div class="personal">
+                <button type="button" class="collapse-button">Personal</button>
                 <div class="collapsible-content">
-                    <div class="company-container">
-                        <c:forEach var="company" items="${experience.companies}">
-                            <div class="company">
-                                <div class="company-name">${company.name}</div>
-                                <c:forEach var="period" items="${company.periods}">
-                                    <div class="period">
-                                        <div class="period-title">${period.title}</div>
-                                        <div class="period-time">${DateUtil.format(period.startDate)}
-                                            - ${DateUtil.format(period.endDate)}</div>
-                                    </div>
-                                    <div class="period-description">${period.description}</div>
-                                </c:forEach>
-                            </div>
-                        </c:forEach>
+                    <div class="text-container">
+                            ${personal.text}
                     </div>
                 </div>
             </div>
         </div>
     </c:if>
-    <%--    /Experience section   --%>
+    <%--    /Personal section   --%>
 </div>
 <div class="bottom">
     <jsp:include page="/WEB-INF/jsp/fragments/footer.jsp"/>
