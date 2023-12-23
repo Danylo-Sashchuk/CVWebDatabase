@@ -3,6 +3,8 @@
   Date: 12/16/23
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="myTags" tagdir="/WEB-INF/tags" %>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.webcv.model.ContactType" %>
 <%@ page import="com.webcv.model.SectionType" %>
@@ -61,139 +63,18 @@
     <%--    Main sections   --%>
     <c:set var="sections" value="${resume.sections}"/>
 
-    <%--    Postiton section   --%>
-    <c:set var="position" value="${sections.get(SectionType.POSITION)}"/>
-    <c:set var="position" value="${position}" target="TextSection"/>
-    <c:if test="${position != null}">
-        <jsp:useBean id="position" type="com.webcv.model.TextSection"/>
-        <div class="panel">
-            <div class="position">
-                <button type="button" class="collapse-button">Position</button>
-                <div class="collapsible-content">
-                    <div class="text-container">
-                            ${position.text}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </c:if>
-    <%--    /Postiton section   --%>
+    <myTags:textSection sectionType="Position" section="${sections.get(SectionType.POSITION)}"/>
 
-    <%--    Experience section   --%>
-    <c:set var="experience" value="${sections.get(SectionType.EXPERIENCE)}"/>
-    <c:set var="experience" value="${experience}" target="CompanySection"/>
-    <c:if test="${experience != null}">
-        <jsp:useBean id="experience" type="com.webcv.model.CompanySection"/>
-        <div class="panel">
-            <div class="experience">
-                <button type="button" class="collapse-button">Experience</button>
-                <div class="collapsible-content">
-                    <div class="company-container">
-                        <c:forEach var="company" items="${experience.companies}">
-                            <div class="company">
-                                <div class="company-name">${company.name}</div>
-                                <c:forEach var="period" items="${company.periods}">
-                                    <div class="period">
-                                        <div class="period-title">${period.title}</div>
-                                        <div class="period-time">${DateUtil.format(period.startDate)}
-                                            - ${DateUtil.format(period.endDate)}</div>
-                                    </div>
-                                    <div class="period-description">${period.description}</div>
-                                </c:forEach>
-                            </div>
-                        </c:forEach>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </c:if>
-    <%--    /Experience section   --%>
+    <myTags:companySection sectionType="Experience" section="${sections.get(SectionType.EXPERIENCE)}"/>
 
-    <%--    Achievements section   --%>
-    <c:set var="achievements" value="${sections.get(SectionType.ACHIEVEMENTS)}"/>
-    <c:set var="achievements" value="${achievements}" target="ListSection"/>
-    <c:if test="${achievements != null}">
-        <jsp:useBean id="achievements" type="com.webcv.model.ListSection"/>
-        <div class="panel">
-            <div class="achievements">
-                <button type="button" class="collapse-button">Achievements</button>
-                <div class="collapsible-content">
-                    <ol class="list-container">
-                        <c:forEach var="achievement" items="${achievements.texts}">
-                        <li>${achievement}</li>
-                        </c:forEach>
-                </div>
-            </div>
-        </div>
-    </c:if>
-    <%--    /Achievements section   --%>
+    <myTags:listSection sectionType="Achievements" section="${sections.get(SectionType.ACHIEVEMENTS)}"/>
 
-    <%--    Qualifications section   --%>
-    <c:set var="qualifications" value="${sections.get(SectionType.QUALIFICATIONS)}"/>
-    <c:set var="qualifications" value="${qualifications}" target="ListSection"/>
-    <c:if test="${qualifications != null}">
-        <jsp:useBean id="qualifications" type="com.webcv.model.ListSection"/>
-        <div class="panel">
-            <div class="qualifications">
-                <button type="button" class="collapse-button">Qualifications</button>
-                <div class="collapsible-content">
-                    <ol class="list-container">
-                        <c:forEach var="qualification" items="${qualifications.texts}">
-                            <li>${qualification}</li>
-                        </c:forEach>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </c:if>
-    <%--    /Qualifications section   --%>
+    <myTags:listSection sectionType="Qualifications" section="${sections.get(SectionType.QUALIFICATIONS)}"/>
 
-    <%--    Education section   --%>
-    <c:set var="education" value="${sections.get(SectionType.EDUCATION)}"/>
-    <c:set var="education" value="${education}" target="CompanySection"/>
-    <c:if test="${education != null}">
-        <jsp:useBean id="education" type="com.webcv.model.CompanySection"/>
-        <div class="panel">
-            <div class="education">
-                <button type="button" class="collapse-button">Education</button>
-                <div class="collapsible-content">
-                    <div class="company-container">
-                        <c:forEach var="company" items="${education.companies}">
-                            <div class="company">
-                                <div class="company-name">${company.name}</div>
-                                <c:forEach var="period" items="${company.periods}">
-                                    <div class="period">
-                                        <div class="period-title">${period.title}</div>
-                                        <div class="period-time">${period.startDate} - ${period.endDate}</div>
-                                        <div class="period-description">${period.description}</div>
-                                    </div>
-                                </c:forEach>
-                            </div>
-                        </c:forEach>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </c:if>
-    <%--    /Education section   --%>
+    <myTags:companySection sectionType="Education" section="${sections.get(SectionType.EDUCATION)}"/>
 
-    <%--    Personal section   --%>
-    <c:set var="personal" value="${sections.get(SectionType.PERSONAL)}"/>
-    <c:set var="personal" value="${personal}" target="TextSection"/>
-    <c:if test="${personal != null}">
-        <jsp:useBean id="personal" type="com.webcv.model.TextSection"/>
-        <div class="panel">
-            <div class="personal">
-                <button type="button" class="collapse-button">Personal</button>
-                <div class="collapsible-content">
-                    <div class="text-container">
-                            ${personal.text}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </c:if>
-    <%--    /Personal section   --%>
+    <myTags:textSection sectionType="Personal" section="${sections.get(SectionType.PERSONAL)}"/>
+
 </div>
 <div class="bottom">
     <jsp:include page="/WEB-INF/jsp/fragments/footer.jsp"/>
