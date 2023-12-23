@@ -11,6 +11,7 @@
 <%@ page import="com.webcv.model.CompanySection" %>
 
 <%@ page import="com.webcv.util.HtmlUtil" %>
+<%@ page import="com.webcv.util.DateUtil" %>
 
 <jsp:useBean id="resume" scope="request" type="com.webcv.model.Resume"/>
 <html>
@@ -149,9 +150,40 @@
                             <div class="company">
                                 <div class="company-name">${company.name}</div>
                                 <c:forEach var="period" items="${company.periods}">
-                                    <div class="company-period">${period}</div>
-                                    <div class="period-title">${period.title}</div>
-                                    <div class="period-time">${period.startDate} - ${period.endDate}</div>
+                                    <div class="period">
+                                        <div class="period-title">${period.title}</div>
+                                        <div class="period-time">${period.startDate} - ${period.endDate}</div>
+                                        <div class="period-description">${period.description}</div>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </c:if>
+    <%--    /Education section   --%>
+
+    <%--    Experience section   --%>
+    <c:set var="experience" value="${sections.get(SectionType.EXPERIENCE)}"/>
+    <c:set var="experience" value="${experience}" target="CompanySection"/>
+    <c:if test="${experience != null}">
+        <jsp:useBean id="experience" type="com.webcv.model.CompanySection"/>
+        <div class="panel">
+            <div class="experience">
+                <button type="button" class="collapse-button">Experience</button>
+                <div class="collapsible-content">
+                    <div class="company-container">
+                        <c:forEach var="company" items="${experience.companies}">
+                            <div class="company">
+                                <div class="company-name">${company.name}</div>
+                                <c:forEach var="period" items="${company.periods}">
+                                    <div class="period">
+                                        <div class="period-title">${period.title}</div>
+                                        <div class="period-time">${DateUtil.format(period.startDate)}
+                                            - ${DateUtil.format(period.endDate)}</div>
+                                    </div>
                                     <div class="period-description">${period.description}</div>
                                 </c:forEach>
                             </div>
@@ -161,6 +193,7 @@
             </div>
         </div>
     </c:if>
+    <%--    /Experience section   --%>
 </div>
 <div class="bottom">
     <jsp:include page="/WEB-INF/jsp/fragments/footer.jsp"/>
@@ -169,7 +202,7 @@
     function scrollToTop() {
         window.scrollTo({
             top: 0,
-            behavior: 'smooth' // Smooth scroll
+            behavior: 'smooth'
         });
     }
 
