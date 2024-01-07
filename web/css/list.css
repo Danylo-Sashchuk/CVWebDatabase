@@ -1,6 +1,7 @@
 div.main-div {
     width: 800px;
     margin: auto auto 50px;
+    height: auto;
 }
 
 img {

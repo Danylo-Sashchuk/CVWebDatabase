@@ -163,7 +163,6 @@ a {
     transform: translateY(-2px);
 }
 
-/* Use Unicode symbols for buttons */
 .expand-all-button:before {
     content: '\25BC';
     display: inline-block;
@@ -202,8 +201,6 @@ a {
 
 .period-title {
     font-size: 18px; /* Slightly larger font size for period title */
-    /*color: #007bff; !* Blue color for the period title for distinction *!*/
-    /*font-weight: bold; !* Bold font weight for period title *!*/
 }
 
 .period-time {

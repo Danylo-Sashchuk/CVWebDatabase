@@ -11,8 +11,13 @@ nav {
     margin: 0 auto;
 }
 
+nav a {
+    text-decoration: none;
+    color: inherit;
+}
+
 div.bottom {
-    position: sticky;
+    position: fixed;
     bottom: 0;
     width: 100%;
     background-color: #333333;
