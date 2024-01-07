@@ -11,9 +11,8 @@ nav {
     margin: 0 auto;
 }
 
-nav a {
+a {
     text-decoration: none;
-    color: inherit;
 }
 
 div.bottom {

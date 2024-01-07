@@ -46,7 +46,7 @@ public class ResumeServlet extends HttpServlet {
             }
             case "add" -> {
                 request.setAttribute("resume", resume);
-                request.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/jsp/newedit.jsp").forward(request, response);
             }
             default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }

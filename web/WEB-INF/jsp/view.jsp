@@ -18,7 +18,7 @@
 <jsp:useBean id="resume" scope="request" type="com.webcv.model.Resume"/>
 <html>
 <head>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/resume-view.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/view.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/intersectional.css">
     <title>Resume ${resume.fullName}</title>
 </head>
