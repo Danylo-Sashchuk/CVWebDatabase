@@ -63,7 +63,7 @@
         </c:if>
 
         <div class="submit-container">
-            <input type="submit" class="submit-button"> Save
+            <input type="submit" class="submit-button">
         </div>
     </form>
 </div>

@@ -57,6 +57,7 @@ function adjustMainContentPadding() {
             totalExpandedHeight += content.scrollHeight;
         }
     }
+
     mainContent.style.paddingBottom = totalExpandedHeight + 'px';
 }
 
@@ -79,4 +80,21 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('DOMContentLoaded', function () {
     assignClicksAndExpand();
     assignTransition();
+    setInitialHeight();
 });
+
+function setInitialHeight() {
+    var formWrapper = document.querySelector('.form-wrapper');
+
+    var panels = formWrapper.querySelectorAll('.panel');
+
+    var totalHeight = 0;
+
+    panels.forEach(function (panel) {
+        totalHeight += panel.offsetHeight;
+    });
+
+    if (totalHeight < 768) {
+        formWrapper.style.height = totalHeight + 'px';
+    }
+}
