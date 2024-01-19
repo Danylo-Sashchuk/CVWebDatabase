@@ -3,6 +3,7 @@
   Date: 12/11/23
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="static" uri="https://www.webcv.com/static" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="resume" scope="request" type="com.webcv.model.Resume"/>
 <%@ page import="com.webcv.model.ContactType" %>
@@ -36,7 +37,7 @@
                     <c:forEach var="contactType" items="${ContactType.values()}">
                         <div class="contact">
                             <div class="contact-type">${contactType.title}:</div>
-                            <input type="text" id="${contactType.name()}"
+                            <input type="text" name="${contactType.name()}"
                                    value="${contacts.get(contactType)}" class="contact-input"/>
                         </div>
                     </c:forEach>
@@ -55,12 +56,58 @@
                     <button type="button" class="collapse-button">Position</button>
                     <div class="collapsible-content">
                         <div class="text-container">
-                            <input type="text" id="position" value="${position.text}">
+                            <input type="text" name="position" value="${position.text}">
                         </div>
                     </div>
                 </div>
             </div>
         </c:if>
+        <%--    /Postiton    --%>
+
+        <%--    Experience    --%>
+        <c:set var="experience" value="${sections.get(SectionType.EXPERIENCE)}"/>
+        <c:if test="${experience != null}">
+            <div class="panel">
+                <div class="experience">
+                    <button type="button" class="collapse-button">Experience</button>
+                    <div class="collapsible-content">
+                        <div class="company-container">
+                            <c:forEach var="company" items="${experience.companies}" varStatus="companyCounter">
+                                <div class="company">
+                                    <div class="company-name">
+                                        <input type="text" name="company-name${companyCounter}" value="${company.name}">
+                                    </div>
+                                    <c:forEach var="period" items="${company.periods}" varStatus="periodCounter">
+                                        <div class="period">
+                                            <div class="period-title">
+                                                <input type="text"
+                                                       name="period-title${companyCounter}${periodCounter}"
+                                                       value="${period.title}">
+                                            </div>
+                                            <div class="period-time">
+                                                <input type="month"
+                                                       name="period-time-start${companyCounter}${periodCounter}"
+                                                       value="${static:formatDate(period.startDate)}">
+                                                -
+                                                <input type="month"
+                                                       name="period-time-end${companyCounter}${periodCounter}"
+                                                       value="${static:formatDate(period.endDate)}">
+                                            </div>
+                                        </div>
+                                        <div class="period-description">
+                                            <input type="text"
+                                                   name="period-description${companyCounter}${periodCounter}"
+                                                   value="${period.description}">
+                                        </div>
+                                    </c:forEach>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </c:if>
+
 
         <div class="submit-container">
             <input type="submit" class="submit-button">

@@ -162,3 +162,36 @@ div.contact-type {
     font-size: 18px; /* Match the font size to your design */
     box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
+
+.company {
+    margin-bottom: 20px; /* Space between each company block */
+}
+
+.company-name {
+    font-size: 22px; /* Larger font size for company name */
+    color: #333; /* Dark text for better readability */
+    font-weight: bold; /* Bold font weight for company name */
+    margin-bottom: 10px; /* Space after the company name */
+}
+
+.period {
+    margin-left: 20px; /* Indent for the period details */
+    margin-top: 10px; /* Space before each period */
+    padding-left: 10px;
+    border-left: 1px solid #333; /* A blue line to indicate the start of a period */
+}
+
+.period-title {
+    font-size: 18px; /* Slightly larger font size for period title */
+}
+
+.period-time {
+    font-size: 16px; /* Standard font size for period time */
+    color: #666; /* Dark gray for the time to differentiate from the title */
+}
+
+.period-description {
+    font-size: 14px; /* Smaller font size for description to de-emphasize */
+    color: #666; /* Dark gray for the description */
+    margin-bottom: 10px; /* Space after the description before the next period */
+}
