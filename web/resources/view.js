@@ -150,6 +150,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         currentButtonRow.after(newPeriodDiv);
         newPeriodDiv.after(buttonRowDiv);
+
+        const collapsibleContent = periodsContainer.closest('.collapsible-content');
+        if (collapsibleContent.style.maxHeight) {
+            collapsibleContent.style.maxHeight = collapsibleContent.scrollHeight + "px";
+        }
     }
 
     // Event delegation for handling dynamically added "Add new period" buttons

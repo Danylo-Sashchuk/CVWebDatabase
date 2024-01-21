@@ -73,7 +73,7 @@
                     <div class="collapsible-content">
                         <div class="company-container">
                             <c:forEach var="company" items="${experience.companies}" varStatus="companyCounter">
-                                <div class="company" data-company-index="${companyCounter.index}">>
+                                <div class="company" data-company-index="${companyCounter.index}">
                                     <div class="company-name">
                                         <input type="text" name="company-name${companyCounter}" value="${company.name}">
                                     </div>
