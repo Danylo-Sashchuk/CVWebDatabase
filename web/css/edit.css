@@ -191,3 +191,50 @@ div.contact-type {
     color: #666; /* Dark gray for the description */
     margin-bottom: 10px; /* Space after the description before the next period */
 }
+
+.company-name input,
+.period-title input,
+.period-time input,
+.period-description input {
+    width: 90%;
+    padding: 5px;
+    margin: 5px 5px;
+    font-size: 18px; /* Match the font size to your design */
+}
+
+/* Place the button containers in a row and center them */
+.button-row {
+    display: flex;
+    justify-content: center; /* Center buttons in the row */
+    gap: 10px; /* Add some space between the buttons */
+    margin-top: 10px; /* Add some margin on the top for spacing */
+}
+
+/* Style for remove period button */
+.remove-period-button-container .remove-period-button {
+    padding: 5px 15px;
+    background-color: #f44336; /* Red color for remove button */
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Style for add period button */
+.add-period-button-container .add-period-button {
+    padding: 5px 15px;
+    background-color: #4CAF50; /* Green color for add button */
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Hover effect for buttons, making them slightly darker */
+.remove-period-button-container .remove-period-button:hover {
+    background-color: #d32f2f; /* Slightly darker shade of red */
+}
+
+.add-period-button-container .add-period-button:hover {
+    background-color: #388e3c; /* Slightly darker shade of green */
+}

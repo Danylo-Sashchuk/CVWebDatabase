@@ -73,33 +73,48 @@
                     <div class="collapsible-content">
                         <div class="company-container">
                             <c:forEach var="company" items="${experience.companies}" varStatus="companyCounter">
-                                <div class="company">
+                                <div class="company" data-company-index="${companyCounter.index}">>
                                     <div class="company-name">
                                         <input type="text" name="company-name${companyCounter}" value="${company.name}">
                                     </div>
-                                    <c:forEach var="period" items="${company.periods}" varStatus="periodCounter">
-                                        <div class="period">
-                                            <div class="period-title">
-                                                <input type="text"
-                                                       name="period-title${companyCounter}${periodCounter}"
-                                                       value="${period.title}">
+                                    <div class="periods-container">
+                                        <c:forEach var="period" items="${company.periods}" varStatus="periodCounter">
+                                            <div class="period">
+                                                <div class="period-title">
+                                                    <input type="text"
+                                                           name="period-title${companyCounter}${periodCounter}"
+                                                           value="${period.title}">
+                                                </div>
+                                                <div class="period-time">
+                                                    <input type="month"
+                                                           name="period-time-start${companyCounter}${periodCounter}"
+                                                           value="${static:formatDate(period.startDate)}">
+                                                    -
+                                                    <input type="month"
+                                                           name="period-time-end${companyCounter}${periodCounter}"
+                                                           value="${static:formatDate(period.endDate)}">
+                                                </div>
+                                                <div class="period-description">
+                                                    <input type="text"
+                                                           name="period-description${companyCounter}${periodCounter}"
+                                                           value="${period.description}">
+                                                </div>
                                             </div>
-                                            <div class="period-time">
-                                                <input type="month"
-                                                       name="period-time-start${companyCounter}${periodCounter}"
-                                                       value="${static:formatDate(period.startDate)}">
-                                                -
-                                                <input type="month"
-                                                       name="period-time-end${companyCounter}${periodCounter}"
-                                                       value="${static:formatDate(period.endDate)}">
+                                            <div class="button-row">
+                                                <div class="remove-period-button-container">
+                                                    <button type="button" class="remove-period-button">Remove period
+                                                    </button>
+                                                </div>
+                                                <div class="add-period-button-container">
+                                                    <button type="button" class="add-period-button">Add new period
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="period-description">
-                                            <input type="text"
-                                                   name="period-description${companyCounter}${periodCounter}"
-                                                   value="${period.description}">
-                                        </div>
-                                    </c:forEach>
+                                        </c:forEach>
+                                    </div>
+                                </div>
+                                <div class="remove-company-button-container">
+                                    <button type="button" class="remove-company-button">Remove company</button>
                                 </div>
                             </c:forEach>
                         </div>
