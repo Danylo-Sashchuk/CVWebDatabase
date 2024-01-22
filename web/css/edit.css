@@ -182,8 +182,11 @@ div.contact-type {
 }
 
 .period-time {
-    font-size: 16px; /* Standard font size for period time */
-    color: #666; /* Dark gray for the time to differentiate from the title */
+    display: flex; /* Align items in a row */
+    justify-content: start; /* Align to the start of the container */
+    font-size: 16px;
+    color: #666;
+    gap: 5px; /* Add some space between the start and end date inputs */
 }
 
 .period-description {
@@ -192,14 +195,42 @@ div.contact-type {
     margin-bottom: 10px; /* Space after the description before the next period */
 }
 
+.company-name {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.delete-company-button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 16px; /* Adjust size as needed */
+    color: #999; /* Adjust color as needed */
+}
+
+.delete-company-button:hover {
+    color: red; /* Change color on hover for a delete action */
+}
+
+.delete-company-button .icon {
+    display: block; /* Adjust as needed */
+}
+
 .company-name input,
 .period-title input,
 .period-time input,
 .period-description input {
-    width: 90%;
-    padding: 5px;
-    margin: 5px 5px;
     font-size: 18px; /* Match the font size to your design */
+    padding: 5px;
+    margin: 5px 0;
+    width: calc(100% - 20px); /* Adjust width as needed, subtracting padding */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.period-time input {
+    width: 20%;
 }
 
 /* Place the button containers in a row and center them */
@@ -237,4 +268,47 @@ div.contact-type {
 
 .add-period-button-container .add-period-button:hover {
     background-color: #388e3c; /* Slightly darker shade of green */
+}
+
+.remove-company-button-container {
+    text-align: center; /* Align the button to the right side of its container */
+    margin-top: 10px; /* Add some space above the button */
+}
+
+.remove-company-button {
+    padding: 8px 16px; /* Add padding inside the button for spacing */
+    background-color: #d9534f; /* A standard color for 'remove' or 'delete' actions */
+    color: white; /* Text color for the button */
+    border: none; /* Remove the default border */
+    border-radius: 4px; /* Optionally round the corners of the button */
+    cursor: pointer; /* Change the mouse cursor to indicate it's clickable */
+    font-size: 14px; /* Set the font size for the button text */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: add a slight shadow for depth */
+    transition: background-color 0.2s; /* Smooth transition for hover effects */
+}
+
+.remove-company-button:hover {
+    background-color: #c9302c; /* Darken the button color on hover for interaction feedback */
+}
+
+.add-company-button-container {
+    text-align: center; /* Align the button to the right side of its container */
+    margin-top: 10px; /* Add some space above the button */
+    margin-bottom: 10px;
+}
+
+.add-company-button {
+    padding: 8px 16px; /* Add padding inside the button for spacing */
+    background-color: #5cb85c; /* A standard color for 'add' actions */
+    color: white; /* Text color for the button */
+    border: none; /* Remove the default border */
+    border-radius: 4px; /* Optionally round the corners of the button */
+    cursor: pointer; /* Change the mouse cursor to indicate it's clickable */
+    font-size: 14px; /* Set the font size for the button text */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: add a slight shadow for depth */
+    transition: background-color 0.2s; /* Smooth transition for hover effects */
+}
+
+.add-company-button:hover {
+    background-color: #449d44; /* Darken the button color on hover for interaction feedback */
 }

@@ -73,23 +73,23 @@
                     <div class="collapsible-content">
                         <div class="company-container">
                             <c:forEach var="company" items="${experience.companies}" varStatus="companyCounter">
-                                <div class="company" data-company-index="${companyCounter.index}">
+                                <div class="company" data-company-index="${companyCounter}">
                                     <div class="company-name">
-                                        <input type="text" name="company-name${companyCounter}" value="${company.name}">
+                                        <input type="text" name="company-name${companyCounter.index}" value="${company.name}">
                                     </div>
                                     <div class="periods-container">
                                         <c:forEach var="period" items="${company.periods}" varStatus="periodCounter">
                                             <div class="period">
                                                 <div class="period-title">
                                                     <input type="text"
-                                                           name="period-title${companyCounter}${periodCounter}"
+                                                           name="period-title${companyCounter.index}${periodCounter.index}"
                                                            value="${period.title}">
                                                 </div>
                                                 <div class="period-time">
                                                     <input type="month"
                                                            name="period-time-start${companyCounter}${periodCounter}"
                                                            value="${static:formatDate(period.startDate)}">
-                                                    -
+                                                    to
                                                     <input type="month"
                                                            name="period-time-end${companyCounter}${periodCounter}"
                                                            value="${static:formatDate(period.endDate)}">
@@ -115,6 +115,9 @@
                                 </div>
                                 <div class="remove-company-button-container">
                                     <button type="button" class="remove-company-button">Remove company</button>
+                                </div>
+                                <div class="add-company-button-container">
+                                    <button type="button" class="add-company-button">Add new company</button>
                                 </div>
                             </c:forEach>
                         </div>

@@ -124,9 +124,9 @@ document.addEventListener('DOMContentLoaded', function () {
         <input type="text" name="period-title${companyCounter}${periodCounter}" placeholder="Period Title">
       </div>
       <div class="period-time">
-        <input type="month" name="period-time-start${companyCounter}${periodCounter}">
-        -
-        <input type="month" name="period-time-end${companyCounter}${periodCounter}">
+        <input type="month" name="period-time-start${companyCounter}${periodCounter}" placeholder="Start Date">
+        to
+        <input type="month" name="period-time-end${companyCounter}${periodCounter}" placeholder="End Date">
       </div>
       <div class="period-description">
         <input type="text" name="period-description${companyCounter}${periodCounter}" placeholder="Period Description">
