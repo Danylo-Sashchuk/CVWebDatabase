@@ -160,7 +160,8 @@ div.contact-type {
 }
 
 .company {
-    margin-bottom: 20px; /* Space between each company block */
+    /*margin-bottom: 10px; !* Space between each company block *!*/
+    padding: 5px;
 }
 
 .company-name {
@@ -294,7 +295,6 @@ div.contact-type {
 .add-company-button-container {
     text-align: center; /* Align the button to the right side of its container */
     margin-top: 10px; /* Add some space above the button */
-    margin-bottom: 10px;
 }
 
 .add-company-button {

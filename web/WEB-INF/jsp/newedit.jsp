@@ -75,7 +75,8 @@
                             <c:forEach var="company" items="${experience.companies}" varStatus="companyCounter">
                                 <div class="company" data-company-index="${companyCounter}">
                                     <div class="company-name">
-                                        <input type="text" name="company-name${companyCounter.index}" value="${company.name}">
+                                        <input type="text" name="company-name${companyCounter.index}"
+                                               value="${company.name}">
                                     </div>
                                     <div class="periods-container">
                                         <c:forEach var="period" items="${company.periods}" varStatus="periodCounter">
@@ -112,12 +113,14 @@
                                             </div>
                                         </c:forEach>
                                     </div>
-                                </div>
-                                <div class="remove-company-button-container">
-                                    <button type="button" class="remove-company-button">Remove company</button>
-                                </div>
-                                <div class="add-company-button-container">
-                                    <button type="button" class="add-company-button">Add new company</button>
+                                    <div class="company-buttons-container">
+                                        <div class="remove-company-button-container">
+                                            <button type="button" class="remove-company-button">Remove company</button>
+                                        </div>
+                                        <div class="add-company-button-container">
+                                            <button type="button" class="add-company-button">Add new company</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </c:forEach>
                         </div>

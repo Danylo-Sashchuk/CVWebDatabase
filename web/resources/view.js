@@ -107,6 +107,107 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+
+document.addEventListener('DOMContentLoaded', function () {
+    function removeCompany(event) {
+        const companyToRemove = event.target.closest('.company');
+        if (companyToRemove) {
+            console.log(companyToRemove);
+            companyToRemove.remove();
+        }
+    }
+
+    document.querySelectorAll('.remove-company-button').forEach(button => {
+        button.addEventListener('click', removeCompany);
+    });
+
+    function addNewCompany(event) {
+        // Find the button's parent company element
+        const currentCompanyDiv = event.target.closest('.company');
+        // Find the container where companies are listed
+        const companyContainer = document.querySelector('.company-container');
+        // Calculate the new company index based on existing companies
+        const existingCompanies = companyContainer.querySelectorAll('.company');
+        const newCompanyIndex = existingCompanies.length;
+
+        // Create a new company element
+        const newCompanyDiv = document.createElement('div');
+        newCompanyDiv.className = 'company';
+        newCompanyDiv.setAttribute('data-company-index', newCompanyIndex);
+        newCompanyDiv.innerHTML = `
+        <div class="company-name">
+            <input type="text" name="company-name${newCompanyIndex}" value="">
+        </div>
+        <div class="periods-container">
+            <div class="period">
+                <div class="period-title">
+                    <input type="text"
+                        name="period-title" 
+                        placeholder="Period Title"
+                        >
+                </div>
+                <div class="period-time">
+                    <input type="month"
+                        name="period-time-start"
+                        placeholder="Period Start"
+                        >
+                    to
+                    <input type="month"
+                        name="period-time-end"
+                        placeholder="Period End"
+                        >
+                </div>
+                <div class="period-description">
+                    <input type="text"
+                    name="period-description"
+                    placeholder="Period Description"
+                    >
+                </div>
+            </div>
+                <div class="button-row">
+                    <div class="remove-period-button-container">
+                        <button type="button" class="remove-period-button">Remove period</button>
+                    </div>
+                    <div class="add-period-button-container">
+                        <button type="button" class="add-period-button">Add new period</button>
+                    </div>
+                </div>
+        </div>
+        <div class="company-buttons-container">
+            <div class="remove-company-button-container">
+                <button type="button" class="remove-company-button">Remove company</button>
+            </div>
+            <div class="add-company-button-container">
+                <button type="button" class="add-company-button">Add new company</button>
+            </div>
+        </div>
+    `;
+
+        // Insert the new company right after the current company
+        currentCompanyDiv.after(newCompanyDiv);
+
+        // Attach event listeners to the new company's buttons
+        // This assumes you have the removeCompany and addNewPeriod functions defined
+        newCompanyDiv.querySelector('.remove-company-button')
+            .addEventListener('click', removeCompany);
+        newCompanyDiv.querySelector('.add-company-button')
+            .addEventListener('click', addNewCompany);
+
+        const collapsibleContent = newCompanyDiv.closest('.collapsible-content');
+        if (collapsibleContent.style.maxHeight) {
+            collapsibleContent.style.maxHeight = collapsibleContent.scrollHeight + "px";
+        }
+
+        // Optionally, focus the new company name input
+        newCompanyDiv.querySelector('input[type="text"]').focus();
+    }
+
+
+    document.querySelectorAll('.add-company-button').forEach(button => {
+        button.addEventListener('click', addNewCompany);
+    });
+});
+
 document.addEventListener('DOMContentLoaded', function () {
     // Function to add a new period
     function addNewPeriod(event) {
@@ -155,6 +256,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (collapsibleContent.style.maxHeight) {
             collapsibleContent.style.maxHeight = collapsibleContent.scrollHeight + "px";
         }
+
+        newPeriodDiv.querySelector('input').focus();
     }
 
     // Event delegation for handling dynamically added "Add new period" buttons
@@ -163,8 +266,6 @@ document.addEventListener('DOMContentLoaded', function () {
             addNewPeriod(event);
         }
     });
-
-    // Existing removePeriod function from earlier
 });
 
 function setInitialHeight() {
