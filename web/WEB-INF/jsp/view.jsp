@@ -81,5 +81,6 @@
 </div>
 
 <script src="${pageContext.request.contextPath}/resources/view.js"></script>
+<script src="${pageContext.request.contextPath}/resources/interpage.js"></script>
 </body>
 </html>

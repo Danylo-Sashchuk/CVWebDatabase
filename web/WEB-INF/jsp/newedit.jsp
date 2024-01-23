@@ -139,6 +139,7 @@
     <jsp:include page="/WEB-INF/jsp/fragments/footer.jsp"/>
 </div>
 
-<script src="${pageContext.request.contextPath}/resources/view.js"></script>
+<script src="${pageContext.request.contextPath}/resources/edit.js"></script>
+<script src="${pageContext.request.contextPath}/resources/interpage.js"></script>
 </body>
 </html>

@@ -290,6 +290,7 @@ div.contact-type {
 
 .remove-company-button:hover {
     background-color: #c9302c; /* Darken the button color on hover for interaction feedback */
+    cursor: pointer;
 }
 
 .add-company-button-container {
