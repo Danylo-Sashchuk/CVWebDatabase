@@ -4,6 +4,7 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="static" uri="https://www.webcv.com/static" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="resume" scope="request" type="com.webcv.model.Resume"/>
 <%@ page import="com.webcv.model.ContactType" %>
@@ -100,15 +101,21 @@
                                                            name="period-description${companyCounter}${periodCounter}"
                                                            value="${period.description}">
                                                 </div>
-                                            </div>
-                                            <div class="button-row">
-                                                <div class="remove-period-button-container">
-                                                    <button type="button" class="remove-period-button">Remove period
-                                                    </button>
-                                                </div>
-                                                <div class="add-period-button-container">
-                                                    <button type="button" class="add-period-button">Add new period
-                                                    </button>
+                                                <div class="button-row">
+                                                    <c:if test="${fn:length(company.periods) > 1}">
+                                                        <div class="remove-period-button-container">
+                                                            <button type="button" class="remove-period-button">Remove
+                                                                period
+                                                            </button>
+                                                        </div>
+                                                    </c:if>
+                                                    <c:if test="${periodCounter.last}">
+                                                        <div class="add-period-button-container">
+                                                            <button type="button" class="add-period-button">Add new
+                                                                period
+                                                            </button>
+                                                        </div>
+                                                    </c:if>
                                                 </div>
                                             </div>
                                         </c:forEach>
@@ -117,9 +124,12 @@
                                         <div class="remove-company-button-container">
                                             <button type="button" class="remove-company-button">Remove company</button>
                                         </div>
-                                        <div class="add-company-button-container">
-                                            <button type="button" class="add-company-button">Add new company</button>
-                                        </div>
+                                        <c:if test="${companyCounter.last}">
+                                            <div class="add-company-button-container">
+                                                <button type="button" class="add-company-button">Add new company
+                                                </button>
+                                            </div>
+                                        </c:if>
                                     </div>
                                 </div>
                             </c:forEach>

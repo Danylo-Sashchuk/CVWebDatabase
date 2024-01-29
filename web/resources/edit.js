@@ -1,57 +1,88 @@
-// Function to add a new period
 function addNewPeriod(event) {
-    const currentButtonRow = event.target.closest('.button-row');
-    const periodsContainer = event.target.closest('.company').querySelector('.periods-container');
-    const companyCounter = event.target.closest('.company').getAttribute('data-company-index');
-    const allPeriods = periodsContainer.querySelectorAll('.period');
-    const periodCounter = allPeriods.length; // This may need to be adjusted based on how you want to count periods
+    const period = event.target.closest('.period');
+    const addNewPeriodButton = event.target.closest('.add-period-button');
+    addNewPeriodButton.remove();
 
-    // Create the new period element
     const newPeriodDiv = document.createElement('div');
     newPeriodDiv.className = 'period';
     newPeriodDiv.innerHTML = `
-      <div class="period-title">
-        <input type="text" name="period-title${companyCounter}${periodCounter}" placeholder="Period Title">
-      </div>
-      <div class="period-time">
-        <input type="month" name="period-time-start${companyCounter}${periodCounter}" placeholder="Start Date">
-        to
-        <input type="month" name="period-time-end${companyCounter}${periodCounter}" placeholder="End Date">
-      </div>
-      <div class="period-description">
-        <input type="text" name="period-description${companyCounter}${periodCounter}" placeholder="Period Description">
-      </div>
-    `;
+    <div class="period-title">
+        <input type="text"
+        name=""
+        value=""
+        placeholder="Period title">
+    </div>
+    <div class="period-time">
+        <input type="month"
+        name=""
+        value=""
+        placeholder="Start date">
+            to
+        <input type="month"
+        name=""
+        value=""
+        placeholder="End date">
+    </div>
+    <div class="period-description">
+        <input type="text"
+        name=""
+        value=""
+        placeholder="Description">
+    </div>
+    <div class="button-row">
+        <div class="remove-period-button-container">
+            <button type="button" class="remove-period-button">Remove period
+            </button>
+        </div>
+        <div class="add-period-button-container">
+            <button type="button" class="add-period-button">Add new period
+            </button>
+        </div>
+    </div>
+    `
 
-    // Create the button row for the new period
-    const buttonRowDiv = document.createElement('div');
-    buttonRowDiv.className = 'button-row';
-    buttonRowDiv.innerHTML = `
-      <div class="remove-period-button-container">
-        <button type="button" class="remove-period-button">Remove period</button>
-      </div>
-      <div class="add-period-button-container">
-        <button type="button" class="add-period-button">Add new period</button>
-      </div>
-    `;
+    period.after(newPeriodDiv);
 
-    // Append the button row to the new period element
-    // Insert the new period after the current button row
-
-    currentButtonRow.after(newPeriodDiv);
-    newPeriodDiv.after(buttonRowDiv);
-
-    fixCollapsibleMaxHeight(newPeriodDiv);
+    fixCollapsibleMaxHeight(period);
 }
 
 function removePeriod(event) {
-    const buttonRow = event.target.closest('.button-row');
-    let periodElement = null;
+    const periodElement = event.target.closest('.period');
 
-    periodElement = buttonRow.previousElementSibling;
+    if (isOnlyOnePeriod(periodElement)) {
+        return;
+    }
 
-    periodElement.remove(); // Remove .period
-    buttonRow.remove(); // Remove .button-row itself
+    if (isLastPeriod(periodElement)) {
+        addAddNewPeriodButtonToPreviousPeriod(periodElement);
+        //TODO: IF previous period is the last one, remove the add period button
+    }
+
+    periodElement.remove();
+}
+
+function addAddNewPeriodButtonToPreviousPeriod(period) {
+    let previousPeriod = period.previousElementSibling;
+    let removePeriodContainer = previousPeriod.querySelector('.remove-period-button-container');
+    const newPeriodDiv = document.createElement('div');
+    newPeriodDiv.className = 'add-period-button-container';
+    newPeriodDiv.innerHTML = `
+            <button type="button" class="add-period-button">Add new period</button>
+    `;
+    removePeriodContainer.after(newPeriodDiv);
+}
+
+function isLastPeriod(periodElement) {
+    const periodsContainer = periodElement.closest('.periods-container');
+    const allPeriods = periodsContainer.querySelectorAll('.period');
+    const lastPeriod = allPeriods[allPeriods.length - 1];
+    return lastPeriod === periodElement;
+}
+
+function isOnlyOnePeriod(periodElement) {
+    const periodsContainer = periodElement.closest('.periods-container');
+    const allPeriods = periodsContainer.querySelectorAll('.period');
+    return allPeriods.length === 1;
 }
 
 function removeCompany(event) {
@@ -71,66 +102,54 @@ function fixCollapsibleMaxHeight(div) {
 function addNewCompany(event) {
     // Find the button's parent company element
     const currentCompanyDiv = event.target.closest('.company');
-    // Find the container where companies are listed
-    const companyContainer = document.querySelector('.company-container');
-    // Calculate the new company index based on existing companies
-    const existingCompanies = companyContainer.querySelectorAll('.company');
-    const newCompanyIndex = existingCompanies.length;
+
+    // Remove the button from the current company
+    const addNewCompanyButton = currentCompanyDiv.querySelector('.add-company-button-container');
+    addNewCompanyButton.remove();
 
     // Create a new company element
     const newCompanyDiv = document.createElement('div');
     newCompanyDiv.className = 'company';
-    newCompanyDiv.setAttribute('data-company-index', newCompanyIndex);
     newCompanyDiv.innerHTML = `
+    <div class="company">
         <div class="company-name">
-            <input type="text" name="company-name${newCompanyIndex}" placeholder="Company Name">
+            <input type="text" name="" value="" placeholder="Company title">
         </div>
-        <div class="periods-container">
-            <div class="period">
+    <div class="periods-container">
+        <div class="period">
                 <div class="period-title">
                     <input type="text"
-                        name="period-title" 
-                        placeholder="Period Title"
-                        >
+                    name=""
+                    value=""
+                    placeholder="Period title">
                 </div>
                 <div class="period-time">
                     <input type="month"
-                        name="period-time-start"
-                        placeholder="Period Start"
-                        >
-                    to
+                    name=""
+                    value=""
+                    placeholder="Start date">
+                        to
                     <input type="month"
-                        name="period-time-end"
-                        placeholder="Period End"
-                        >
+                    name=""
+                    value=""
+                    placeholder="End date">
                 </div>
                 <div class="period-description">
                     <input type="text"
-                    name="period-description"
-                    placeholder="Period Description"
-                    >
+                    name=""
+                    value=""
+                    placeholder="Description">
                 </div>
-            </div>
                 <div class="button-row">
-                    <div class="remove-period-button-container">
-                        <button type="button" class="remove-period-button">Remove period</button>
-                    </div>
                     <div class="add-period-button-container">
                         <button type="button" class="add-period-button">Add new period</button>
                     </div>
                 </div>
         </div>
-        <div class="company-buttons-container">
-            <div class="remove-company-button-container">
-                <button type="button" class="remove-company-button">Remove company</button>
-            </div>
-            <div class="add-company-button-container">
-                <button type="button" class="add-company-button">Add new company</button>
-            </div>
-        </div>
-    `;
+    </div>
+    `
 
-    // Insert the new company right after the current company
+    // Add the new company element after the current company
     currentCompanyDiv.after(newCompanyDiv);
     fixCollapsibleMaxHeight(newCompanyDiv);
 }
