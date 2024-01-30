@@ -314,3 +314,13 @@ div.contact-type {
 .add-company-button:hover {
     background-color: #449d44; /* Darken the button color on hover for interaction feedback */
 }
+
+textarea {
+    width: 100%; /* Full width of the container */
+    height: 150px; /* Fixed height, adjust as needed */
+    border: 1px solid #ccc; /* Light grey border */
+    border-radius: 4px; /* Rounded corners */
+    padding: 10px; /* Spacing inside the textarea */
+    font-size: 16px; /* Comfortable font size for reading */
+    line-height: 1.5; /* Spacing between lines */
+}

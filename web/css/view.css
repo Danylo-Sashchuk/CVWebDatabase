@@ -119,67 +119,6 @@ a {
     padding-left: 20px;
 }
 
-.fixed-buttons-container {
-    position: fixed;
-    right: 150px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 1000;
-}
-
-.fixed-button {
-    display: block;
-    margin-bottom: 10px;
-}
-
-.go-top-container {
-    position: fixed;
-    right: 150px;
-    bottom: calc(50% - 160px);
-    z-index: 1000;
-}
-
-.go-top {
-    display: none;
-}
-
-
-.fixed-button, .go-top {
-    background-color: #f9f9f9;
-    color: #333333;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    font-size: 16px;
-    margin-bottom: 20px;
-    transition: background-color 0.3s, transform 0.3s;
-}
-
-.fixed-button:hover, .go-top:hover {
-    background-color: #f2f2f2;
-    transform: translateY(-2px);
-}
-
-.expand-all-button:before {
-    content: '\25BC';
-    display: inline-block;
-    margin-right: 5px;
-}
-
-.collapse-all-button:before {
-    content: '\25B2';
-    display: inline-block;
-    margin-right: 5px;
-}
-
-.go-top:before {
-    content: '\2191';
-    display: inline-block;
-    margin-right: 5px;
-}
-
 .company {
     margin-bottom: 20px; /* Space between each company block */
 }
