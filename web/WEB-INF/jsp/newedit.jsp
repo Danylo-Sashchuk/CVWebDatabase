@@ -105,14 +105,12 @@
                                                     <c:if test="${fn:length(company.periods) > 1}">
                                                         <div class="remove-period-button-container">
                                                             <button type="button" class="remove-period-button">Remove
-                                                                period
                                                             </button>
                                                         </div>
                                                     </c:if>
                                                     <c:if test="${periodCounter.last}">
                                                         <div class="add-period-button-container">
                                                             <button type="button" class="add-period-button">Add new
-                                                                period
                                                             </button>
                                                         </div>
                                                     </c:if>

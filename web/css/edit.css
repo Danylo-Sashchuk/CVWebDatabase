@@ -162,6 +162,7 @@ div.contact-type {
 .company {
     /*margin-bottom: 10px; !* Space between each company block *!*/
     padding: 5px;
+    margin-top: 5px;
 }
 
 .company-name {
