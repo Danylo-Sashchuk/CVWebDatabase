@@ -160,8 +160,7 @@
                 <div class="collapsible-content">
                 <textarea name="achievements">
                     <c:forEach var="item" items="${achievements.texts}" varStatus="status">
-${item}
-                        <c:if test="${!status.last}">|</c:if>
+                        ${static:stringTrim(item)}
                     </c:forEach>
                 </textarea>
                 </div>

@@ -30,4 +30,9 @@ public class HtmlUtil {
             return "<a href=" + value + ">" + value + "</a>";
         return null;
     }
+
+    public static String removeNewLinesAndCarriage(String line) {
+        line = line.replaceAll("\n", "").replaceAll("\r", "");
+        return line;
+    }
 }

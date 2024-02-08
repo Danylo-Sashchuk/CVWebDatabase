@@ -11,4 +11,9 @@
         <function-class>com.webcv.util.DateUtil</function-class>
         <function-signature>java.lang.String format(java.time.LocalDate)</function-signature>
     </function>
+    <function>
+        <name>stringTrim</name>
+        <function-class>com.webcv.util.HtmlUtil</function-class>
+        <function-signature>java.lang.String removeNewLinesAndCarriage(java.lang.String)</function-signature>
+    </function>
 </taglib>
