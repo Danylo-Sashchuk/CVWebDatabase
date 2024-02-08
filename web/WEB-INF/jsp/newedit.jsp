@@ -158,12 +158,9 @@
             <div class="achievements">
                 <button type="button" class="collapse-button">Achievements</button>
                 <div class="collapsible-content">
-                <textarea name="achievements">
-                    <c:forEach var="item" items="${achievements.texts}" varStatus="status">
-                        ${static:stringTrim(item)}
-                    </c:forEach>
-                </textarea>
-                </div>
+                <textarea name="achievements"><c:forEach var="item" items="${achievements.texts}"
+                                                         varStatus="status">    ${item}
+                </c:forEach></textarea></div>
             </div>
         </div>
 
