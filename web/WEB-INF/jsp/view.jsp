@@ -65,13 +65,13 @@
     <c:forEach var="sectionType" items="${SectionType.values()}">
         <c:choose>
             <c:when test="${sectionType == SectionType.POSITION || sectionType == SectionType.PERSONAL}">
-                <myTags:textSection sectionType="${sectionType.title}" section="${sections.get(sectionType)}"/>
+                <myTags:textSectionView sectionType="${sectionType.title}" section="${sections.get(sectionType)}"/>
             </c:when>
             <c:when test="${sectionType == SectionType.EXPERIENCE || sectionType == SectionType.EDUCATION}">
-                <myTags:companySection sectionType="${sectionType.title}" section="${sections.get(sectionType)}"/>
+                <myTags:companySectionView sectionType="${sectionType.title}" section="${sections.get(sectionType)}"/>
             </c:when>
             <c:when test="${sectionType == SectionType.EDUCATION || sectionType == SectionType.QUALIFICATIONS}">
-                <myTags:listSection sectionType="${sectionType.title}" section="${sections.get(sectionType)}"/>
+                <myTags:listSectionView sectionType="${sectionType.title}" section="${sections.get(sectionType)}"/>
             </c:when>
         </c:choose>
     </c:forEach>
