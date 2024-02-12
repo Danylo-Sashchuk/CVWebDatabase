@@ -316,11 +316,13 @@ div.contact-type {
 }
 
 textarea {
-    width: 100%; /* Full width of the container */
+    width: calc(100% - 10px); /* Full width of the container */
     height: 150px; /* Fixed height, adjust as needed */
     border: 1px solid #ccc; /* Light grey border */
     border-radius: 4px; /* Rounded corners */
-    padding: 10px; /* Spacing inside the textarea */
+    padding: 5px; /* Spacing inside the textarea */
+    margin: 5px;
     font-size: 16px; /* Comfortable font size for reading */
     line-height: 1.5; /* Spacing between lines */
+    resize: none;
 }
