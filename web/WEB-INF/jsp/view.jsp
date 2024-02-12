@@ -62,18 +62,19 @@
 
     <%--    Main sections   --%>
     <c:set var="sections" value="${resume.sections}"/>
-
-    <myTags:textSection sectionType="Position" section="${sections.get(SectionType.POSITION)}"/>
-
-    <myTags:companySection sectionType="Experience" section="${sections.get(SectionType.EXPERIENCE)}"/>
-
-    <myTags:listSection sectionType="Achievements" section="${sections.get(SectionType.ACHIEVEMENTS)}"/>
-
-    <myTags:listSection sectionType="Qualifications" section="${sections.get(SectionType.QUALIFICATIONS)}"/>
-
-    <myTags:companySection sectionType="Education" section="${sections.get(SectionType.EDUCATION)}"/>
-
-    <myTags:textSection sectionType="Personal" section="${sections.get(SectionType.PERSONAL)}"/>
+    <c:forEach var="sectionType" items="${SectionType.values()}">
+        <c:choose>
+            <c:when test="${sectionType == SectionType.POSITION || sectionType == SectionType.PERSONAL}">
+                <myTags:textSection sectionType="${sectionType.title}" section="${sections.get(sectionType)}"/>
+            </c:when>
+            <c:when test="${sectionType == SectionType.EXPERIENCE || sectionType == SectionType.EDUCATION}">
+                <myTags:companySection sectionType="${sectionType.title}" section="${sections.get(sectionType)}"/>
+            </c:when>
+            <c:when test="${sectionType == SectionType.EDUCATION || sectionType == SectionType.QUALIFICATIONS}">
+                <myTags:listSection sectionType="${sectionType.title}" section="${sections.get(sectionType)}"/>
+            </c:when>
+        </c:choose>
+    </c:forEach>
 
 </div>
 <div class="bottom">

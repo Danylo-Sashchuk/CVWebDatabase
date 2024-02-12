@@ -7,10 +7,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="resume" scope="request" type="com.webcv.model.Resume"/>
-<%@ page import="com.webcv.model.ContactType" %>
-<%@ page import="com.webcv.model.SectionType" %>
-<%@ page import="com.webcv.model.CompanySection" %>
-<%@ page import="com.webcv.model.ListSection" %>
+<%@ page import="com.webcv.model.*" %>
 <html>
 <head>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/edit.css">
@@ -60,19 +57,21 @@
         <c:set var="sections" value="${resume.sections}"/>
 
         <%--    Postiton    --%>
-        <c:if test="${sections.get(SectionType.POSITION) != null}">
-            <c:set var="position" value="${sections.get(SectionType.POSITION)}"/>
-            <div class="panel">
-                <div class="position">
-                    <button type="button" class="collapse-button">Position</button>
-                    <div class="collapsible-content">
-                        <div class="text-container">
-                            <input type="text" name="position" value="${position.text}">
-                        </div>
+        <c:set var="position" value="${sections.get(SectionType.POSITION)}"/>
+        <c:if test="${position == null}">
+            <c:set var="position" value="<%=TextSection.getEmpty()%>"/>
+        </c:if>
+        <c:set var="position" value="${sections.get(SectionType.POSITION)}"/>
+        <div class="panel">
+            <div class="position">
+                <button type="button" class="collapse-button">Position</button>
+                <div class="collapsible-content">
+                    <div class="text-container">
+                        <input type="text" name="position" value="${position.text}">
                     </div>
                 </div>
             </div>
-        </c:if>
+        </div>
         <%--    /Postiton    --%>
 
         <%--    Experience    --%>
