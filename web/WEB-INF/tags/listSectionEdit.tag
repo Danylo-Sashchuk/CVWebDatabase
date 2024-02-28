@@ -12,7 +12,7 @@
         <button type="button" class="collapse-button">${sectionType}</button>
         <div class="collapsible-content">
                 <textarea name="${sectionType}"><c:forEach var="item" items="${section.texts}"
-                                                           varStatus="status">    ${item}${status.last ? '' : '&#xa;'}</c:forEach></textarea>
+                                                           varStatus="status">${item}${status.last ? '' : '&#xa;'}</c:forEach></textarea>
         </div>
     </div>
 </div>

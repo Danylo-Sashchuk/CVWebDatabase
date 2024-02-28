@@ -15,9 +15,9 @@
         <div class="collapsible-content">
             <div class="company-container">
                 <c:forEach var="company" items="${section.companies}" varStatus="companyCounter">
-                    <div class="company" data-company-index="${companyCounter}">
+                    <div class="company">
                         <div class="company-name">
-                            <input type="text" name="company-name${companyCounter.index}"
+                            <input type="text" name="company[${companyCounter.index}].name"
                                    value="${company.name}">
                         </div>
                         <div class="periods-container">
