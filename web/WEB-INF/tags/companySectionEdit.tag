@@ -25,21 +25,21 @@
                                 <div class="period">
                                     <div class="period-title">
                                         <input type="text"
-                                               name="period-title${companyCounter.index}${periodCounter.index}"
+                                               name="company[${companyCounter.index}].period[${periodCounter.index}].title"
                                                value="${period.title}">
                                     </div>
                                     <div class="period-time">
                                         <input type="month"
-                                               name="period-time-start${companyCounter}${periodCounter}"
+                                               name="company[${companyCounter.index}].period[${periodCounter.index}].start"
                                                value="${static:formatDate(period.startDate)}">
                                         to
                                         <input type="month"
-                                               name="period-time-end${companyCounter}${periodCounter}"
+                                               name="company[${companyCounter.index}].period[${periodCounter.index}].end"
                                                value="${static:formatDate(period.endDate)}">
                                     </div>
                                     <div class="period-description">
                                         <input type="text"
-                                               name="period-description${companyCounter}${periodCounter}"
+                                               name="company[${companyCounter.index}].period[${periodCounter.index}].description"
                                                value="${period.description}">
                                     </div>
                                     <div class="button-row">

@@ -93,6 +93,11 @@ public class ResumeServlet extends HttpServlet {
                     case EXPERIENCE:
                         List<Company> companies = new ArrayList<>();
                         String[] urls = request.getParameterValues(type.name() + ".url");
+
+
+
+
+
                         for (int i = 0; i < values.length; i++) {
                             String name = values[i];
                             if (!HtmlUtil.isEmpty(name)) {
