@@ -8,7 +8,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ attribute name="sectionType" required="true" %>
 <%@ attribute name="section" required="true" type="com.webcv.model.CompanySection" %>
-
+<%-- TODO: add company website --%>
 <div class="panel">
     <div class="${sectionType}">
         <button type="button" class="collapse-button">${sectionType}</button>

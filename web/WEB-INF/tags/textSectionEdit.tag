@@ -12,7 +12,7 @@
         <button type="button" class="collapse-button">${sectionType}</button>
         <div class="collapsible-content">
             <div class="text-container">
-                <input type="text" name="position" value="${section.text}">
+                <input type="text" name="${sectionType}" value="${section.text}">
             </div>
         </div>
     </div>

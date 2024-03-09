@@ -51,7 +51,7 @@
                     <c:forEach var="contactType" items="${ContactType.values()}">
                         <div class="contact">
                             <div class="contact-type">${contactType.title}:</div>
-                            <input type="text" name="${contactType.name()}"
+                            <input type="text" name="${contactType}"
                                    value="${contacts.get(contactType)}" class="contact-input"/>
                         </div>
                     </c:forEach>
