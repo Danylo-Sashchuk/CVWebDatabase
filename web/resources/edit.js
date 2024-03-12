@@ -65,7 +65,32 @@ function createCompanyDiv(index) {
 }
 
 function createPeriodDiv(index) {
-    return document.createElement('div');
+    const newPeriodDiv = document.createElement('div');
+    newPeriodDiv.className = 'period';
+    newPeriodDiv.innerHTML = ` 
+    <div class="period-title">
+        <input type="text"
+               name=""
+               value=""
+               placeholder="Period title">
+    </div>
+    <div class="period-time">
+        <input type="month"
+               name=""
+               value=""
+               placeholder="Start date">
+        to
+        <input type="month"
+               name=""
+               value=""
+               placeholder="End date">
+    </div>
+    <div class="period-description">
+        <input type="text"
+               name=""
+               value=""
+               placeholder="Description">
+    </div>`
 }
 
 function addNewPeriod(event) {
