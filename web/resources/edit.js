@@ -59,6 +59,15 @@ const companyInnerHTML = `
     </div>
 `
 
+function createCompanyDiv(index) {
+
+    return document.createElement('div');
+}
+
+function createPeriodDiv(index) {
+    return document.createElement('div');
+}
+
 function addNewPeriod(event) {
     const period = event.target.closest('.period');
     const addNewPeriodButton = event.target.closest('.add-period-button-container');
