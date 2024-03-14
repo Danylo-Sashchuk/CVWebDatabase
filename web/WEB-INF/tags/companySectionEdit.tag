@@ -13,12 +13,13 @@
     <div class="${sectionType}">
         <button type="button" class="collapse-button">${sectionType}</button>
         <div class="collapsible-content">
-            <div class="company-container">
+            <div class="companies-container">
                 <c:forEach var="company" items="${section.companies}" varStatus="companyCounter">
                     <div class="company">
                         <div class="company-name">
                             <input type="text" name="company[${companyCounter.index}].name"
-                                   value="${company.name}">
+                                   value="${company.name}"
+                                   placeholder="${sectionType} name">
                         </div>
                         <div class="periods-container">
                             <c:forEach var="period" items="${company.periods}" varStatus="periodCounter">
