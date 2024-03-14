@@ -26,21 +26,25 @@
                                     <div class="period-title">
                                         <input type="text"
                                                name="company[${companyCounter.index}].period[${periodCounter.index}].title"
-                                               value="${period.title}">
+                                               value="${period.title}"
+                                               placeholder="Period title">
                                     </div>
                                     <div class="period-time">
                                         <input type="month"
                                                name="company[${companyCounter.index}].period[${periodCounter.index}].start"
-                                               value="${static:formatDate(period.startDate)}">
+                                               value="${static:formatDate(period.startDate)}"
+                                               placeholder="Start date">
                                         to
                                         <input type="month"
                                                name="company[${companyCounter.index}].period[${periodCounter.index}].end"
-                                               value="${static:formatDate(period.endDate)}">
+                                               value="${static:formatDate(period.endDate)}"
+                                               placeholder="End date">
                                     </div>
                                     <div class="period-description">
                                         <input type="text"
                                                name="company[${companyCounter.index}].period[${periodCounter.index}].description"
-                                               value="${period.description}">
+                                               value="${period.description}"
+                                               placeholder="Description">
                                     </div>
                                     <div class="button-row">
                                         <c:if test="${fn:length(company.periods) > 1}">

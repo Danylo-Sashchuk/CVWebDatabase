@@ -1,4 +1,3 @@
-const removePeriodButtonContainerInnerHTML = `<button type="button" class="remove-period-button">Remove</button>`
 const addPeriodButtonContainerInnerHTML = `<button type="button" class="add-period-button">Add new</button>`
 const periodFieldsInnerHTML = `
     <div class="period-title">
@@ -25,14 +24,7 @@ const periodFieldsInnerHTML = `
         placeholder="Description">
     </div>
 `
-const fullButtonRowInnerHTML = `
-    <div class="remove-period-button-container">
-        ${removePeriodButtonContainerInnerHTML}
-    </div>
-    <div class="add-period-button-container">
-        ${addPeriodButtonContainerInnerHTML}
-    </div>
-`
+
 const addCompanyButtonContainerInnerHTML = `<button type="button" class="add-company-button">Add new company</button>`
 const removeCompanyButtonContainerInnerHTML = `<button type="button" class="remove-company-button">Remove company</button>`
 const companyInnerHTML = `
@@ -60,59 +52,103 @@ const companyInnerHTML = `
 `
 
 function createCompanyDiv(index) {
+    const newCompanyDiv = document.createElement('div');
+    newCompanyDiv.className = 'company';
+    newCompanyDiv.innerHTML = `
+    <div class="company-name">
+        <input type="text" 
+                name="company[${index}].name" 
+                value="" 
+                placeholder="Company title">
+    </div>
+    <div class="periods-container">
+        <div class="period">
+            ${createPeriodDiv(index, 0, false).innerHTML}
+        </div>
+    </div>
+    <div class="company-buttons-container">
+        <div class="remove-company-button-container">
+            <button type="button" class="add-company-button">Add new company</button>
+        </div>
+        <div class="add-company-button-container">
+            <button type="button" class="remove-company-button">Remove company</button>
+        </div>
+    </div>`;
 
-    return document.createElement('div');
+    return newCompanyDiv;
 }
 
-function createPeriodDiv(index) {
+function createPeriodDiv(companyIndex, periodIndex, removeButton = true) {
     const newPeriodDiv = document.createElement('div');
     newPeriodDiv.className = 'period';
     newPeriodDiv.innerHTML = ` 
     <div class="period-title">
         <input type="text"
-               name=""
+               name="company[${companyIndex}].period[${periodIndex}].title"
                value=""
                placeholder="Period title">
     </div>
     <div class="period-time">
         <input type="month"
-               name=""
+               name="company[${companyIndex}].period[${periodIndex}].start"
                value=""
                placeholder="Start date">
         to
         <input type="month"
-               name=""
+               name="company[${companyIndex}].period[${periodIndex}].end"
                value=""
                placeholder="End date">
     </div>
     <div class="period-description">
         <input type="text"
-               name=""
+               name="company[${companyIndex}].period[${periodIndex}].description"
                value=""
                placeholder="Description">
-    </div>`
+    </div>
+    <div class="button-row">` +
+        (removeButton ? `
+        <div class="remove-period-button-container">
+            <button type="button" class="remove-period-button">Remove</button>
+        </div>` : '') +
+        `
+        <div class="add-period-button-container">
+            <button type="button" class="add-period-button">Add new</button>
+        </div>
+    </div>
+    `;
+
+    return newPeriodDiv;
 }
 
+
 function addNewPeriod(event) {
-    const period = event.target.closest('.period');
+    const currentPeriod = event.target.closest('.period');
     const addNewPeriodButton = event.target.closest('.add-period-button-container');
     const removePeriodButton = document.createElement('div');
 
+    // Unique case when there is only one period.
     if (addNewPeriodButton.previousElementSibling == null) {
         removePeriodButton.className = 'remove-period-button-container';
-        removePeriodButton.innerHTML = removePeriodButtonContainerInnerHTML;
+        removePeriodButton.innerHTML = '<button type="button" class="remove-period-button">Remove</button>;'
         addNewPeriodButton.before(removePeriodButton);
     }
 
     addNewPeriodButton.remove();
 
-    const newPeriodDiv = document.createElement('div');
-    newPeriodDiv.className = 'period';
-    newPeriodDiv.innerHTML = periodFieldsInnerHTML + "<div class='button-row'>" + fullButtonRowInnerHTML + "</div>";
+    const periodsNumber = countPeriods(currentPeriod);
+    const newPeriodDiv = createPeriodDiv(0, periodsNumber);
 
-    period.after(newPeriodDiv);
+    currentPeriod.after(newPeriodDiv);
 
-    fixCollapsibleMaxHeight(period);
+    fixCollapsibleMaxHeight(currentPeriod);
+}
+
+function countCompanies() {
+    return 0;
+}
+
+function countPeriods(element) {
+    return element.closest('.periods-container').querySelectorAll('.period').length;
 }
 
 function removePeriod(event) {
@@ -124,11 +160,22 @@ function removePeriod(event) {
     }
 
     periodElement.remove();
+    reindexPeriods(periodsContainer);
 
     const allPeriods = periodsContainer.querySelectorAll('.period');
     if (allPeriods.length === 1) {
         removeRemovePeriodButton(allPeriods[0]);
     }
+}
+
+function reindexPeriods(periodsContainer) {
+    periodsContainer.querySelectorAll('.period').forEach((period, index) => {
+        period.querySelectorAll('input').forEach(input => {
+            const name = input.getAttribute('name');
+            const newName = name.replace(/period\[\d+\]/, `period[${index}]`);
+            input.setAttribute('name', newName);
+        });
+    });
 }
 
 function removeRemovePeriodButton(period) {
@@ -141,7 +188,7 @@ function addAddNewPeriodButtonToPreviousPeriod(period) {
     let removePeriodContainer = previousPeriod.querySelector('.remove-period-button-container');
     const addNewPeriodButton = document.createElement('div');
     addNewPeriodButton.className = 'add-period-button-container';
-    addNewPeriodButton.innerHTML = addPeriodButtonContainerInnerHTML;
+    addNewPeriodButton.innerHTML = '<button type="button" class="add-period-button">Add new</button>';
     removePeriodContainer.after(addNewPeriodButton);
 }
 
@@ -186,7 +233,7 @@ function addAddNewCompanyButtonToPreviousCompany(company) {
     let removeCompanyContainer = previousCompany.querySelector('.remove-company-button-container');
     const addNewCompanyButton = document.createElement('div');
     addNewCompanyButton.className = 'add-company-button-container';
-    addNewCompanyButton.innerHTML = addCompanyButtonContainerInnerHTML;
+    addNewCompanyButton.innerHTML = '<button type="button" class="add-company-button">Add new company</button>';
     removeCompanyContainer.after(addNewCompanyButton);
 }
 
