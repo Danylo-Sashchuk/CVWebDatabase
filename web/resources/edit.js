@@ -240,18 +240,22 @@ function addNewCompany(event) {
 
 
 document.addEventListener('DOMContentLoaded', function () {
+    const companiesContainers = document.querySelectorAll('.companies-container');
+
     // Event delegation for handling dynamically added buttons
-    document.querySelector('.companies-container').addEventListener('click', function (event) {
-        console.log(event.target.classList)
-        if (event.target.classList.contains('remove-period-button')) {
-            removePeriod(event);
-        } else if (event.target.classList.contains('add-period-button')) {
-            addNewPeriod(event);
-        } else if (event.target.classList.contains('remove-company-button')) {
-            removeCompany(event);
-        } else if (event.target.classList.contains('add-company-button')) {
-            addNewCompany(event);
-        }
+    companiesContainers.forEach(function (container) {
+        container.addEventListener('click', function (event) {
+            console.log(event.target.classList);
+            if (event.target.classList.contains('remove-period-button')) {
+                removePeriod(event);
+            } else if (event.target.classList.contains('add-period-button')) {
+                addNewPeriod(event);
+            } else if (event.target.classList.contains('remove-company-button')) {
+                removeCompany(event);
+            } else if (event.target.classList.contains('add-company-button')) {
+                addNewCompany(event);
+            }
+        });
     });
 });
 
