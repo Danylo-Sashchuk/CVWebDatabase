@@ -246,7 +246,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.target.classList.contains('remove-period-button')) {
             removePeriod(event);
         } else if (event.target.classList.contains('add-period-button')) {
-            console.log('add period')
             addNewPeriod(event);
         } else if (event.target.classList.contains('remove-company-button')) {
             removeCompany(event);
