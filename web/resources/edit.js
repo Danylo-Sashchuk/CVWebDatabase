@@ -238,7 +238,7 @@ function addNewCompany(event) {
     fixCollapsibleMaxHeight(newCompanyDiv);
 }
 
-
+//TODO: name for experience and education should be different, this include jsp part and js code here
 document.addEventListener('DOMContentLoaded', function () {
     const companiesContainers = document.querySelectorAll('.companies-container');
 
