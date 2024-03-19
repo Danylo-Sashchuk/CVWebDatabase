@@ -1,16 +1,16 @@
-function createCompanyDiv(index) {
+function createCompanyDiv(index, sectionType) {
     const newCompanyDiv = document.createElement('div');
     newCompanyDiv.className = 'company';
     newCompanyDiv.innerHTML = `
     <div class="company-name">
-        <input type="text" 
-                name="company[${index}].name" 
+        <input type="text"
+                name="${sectionType}[${index}].name" 
                 value="" 
-                placeholder="Company title">
+                placeholder="${sectionType} name">
     </div>
     <div class="periods-container">
         <div class="period">
-            ${createPeriodDiv(index, 0, false).innerHTML}
+            ${createPeriodDiv(index, 0, sectionType, false).innerHTML}
         </div>
     </div>
     <div class="company-buttons-container">
@@ -26,29 +26,31 @@ function createCompanyDiv(index) {
 }
 
 function createPeriodDiv(companyIndex, periodIndex, sectionType, removeButton = true) {
+    console.log(companyIndex);
+    console.log(periodIndex);
     const newPeriodDiv = document.createElement('div');
     newPeriodDiv.className = 'period';
     newPeriodDiv.innerHTML = ` 
     <div class="period-title">
         <input type="text"
-               name="company[${companyIndex}].period[${periodIndex}].title"
+               name="${sectionType}[${companyIndex}].period[${periodIndex}].title"
                value=""
                placeholder="Period title">
     </div>
     <div class="period-time">
         <input type="month"
-               name="company[${companyIndex}].period[${periodIndex}].start"
+               name="${sectionType}[${companyIndex}].period[${periodIndex}].start"
                value=""
                placeholder="Start date">
         to
         <input type="month"
-               name="company[${companyIndex}].period[${periodIndex}].end"
+               name="${sectionType}[${companyIndex}].period[${periodIndex}].end"
                value=""
                placeholder="End date">
     </div>
     <div class="period-description">
         <input type="text"
-               name="company[${companyIndex}].period[${periodIndex}].description"
+               name="${sectionType}[${companyIndex}].period[${periodIndex}].description"
                value=""
                placeholder="Description">
     </div>
@@ -69,20 +71,33 @@ function createPeriodDiv(companyIndex, periodIndex, sectionType, removeButton = 
 
 //TODO: querySelector will be wrong since "company" is no longer a class.
 function getCompanyIndexFromPeriod(currentPeriod) {
-    const inputElement = currentPeriod.querySelector('input[name^="company["]');
+    const inputElement = currentPeriod.querySelector('input');
     const nameAttribute = inputElement.getAttribute('name');
-    const match = nameAttribute.match(/company\[(\d+)\]/);
+    const match = nameAttribute.match(/\[(\d+)\]/);
 
-    if (match && match[1]) {
-        return parseInt(match[1], 10);
+    if (match) {
+        // If a match is found, return the first group (the digits)
+        return match[1];
     } else {
-        console.log('Company index could not be found in the name attribute.');
+        // If no match is found, return null or an appropriate value indicating no match
+        console.error('No number found in the first set of brackets');
         return null;
     }
 }
 
 function getSectionType(currentPeriod) {
+    const inputElement = currentPeriod.querySelector('input');
 
+    const nameAttribute = inputElement.getAttribute('name');
+
+    const match = nameAttribute.match(/^(\w+)/);
+
+    if (match && match[1]) {
+        return match[1];
+    } else {
+        console.error('No match found in the name attribute');
+        return null;
+    }
 }
 
 function addNewPeriod(event) {
@@ -100,7 +115,7 @@ function addNewPeriod(event) {
     addNewPeriodButton.remove();
 
     const periodsNumber = countPeriods(currentPeriod);
-    const newPeriodDiv = createPeriodDiv(getCompanyIndexFromPeriod(currentPeriod), getSectionType(currentPeriod), periodsNumber);
+    const newPeriodDiv = createPeriodDiv(getCompanyIndexFromPeriod(currentPeriod), periodsNumber, getSectionType(currentPeriod));
 
     currentPeriod.after(newPeriodDiv);
 
@@ -235,21 +250,19 @@ function addNewCompany(event) {
     addNewCompanyButton.remove();
 
     // Create a new company element
-    const newCompanyDiv = createCompanyDiv(countCompanies(currentCompanyDiv));
+    const newCompanyDiv = createCompanyDiv(countCompanies(currentCompanyDiv), getSectionType(currentCompanyDiv));
 
     // Add the new company element after the current company
     currentCompanyDiv.after(newCompanyDiv);
     fixCollapsibleMaxHeight(newCompanyDiv);
 }
 
-//TODO: name for experience and education should be different, this include jsp part and js code here
 document.addEventListener('DOMContentLoaded', function () {
     const companiesContainers = document.querySelectorAll('.companies-container');
 
     // Event delegation for handling dynamically added buttons
     companiesContainers.forEach(function (container) {
         container.addEventListener('click', function (event) {
-            console.log(event.target.classList);
             if (event.target.classList.contains('remove-period-button')) {
                 removePeriod(event);
             } else if (event.target.classList.contains('add-period-button')) {
