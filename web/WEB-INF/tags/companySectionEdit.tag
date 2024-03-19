@@ -18,7 +18,7 @@
                 <c:forEach var="company" items="${section.companies}" varStatus="companyCounter">
                     <div class="company">
                         <div class="company-name">
-                            <input type="text" name="company[${companyCounter.index}].name"
+                            <input type="text" name="${sectionType}[${companyCounter.index}].name"
                                    value="${company.name}"
                                    placeholder="${sectionType} name">
                         </div>
@@ -27,24 +27,24 @@
                                 <div class="period">
                                     <div class="period-title">
                                         <input type="text"
-                                               name="company[${companyCounter.index}].period[${periodCounter.index}].title"
+                                               name="${sectionType}[${companyCounter.index}].period[${periodCounter.index}].title"
                                                value="${period.title}"
                                                placeholder="Period title">
                                     </div>
                                     <div class="period-time">
                                         <input type="month"
-                                               name="company[${companyCounter.index}].period[${periodCounter.index}].start"
+                                               name="${sectionType}[${companyCounter.index}].period[${periodCounter.index}].start"
                                                value="${static:formatDate(period.startDate)}"
                                                placeholder="Start date">
                                         to
                                         <input type="month"
-                                               name="company[${companyCounter.index}].period[${periodCounter.index}].end"
+                                               name="${sectionType}[${companyCounter.index}].period[${periodCounter.index}].end"
                                                value="${static:formatDate(period.endDate)}"
                                                placeholder="End date">
                                     </div>
                                     <div class="period-description">
                                         <input type="text"
-                                               name="company[${companyCounter.index}].period[${periodCounter.index}].description"
+                                               name="${sectionType}[${companyCounter.index}].period[${periodCounter.index}].description"
                                                value="${period.description}"
                                                placeholder="Description">
                                     </div>

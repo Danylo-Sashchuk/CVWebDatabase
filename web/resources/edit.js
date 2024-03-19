@@ -25,7 +25,7 @@ function createCompanyDiv(index) {
     return newCompanyDiv;
 }
 
-function createPeriodDiv(companyIndex, periodIndex, removeButton = true) {
+function createPeriodDiv(companyIndex, periodIndex, sectionType, removeButton = true) {
     const newPeriodDiv = document.createElement('div');
     newPeriodDiv.className = 'period';
     newPeriodDiv.innerHTML = ` 
@@ -81,6 +81,10 @@ function getCompanyIndexFromPeriod(currentPeriod) {
     }
 }
 
+function getSectionType(currentPeriod) {
+
+}
+
 function addNewPeriod(event) {
     const currentPeriod = event.target.closest('.period');
     const addNewPeriodButton = event.target.closest('.add-period-button-container');
@@ -96,7 +100,7 @@ function addNewPeriod(event) {
     addNewPeriodButton.remove();
 
     const periodsNumber = countPeriods(currentPeriod);
-    const newPeriodDiv = createPeriodDiv(getCompanyIndexFromPeriod(currentPeriod), periodsNumber);
+    const newPeriodDiv = createPeriodDiv(getCompanyIndexFromPeriod(currentPeriod), getSectionType(currentPeriod), periodsNumber);
 
     currentPeriod.after(newPeriodDiv);
 
