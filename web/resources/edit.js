@@ -15,10 +15,10 @@ function createCompanyDiv(index, sectionType) {
     </div>
     <div class="company-buttons-container">
         <div class="remove-company-button-container">
-            <button type="button" class="add-company-button">Add new company</button>
+            <button type="button" class="remove-company-button">Remove company</button>
         </div>
         <div class="add-company-button-container">
-            <button type="button" class="remove-company-button">Remove company</button>
+            <button type="button" class="add-company-button">Add new company</button>
         </div>
     </div>`;
 
@@ -162,7 +162,7 @@ function reindexCompanies(companiesContainer) {
     companiesContainer.querySelectorAll('.company').forEach((company, index) => {
         company.querySelectorAll('input').forEach(input => {
             const name = input.getAttribute('name');
-            const newName = name.replace(/company\[\d+\]/, `company[${index}]`);
+            const newName = name.replace(/(\w+)\[\d+\]/, `$1[${index}]`);
             input.setAttribute('name', newName);
         });
     });
