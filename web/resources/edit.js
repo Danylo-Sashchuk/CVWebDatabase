@@ -69,7 +69,7 @@ function createPeriodDiv(companyIndex, periodIndex, sectionType, removeButton = 
     return newPeriodDiv;
 }
 
-//TODO: querySelector will be wrong since "company" is no longer a class.
+
 function getCompanyIndexFromPeriod(currentPeriod) {
     const inputElement = currentPeriod.querySelector('input');
     const nameAttribute = inputElement.getAttribute('name');
