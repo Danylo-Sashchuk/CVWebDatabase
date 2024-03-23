@@ -75,14 +75,7 @@ function getCompanyIndexFromPeriod(currentPeriod) {
     const nameAttribute = inputElement.getAttribute('name');
     const match = nameAttribute.match(/\[(\d+)\]/);
 
-    if (match) {
-        // If a match is found, return the first group (the digits)
-        return match[1];
-    } else {
-        // If no match is found, return null or an appropriate value indicating no match
-        console.error('No number found in the first set of brackets');
-        return null;
-    }
+    return match[1];
 }
 
 function getSectionType(currentPeriod) {
@@ -92,12 +85,7 @@ function getSectionType(currentPeriod) {
 
     const match = nameAttribute.match(/^(\w+)/);
 
-    if (match && match[1]) {
-        return match[1];
-    } else {
-        console.error('No match found in the name attribute');
-        return null;
-    }
+    return match[1];
 }
 
 function addNewPeriod(event) {
