@@ -75,50 +75,54 @@ public class ResumeServlet extends HttpServlet {
         }
 
         for (SectionType type : SectionType.values()) {
-            String value = request.getParameter(type.name());
-            String[] values = request.getParameterValues(type.name());
-            if (HtmlUtil.isEmpty(value) && (values == null || values.length < 2)) {
-                resume.removeSection(type);
-            } else {
-                switch (type) {
-                    case POSITION:
-                    case PERSONAL:
-                        resume.setSection(type, new TextSection(value));
-                        break;
-                    case ACHIEVEMENTS:
-                    case QUALIFICATIONS:
+            switch (type) {
+                case POSITION:
+                case PERSONAL:
+                    String text = request.getParameter(type.getTitle());
+                    if (HtmlUtil.isEmpty(text)) {
+                        resume.removeSection(type);
+                    } else {
+                        resume.setSection(type, new TextSection(text));
+                    }
+                    break;
+                case ACHIEVEMENTS:
+                case QUALIFICATIONS:
+                    String value = request.getParameter(type.getTitle());
+                    if (HtmlUtil.isEmpty(value)) {
+                        resume.removeSection(type);
+                    } else {
                         resume.setSection(type, new ListSection(value.split("\\n")));
-                        break;
-                    case EDUCATION:
-                    case EXPERIENCE:
-                        List<Company> companies = new ArrayList<>();
-                        String[] urls = request.getParameterValues(type.name() + ".url");
+                    }
+                    break;
+                case EDUCATION:
+                case EXPERIENCE:
+                    List<Company> companies = new ArrayList<>();
+                    int companyCounter = 0;
+                    while (request.getParameter(type.getTitle() + "[" + companyCounter + "].name") != null) {
+                        String name = request.getParameter(type.getTitle() + "[" + companyCounter + "].name");
+                        //                            String url = request.getParameter(type.name() + "[" +
+                        //                            companyCounter + "].url");
+                        List<Company.Period> periods = new ArrayList<>();
+                        int periodCounter = 0;
+                        while (request.getParameter(type.getTitle() + "[" + companyCounter + "].period[" + periodCounter + "].title") != null) {
+                            String title = request.getParameter(String.format("%s[%d].period[%d].title",
+                                    type.getTitle(), companyCounter, periodCounter));
+                            String description = request.getParameter(String.format("%s[%d].period[%d].description",
+                                    type.getTitle(), companyCounter, periodCounter));
+                            String startDate = request.getParameter(String.format("%s[%d].period[%d].start",
+                                    type.getTitle(), companyCounter, periodCounter));
+                            String endDate = request.getParameter(String.format("%s[%d].period[%d].end",
+                                    type.getTitle(), companyCounter, periodCounter));
 
-
-
-
-
-                        for (int i = 0; i < values.length; i++) {
-                            String name = values[i];
-                            if (!HtmlUtil.isEmpty(name)) {
-                                List<Company.Period> periods = new ArrayList<>();
-                                String pfx = type.name() + "[" + i + "].";
-                                String[] startDates = request.getParameterValues(pfx + "startDate");
-                                String[] endDates = request.getParameterValues(pfx + "endDate");
-                                String[] titles = request.getParameterValues(pfx + "title");
-                                String[] descriptions = request.getParameterValues(pfx + "description");
-                                for (int j = 0; j < titles.length; j++) {
-                                    if (!HtmlUtil.isEmpty(titles[j])) {
-                                        periods.add(new Company.Period(titles[j], descriptions[j],
-                                                DateUtil.parse(startDates[j]), DateUtil.parse(endDates[j])));
-                                    }
-                                }
-                                companies.add(new Company(name, urls[i], periods));
-                            }
+                            periods.add(new Company.Period(title, description, DateUtil.parse(startDate),
+                                    DateUtil.parse(endDate)));
+                            periodCounter++;
                         }
-                        resume.setSection(type, new CompanySection(companies));
-                        break;
-                }
+                        companies.add(new Company(name, "empty.site", periods));
+                        companyCounter++;
+                    }
+                    resume.setSection(type, new CompanySection(companies));
+                    break;
             }
         }
 
