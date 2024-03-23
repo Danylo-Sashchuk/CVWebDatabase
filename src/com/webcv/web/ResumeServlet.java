@@ -100,6 +100,10 @@ public class ResumeServlet extends HttpServlet {
                     int companyCounter = 0;
                     while (request.getParameter(type.getTitle() + "[" + companyCounter + "].name") != null) {
                         String name = request.getParameter(type.getTitle() + "[" + companyCounter + "].name");
+                        if (HtmlUtil.isEmpty(name)) {
+                            companyCounter++;
+                            continue;
+                        }
                         //                            String url = request.getParameter(type.name() + "[" +
                         //                            companyCounter + "].url");
                         List<Company.Period> periods = new ArrayList<>();
@@ -107,6 +111,10 @@ public class ResumeServlet extends HttpServlet {
                         while (request.getParameter(type.getTitle() + "[" + companyCounter + "].period[" + periodCounter + "].title") != null) {
                             String title = request.getParameter(String.format("%s[%d].period[%d].title",
                                     type.getTitle(), companyCounter, periodCounter));
+                            if (HtmlUtil.isEmpty(title)) {
+                                periodCounter++;
+                                continue;
+                            }
                             String description = request.getParameter(String.format("%s[%d].period[%d].description",
                                     type.getTitle(), companyCounter, periodCounter));
                             String startDate = request.getParameter(String.format("%s[%d].period[%d].start",

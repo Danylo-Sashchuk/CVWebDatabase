@@ -70,7 +70,7 @@
             <c:when test="${sectionType == SectionType.EXPERIENCE || sectionType == SectionType.EDUCATION}">
                 <myTags:companySectionView sectionType="${sectionType.title}" section="${sections.get(sectionType)}"/>
             </c:when>
-            <c:when test="${sectionType == SectionType.EDUCATION || sectionType == SectionType.QUALIFICATIONS}">
+            <c:when test="${sectionType == SectionType.ACHIEVEMENTS || sectionType == SectionType.QUALIFICATIONS}">
                 <myTags:listSectionView sectionType="${sectionType.title}" section="${sections.get(sectionType)}"/>
             </c:when>
         </c:choose>
