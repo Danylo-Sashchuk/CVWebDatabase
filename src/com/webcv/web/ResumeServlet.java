@@ -104,8 +104,9 @@ public class ResumeServlet extends HttpServlet {
                             companyCounter++;
                             continue;
                         }
-                        //                            String url = request.getParameter(type.name() + "[" +
-                        //                            companyCounter + "].url");
+                        //todo: add url
+                                                    String url = request.getParameter(type.name() + "[" +
+                                                    companyCounter + "].url");
                         List<Company.Period> periods = new ArrayList<>();
                         int periodCounter = 0;
                         while (request.getParameter(type.getTitle() + "[" + companyCounter + "].period[" + periodCounter + "].title") != null) {
