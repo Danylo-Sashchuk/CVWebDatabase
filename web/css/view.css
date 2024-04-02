@@ -153,4 +153,8 @@ a {
 }
 
 .company-website {
+    font-size: 16px; /* Standard font size for website links */
+    color: #2a5db0; /* Color for the website links, using a standard link blue */
+    text-decoration: none; /* Removes underline from links */
+    margin-bottom: 10px; /* Space after the website before the next element */
 }
