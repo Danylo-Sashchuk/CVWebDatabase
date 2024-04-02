@@ -1,3 +1,5 @@
+//TODO: bug with lists.
+
 function createCompanyDiv(index, sectionType) {
     const newCompanyDiv = document.createElement('div');
     newCompanyDiv.className = 'company';
