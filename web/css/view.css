@@ -127,7 +127,13 @@ a {
     font-size: 22px; /* Larger font size for company name */
     color: #333; /* Dark text for better readability */
     font-weight: bold; /* Bold font weight for company name */
-    margin-bottom: 10px; /* Space after the company name */
+    margin-bottom: 10px; /* Space after the company name */;
+}
+
+.company-name a {
+    color: #0056b3; /* A different color to stand out, perhaps a shade of link blue */
+    text-decoration: underline; /* Underline to signify an interactive link */
+    cursor: pointer; /* Changes the cursor to the pointer hand to indicate a link */
 }
 
 .period {
@@ -150,11 +156,4 @@ a {
     font-size: 14px; /* Smaller font size for description to de-emphasize */
     color: #666; /* Dark gray for the description */
     margin-bottom: 10px; /* Space after the description before the next period */
-}
-
-.company-website {
-    font-size: 16px; /* Standard font size for website links */
-    color: #2a5db0; /* Color for the website links, using a standard link blue */
-    text-decoration: none; /* Removes underline from links */
-    margin-bottom: 10px; /* Space after the website before the next element */
 }
