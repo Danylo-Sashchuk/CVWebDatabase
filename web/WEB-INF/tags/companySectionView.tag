@@ -16,7 +16,7 @@
                 <div class="company-container">
                     <c:forEach var="company" items="${section.companies}">
                         <div class="company">
-                            <div class="company-name"><a href="${company.website.url}">${company.name}</a></div>
+                            <div class="company-name"><a href="https://${company.website.url}">${company.name}</a></div>
                             <c:forEach var="period" items="${company.periods}">
                                 <div class="period">
                                     <div class="period-title">${period.title}</div>
