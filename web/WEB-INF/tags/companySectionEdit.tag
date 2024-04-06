@@ -19,6 +19,9 @@
                             <input type="text" name="${sectionType}[${companyCounter.index}].name"
                                    value="${company.name}"
                                    placeholder="${sectionType} name">
+                            <input type="text" name="${sectionType}[${companyCounter.index}.url"
+                                   value="${company.website.url}"
+                                   placeholder="${sectionType} website">
                         </div>
                         <div class="periods-container">
                             <c:forEach var="period" items="${company.periods}" varStatus="periodCounter">
