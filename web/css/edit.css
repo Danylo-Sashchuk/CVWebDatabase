@@ -220,6 +220,7 @@ div.contact-type {
 }
 
 .company-name input,
+.company-website input,
 .period-title input,
 .period-time input,
 .period-description input {
@@ -325,4 +326,7 @@ textarea {
     font-size: 16px; /* Comfortable font size for reading */
     line-height: 1.5; /* Spacing between lines */
     resize: none;
+}
+
+.company-website {
 }
