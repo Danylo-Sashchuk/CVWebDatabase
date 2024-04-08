@@ -104,8 +104,8 @@ public class ResumeServlet extends HttpServlet {
                             companyCounter++;
                             continue;
                         }
-                        //todo: add url
-                        String url = request.getParameter(type.name() + "[" +
+                        //TODO: check if url with https://
+                        String url = request.getParameter(type.getTitle() + "[" +
                                                           companyCounter + "].url");
                         List<Company.Period> periods = new ArrayList<>();
                         int periodCounter = 0;
@@ -127,7 +127,7 @@ public class ResumeServlet extends HttpServlet {
                                     DateUtil.parse(endDate)));
                             periodCounter++;
                         }
-                        companies.add(new Company(name, "empty.site", periods));
+                        companies.add(new Company(name, url, periods));
                         companyCounter++;
                     }
                     resume.setSection(type, new CompanySection(companies));
