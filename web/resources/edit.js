@@ -10,6 +10,11 @@ function createCompanyDiv(index, sectionType) {
                 value="" 
                 placeholder="${sectionType} name">
     </div>
+    <div class="company-website">
+        <input type="text" name="${sectionType}[${index}].url"
+                value=""
+                placeholder="${sectionType} website">
+        </div>
     <div class="periods-container">
         <div class="period">
             ${createPeriodDiv(index, 0, sectionType, false).innerHTML}
