@@ -19,6 +19,7 @@ function createCompanyDiv(index, sectionType) {
         <div class="period">
             ${createPeriodDiv(index, 0, sectionType, false).innerHTML}
         </div>
+        <
     </div>
     <div class="company-buttons-container">
         <div class="remove-company-button-container">
