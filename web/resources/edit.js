@@ -33,8 +33,6 @@ function createCompanyDiv(index, sectionType) {
 }
 
 function createPeriodDiv(companyIndex, periodIndex, sectionType, removeButton = true) {
-    console.log(companyIndex);
-    console.log(periodIndex);
     const newPeriodDiv = document.createElement('div');
     newPeriodDiv.className = 'period';
     newPeriodDiv.innerHTML = ` 
